@@ -1,0 +1,33 @@
+{
+    "name": "maximianac/site-builder",
+    "description": "A Laravel package for quickly building websites like landing pages, online stores, etc.",
+    "type": "library",
+    "license": "MIT",
+    "autoload": {
+        "files": [
+          "src/Utility/helpers.php"
+        ],
+        "psr-4": {
+            "Maximianac\\SiteBuilder\\": "src/",
+            "Modules\\": "src/app/Modules/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Maxim Ianac",
+            "email": "maxim_ianac1@list.ru"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "laravel/breeze": "^2.3",
+        "spatie/laravel-permission": "^6.0"
+    },
+    "extra" : {
+        "laravel" : {
+            "providers" : [
+                "Maximianac\\SiteBuilder\\Providers\\SiteBuilderServiceProvider"
+            ]
+        }
+    }
+}

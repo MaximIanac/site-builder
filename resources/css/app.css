@@ -1,0 +1,55 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+    --bg-primary: #ffffff;
+    --bg-secondary: rgb(243 244 246);
+    --text-primary: #1f2937;
+    --text-secondary: rgb(75 85 99);
+    --border-primary: rgb(129 140 248);
+    --border-secondary: rgb(75 85 99);
+    --accent-primary: #2563eb;
+    --accent-secondary: #1d4ed8;
+    --accent-thirdly: rgb(79 70 229);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg-primary: #111827;
+        --bg-secondary: rgb(31 41 55);
+        --text-primary: #f9fafb;
+        --text-secondary: rgb(209 213 219);
+        --border-primary: rgb(79 70 229);
+        --border-secondary: rgb(75 85 99);
+        --accent-primary: #60a5fa;
+        --accent-secondary: #3b82f6;
+        --accent-thirdly: rgb(79 70 229);
+    }
+}
+
+
+h1 {
+    @apply text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight;
+}
+h2 {
+    @apply text-3xl font-bold text-gray-800 dark:text-gray-200 tracking-tight;
+}
+h3 {
+    @apply text-2xl font-semibold text-gray-700 dark:text-gray-300;
+}
+h4 {
+    @apply text-xl font-medium text-gray-600 dark:text-gray-400;
+}
+h5 {
+    @apply text-lg font-medium text-gray-500 dark:text-gray-400;
+}
+h6 {
+    @apply text-base font-normal text-gray-400 dark:text-gray-500 uppercase;
+}
+
+hr {
+    @apply border-gray-500 dark:border-gray-600
+}
+
+[x-cloak] { display: none !important; }
