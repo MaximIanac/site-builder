@@ -191,13 +191,11 @@
         return {
             selectedCategory: @json(old('parent_id', $category?->parent?->id) ?? ''),
             inheritedProperties: [],
-            addedProperties: @json(old('added_properties', $category?->properties) ?? []),
+            addedProperties: [],
             allProperties: @json($properties),
 
-            init() {
-                if (this.selectedCategory) {
-                    this.fetchProperties();
-                }
+            async init() {
+                await this.fetchProperties();
 
                 if (this.addedProperties.length > 0) {
                     if (typeof this.addedProperties[0] !== 'object') {
@@ -215,10 +213,16 @@
                 }
 
                 const res = await useAjax().get(
-                    "{{ route('api.cp.content.modules.catalog.category.parentProperties') }}",
+                    "{{ route('api.cp.content.modules.catalog.categories.parentProperties') }}",
                     {category: this.selectedCategory}
                 );
                 this.inheritedProperties = res.data.data.properties ?? [];
+
+                if (this.addedProperties.length < 1) {
+                    this.addedProperties = @json(old('added_properties', $category?->properties) ?? []);
+                }
+
+                this.removeInheritedFromAdded()
             },
 
             isAdded(property) {
@@ -226,18 +230,16 @@
             },
 
             isInherited(property) {
-                const inherited = this.inheritedProperties.some(ip => ip.id === property.id);
+                return this.inheritedProperties.some(ip => ip.id === property.id);
+            },
 
-                if (inherited) {
-                    //TODO: toggling properties on EDIT
-                    this.addedProperties = this.addedProperties.filter(p => p.id !== property.id);
-                }
-
-                return inherited;
+            removeInheritedFromAdded() {
+                this.addedProperties = this.addedProperties.filter(
+                    p => !this.inheritedProperties.some(ip => ip.id === p.id)
+                );
             },
 
             toggleProperty(property, checked) {
-                console.log(checked)
                 if (checked) {
                     if (!this.addedProperties.some(p => p.id === property.id)) {
                         this.addedProperties.push(property);
@@ -245,7 +247,6 @@
                 } else {
                     this.addedProperties = this.addedProperties.filter(p => p.id !== property.id);
                 }
-                console.log(this.addedProperties)
             },
 
             deselectParentCategory() {

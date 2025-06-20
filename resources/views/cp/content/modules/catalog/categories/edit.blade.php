@@ -4,7 +4,7 @@
 
 @section('content')
     <x-sb.common.forms.default
-        action="{{ route('cp.content.modules.catalog.category.update', $category->slug) }}"
+        action="{{ route('cp.content.modules.catalog.categories.update', $category->slug) }}"
         method="POST"
     >
         @method('PUT')

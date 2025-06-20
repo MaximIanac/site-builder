@@ -31,6 +31,19 @@ class MCatalogProduct extends Model
         return $this->hasMany(MCatalogProductPropertyValue::class, 'product_id');
     }
 
+    public function scopeInCategoryWithChildren($query, MCatalogCategory $category)
+    {
+        $categoryIds = collect([$category->id])
+            ->merge($category->getAllChildCategories()->pluck('id'));
+
+        return $query->whereIn('category_id', $categoryIds);
+    }
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
 //    public function getProperties(): Collection
 //    {
 //        return $this->propertyValues()->get()->mapWithKeys(function ($item) {

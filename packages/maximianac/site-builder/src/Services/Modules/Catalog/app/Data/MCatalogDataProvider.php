@@ -22,15 +22,14 @@ class MCatalogDataProvider
         $propertyQuery = MCatalogProductProperty::query();
 
         if ($request->has('chosen_category')) {
-            $categorySlug = $request->query('chosen_category');
-            $productQuery = $productQuery->whereHas('category', fn($q) => $q->where('slug', $categorySlug));
-
-            $category = MCatalogCategory::where('slug', $categorySlug)->first();
+            $category = MCatalogCategory::where('slug', $request->query('chosen_category'))->first();
 
             if ($category) {
                 $propertyQuery = $propertyQuery->whereHas('categories', fn($q) =>
                     $q->whereIn('m_catalog_categories.id', $category->getAllParentCategories()->pluck('id'))
                 );
+
+                $productQuery = $productQuery->inCategoryWithChildren($category);
             }
         }
 

@@ -28,7 +28,7 @@
                 </div>
 
                 <div class="flex items-center justify-end">
-                    <a href="{{ route('cp.content.modules.catalog.category.edit', $category->slug) }}" class="p-1 text-accent-primary hover:text-accent-secondary" title="Edit {{ $category->name }}">
+                    <a href="{{ route('cp.content.modules.catalog.categories.edit', $category->slug) }}" class="p-1 text-accent-primary hover:text-accent-secondary" title="Edit {{ $category->name }}">
                         <x-icons.edit />
                     </a>
                     <button class="p-1 text-red-400 hover:text-red-500" title="Delete {{ $category->name }}">

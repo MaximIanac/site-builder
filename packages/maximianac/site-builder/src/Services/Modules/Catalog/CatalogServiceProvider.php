@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\api\MCatalogCategoryApiController;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\api\MCatalogPropertyApiController;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogCategoryController;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController;
 use Maximianac\SiteBuilder\Services\Modules\Core\Providers\BaseModuleServiceProvider;
 use stdClass;
 
@@ -23,18 +24,20 @@ class CatalogServiceProvider extends BaseModuleServiceProvider
 
     protected function mapRoutes(): void
     {
-        Route::resource('category', MCatalogCategoryController::class);
+        Route::resource('categories', MCatalogCategoryController::class);
+        Route::resource('products', MCatalogProductController::class);
     }
 
     protected function mapApiRoutes(): void
     {
-        Route::prefix('category')->name('category.')
+        Route::prefix('categories')->name('categories.')
             ->group(function () {
                 Route::get('parentProperties', [MCatalogCategoryApiController::class, 'getCategoryParentProperties'])->name('parentProperties');
+                Route::get('childCategories', [MCatalogCategoryApiController::class, 'getAllChildCategories'])->name('childCategories');
             }
         );
 
-        Route::prefix('property')->name('property.')
+        Route::prefix('properties')->name('properties.')
             ->group(function () {
                 Route::resource('/', MCatalogPropertyApiController::class)->only('store');
             }

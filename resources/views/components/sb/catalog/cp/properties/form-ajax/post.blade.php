@@ -122,7 +122,7 @@
                 const ajax = useAjax();
 
                 await ajax.post(
-                    "{{ route('api.cp.content.modules.catalog.property.store') }}",
+                    "{{ route('api.cp.content.modules.catalog.properties.store') }}",
                     this.payload
                 );
 

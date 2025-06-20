@@ -15,23 +15,17 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogPro
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
 
-class MCatalogCategoryController extends Controller
+class MCatalogProductController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        return view('cp.content.modules.catalog.categories.index', [
-            'rootCategories' => MCatalogCategoryData::collect(
-                MCatalogCategory::whereNull('parent_id')->with(['allChildren'])->get()
-            ),
-            'allCategories' => MCatalogCategoryData::collect(
-                MCatalogCategory::whereNotNull('parent_id')->with(['parent', 'allChildren'])->get()
-            ),
-        ]);
+        return view('cp.content.modules.catalog.products.index');
     }
 
     /**
@@ -74,17 +68,13 @@ class MCatalogCategoryController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(MCatalogCategory $category)
+    public function show(MCatalogProduct $product)
     {
-        $category->load(['properties', 'parent', 'allChildren']);
-
-        $products = $category->products()
-            ->orderBy('created_at', 'desc')
-            ->paginate();
-
-        return view('cp.content.modules.catalog.categories.show', [
-            'category' => $category,
-            'products' => $products,
+        return view('cp.content.modules.catalog.products.show', [
+            'product' => MCatalogProductData::from($product->load([
+                'category', 'offers', 'offers.propertyValues', 'offers.propertyValues.property',
+                'propertyValues', 'propertyValues.property'
+            ])),
         ]);
     }
 
@@ -125,7 +115,7 @@ class MCatalogCategoryController extends Controller
             $validated['added_properties'] ?? []
         ));
 
-        return redirect()->route('cp.content.modules.catalog.categories.show', $category->slug)->with('success', 'Category updated successfully.');
+        return redirect()->route('cp.content.modules.catalog.category.show', $category->slug)->with('success', 'Category updated successfully.');
     }
 
     /**

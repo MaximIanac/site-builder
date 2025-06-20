@@ -32,6 +32,29 @@ class MCatalogCategory extends Model
         return $categories;
     }
 
+    public function getAllChildCategories(): Collection
+    {
+        $categories = collect();
+        $currentLevel = $this->children;
+
+        while ($currentLevel->isNotEmpty()) {
+            $currentLevel = $currentLevel->map(fn($item) => new MCatalogCategory($item->toArray()));
+
+            $categories = $categories->merge($currentLevel);
+            $currentLevel = $currentLevel->flatMap->children;
+        }
+
+        return $categories->unique('id');
+    }
+
+    public function getAllProductsIncludingChildren()
+    {
+        $categoryIds = collect([$this->id])
+            ->merge($this->getAllChildCategories()->pluck('id'));
+
+        return MCatalogProduct::whereIn('category_id', $categoryIds)->get();
+    }
+
     public function children(): HasMany
     {
         return $this->hasMany(MCatalogCategory::class, 'parent_id');

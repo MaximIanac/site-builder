@@ -3,7 +3,7 @@
 @section('title', 'Catalog - Category')
 
 @section('content')
-    <x-sb.common.forms.default action="{{ route('cp.content.modules.catalog.category.store') }}" method="POST">
+    <x-sb.common.forms.default action="{{ route('cp.content.modules.catalog.categories.store') }}" method="POST">
         <div class="flex justify-end items-center mb-6">
             <x-buttons.button-base type="submit">Create Category</x-buttons.button-base>
         </div>
