@@ -19,8 +19,7 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->string('short_description')->nullable();
             $table->text('description')->nullable();
-            $table->string('main_image')->nullable();
-            $table->json('images')->nullable();
+            $table->string('status', 10)->default('draft')->comment('visible, draft');
 
             $table->timestamps();
         });

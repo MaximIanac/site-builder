@@ -13,9 +13,6 @@
     @foreach ($properties as $property)
         <x-sb.common.badges.default>
             <span class="truncate" title="{{ $property->name }} ({{ $property->code }}) - {{ $property->type }}">
-                @if ($property->is_required)
-                    <span class="text-red-400">*</span>
-                @endif
                 <span class="lowercase">{{ $property->name }}</span>
                 <span class="text-gray-400/70 text-[9px] font-mono">({{ $property->type }})</span>
             </span>

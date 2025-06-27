@@ -10,10 +10,13 @@ use Spatie\LaravelData\Data;
 class MCatalogProductOffersData extends Data
 {
     public function __construct(
-        public int                        $id,
-        public string                     $sku,
-        public float                     $price,
-        public int                    $quantity,
+        public int                           $id,
+        public string                        $sku,
+
+        #[DataCollectionOf(MCatalogProductOfferPriceData::class)]
+        public Collection                    $prices,
+        public int                           $quantity,
+
         #[DataCollectionOf(MCatalogProductPropertyValueData::class)]
         public Collection                    $propertyValues,
     ) {}

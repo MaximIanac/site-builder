@@ -36,7 +36,11 @@
                     <div class="rounded-xl border border-b-secondary bg-white/5 shadow p-4">
                         <div class="flex items-center justify-between mb-2">
                             <div class="text-sm font-semibold text-accent-primary">
-                                ${{ number_format($offer->price, 2) }}
+                                @if($offer->prices->count() > 0)
+                                    {{$offer->prices[0]->currency->value}} {{ number_format($offer->prices[0]->value, 2) }}
+                                @else
+                                    {{'test'}}
+                                @endif
                             </div>
                             <span class="text-xs bg-muted px-2 py-0.5 rounded text-muted-foreground">Stock: {{ $offer->quantity }}</span>
                         </div>

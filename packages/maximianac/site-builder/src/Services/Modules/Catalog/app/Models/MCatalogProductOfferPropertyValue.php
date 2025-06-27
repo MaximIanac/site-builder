@@ -10,6 +10,9 @@ class MCatalogProductOfferPropertyValue extends Model
 {
     protected $table = 'm_catalog_product_offer_property_values';
     protected $guarded = [];
+    protected $with = [
+        'property',
+    ];
 
     public function offer(): BelongsTo
     {

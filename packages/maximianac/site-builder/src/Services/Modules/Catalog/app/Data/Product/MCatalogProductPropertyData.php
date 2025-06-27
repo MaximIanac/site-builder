@@ -2,6 +2,7 @@
 
 namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product;
 
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
 use Spatie\LaravelData\Data;
 
 class MCatalogProductPropertyData extends Data
@@ -11,6 +12,6 @@ class MCatalogProductPropertyData extends Data
         public string                        $name,
         public string                        $code,
         public string                        $type,
-        public bool                          $is_required,
+        public PropertyUsageTypeEnum         $usage_type,
     ) {}
 }

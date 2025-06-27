@@ -56,7 +56,8 @@ export default function useAjax() {
                 },
             });
 
-            state.data = response.data;
+            state.data = response.data.data;
+
             return response;
         } catch (error) {
             state.error = handleError(error);

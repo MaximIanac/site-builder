@@ -120,13 +120,13 @@
                             <div class="flex flex-wrap gap-2 min-h-[40px] border border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-2">
                                 <template x-for="property in addedProperties" :key="property.id">
                                     <x-sb.common.badges.default class="max-w-[200px] group">
-                                            <span class="truncate flex items-center">
-                                                <span x-show="property.is_required" class="text-red-400 mr-1">*</span>
-                                                <span x-text="property.name" class="font-medium"></span>
-                                                <span class="mx-1 text-gray-400">-</span>
-                                                <span x-text="property.code" class="lowercase font-mono text-gray-400 text-xs"></span>
-                                                <span class="ml-1 text-gray-400/70 text-[9px] font-mono"x-text="`(${property.type})`"></span>
-                                            </span>
+                                        <span class="truncate flex items-center">
+                                            <span x-show="property.is_required" class="text-red-400 mr-1">*</span>
+                                            <span x-text="property.name" class="font-medium"></span>
+                                            <span class="mx-1 text-gray-400">-</span>
+                                            <span x-text="property.code" class="lowercase font-mono text-gray-400 text-xs"></span>
+                                            <span class="ml-1 text-gray-400/70 text-[9px] font-mono"x-text="`(${property.type})`"></span>
+                                        </span>
                                     </x-sb.common.badges.default>
                                 </template>
                             </div>

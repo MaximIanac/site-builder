@@ -14,18 +14,18 @@ return new class extends Migration
         Schema::create('m_catalog_product_properties', function (Blueprint $table) {
             $table->id();
             $table->string('name', 20);
-            $table->string('code', 20);
+            $table->string('code', 40);
             $table->string('type', 20)->comment("string, text, integer, float, boolean, select");
-            $table->boolean('is_required')->default(false);
+            $table->string('usage_type', 20)->comment("category, offer");
             $table->timestamps();
         });
 
         /** If property type is SELECT */
-        Schema::create('m_catalog_product_property_options', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('property_id')->constrained('m_catalog_product_properties')->cascadeOnDelete();
-            $table->string('value');
-        });
+//        Schema::create('m_catalog_product_property_options', function (Blueprint $table) {
+//            $table->id();
+//            $table->foreignId('property_id')->constrained('m_catalog_product_properties')->cascadeOnDelete();
+//            $table->string('value');
+//        });
 
         /** Relation between CATEGORY and properties of the category */
         Schema::create('m_catalog_category_product_property', function (Blueprint $table) {
@@ -50,7 +50,7 @@ return new class extends Migration
     {
         Schema::dropIfExists('m_catalog_product_property_values');
         Schema::dropIfExists('m_catalog_category_product_property');
-        Schema::dropIfExists('m_catalog_product_property_options');
+//        Schema::dropIfExists('m_catalog_product_property_options');
         Schema::dropIfExists('m_catalog_product_properties');
     }
 };

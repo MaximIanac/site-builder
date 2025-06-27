@@ -6,19 +6,35 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Support\Collection;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
-class MCatalogProduct extends Model
+class MCatalogProduct extends Model implements HasMedia
 {
+    use InteractsWithMedia;
+
     protected $table = 'm_catalog_products';
     protected $guarded = [];
-    protected $casts = [
-        'images' => 'array',
+    protected $with = [
+        'media', 'propertyValues', 'category', 'offers',
     ];
 
-    public function category(): BelongsTo
+    public function properties(): BelongsToMany
     {
-        return $this->belongsTo(MCatalogCategory::class, 'category_id');
+        return $this->belongsToMany(
+            MCatalogProductProperty::class,
+            'm_catalog_product_property_values',
+            'product_id',
+            'property_id'
+        );
+    }
+
+    // TODO: Добавить при тип свойства при создании нового
+    public function propertyValues(): HasMany
+    {
+        return $this->hasMany(MCatalogProductPropertyValue::class, 'product_id');
     }
 
     public function offers(): HasMany
@@ -26,9 +42,9 @@ class MCatalogProduct extends Model
         return $this->hasMany(MCatalogProductOffer::class, 'product_id');
     }
 
-    public function propertyValues(): HasMany
+    public function category(): BelongsTo
     {
-        return $this->hasMany(MCatalogProductPropertyValue::class, 'product_id');
+        return $this->belongsTo(MCatalogCategory::class, 'category_id');
     }
 
     public function scopeInCategoryWithChildren($query, MCatalogCategory $category)
@@ -39,23 +55,18 @@ class MCatalogProduct extends Model
         return $query->whereIn('category_id', $categoryIds);
     }
 
-    public function getRouteKeyName()
+    public function getRouteKeyName(): string
     {
         return 'slug';
     }
 
-//    public function getProperties(): Collection
-//    {
-//        return $this->propertyValues()->get()->mapWithKeys(function ($item) {
-//            return [$item->property->code => $item->value];
-//        });
-//    }
+    public function getImagesAttribute(): MediaCollection
+    {
+        return $this->getMedia('images');
+    }
 
-//    public function getPropertyValue(string $key): ?string
-//    {
-//        return optional(
-//            $this->propertyValues()->get()->firstWhere('property.code', $key)
-//        )
-//            ->value;
-//    }
+    public function getMainImageAttribute(): ?Media
+    {
+        return $this->images->firstWhere('custom_properties.main', true);
+    }
 }

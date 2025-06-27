@@ -2,13 +2,6 @@
     'properties' => [],
 ])
 
-<style>
-    .invisible-scrollbar {
-        scrollbar-width: thin;
-        scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
-    }
-</style>
-
 <div class="flex flex-wrap gap-1 rounded-lg max-h-[500px] overflow-y-auto invisible-scrollbar">
     @foreach ($properties as $property)
         <x-sb.common.badges.default>

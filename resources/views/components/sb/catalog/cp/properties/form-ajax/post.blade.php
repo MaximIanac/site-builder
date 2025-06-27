@@ -1,9 +1,16 @@
+@props([
+    'label' => 'Property',
+    'showMini' => false
+])
+
 <div x-data="propertyManager()" class="p-4 flex flex-col gap-4">
-    Property
+    {{ $label }}
 
-    <hr class="border-gray-700">
+    @if(!$showMini)
+        <hr class="border-gray-700">
+    @endif
 
-    <div class="flex justify-between gap-8">
+    <div class="flex {{ $showMini ? 'flex-col gap-4' : 'justify-between gap-8' }}">
         <div class="flex-1">
             <x-sb.common.inputs.label for="property-name">Name</x-sb.common.inputs.label>
             <span class="text-sm text-red-500 font-semibold" x-text="errors.name"></span>
@@ -17,7 +24,7 @@
         </div>
     </div>
 
-    <div class="flex justify-between gap-8 mb-4">
+    <div class="flex justify-between gap-8">
         <div class="flex-1">
             <x-sb.common.inputs.label for="property-type">Type</x-sb.common.inputs.label>
             <x-sb.common.select.default class="w-full" id="property-type" x-model="payload.type">
@@ -35,19 +42,19 @@
         </div>
     </div>
 
-    <hr class="border-gray-700">
-
     <div class="flex justify-between gap-8">
-        <x-secondary-button type="button" x-on:click="$dispatch('close')">
-            Close
-        </x-secondary-button>
+        @if(!$showMini)
+            <x-secondary-button type="button" x-on:click="$dispatch('close')">
+                Close
+            </x-secondary-button>
+        @endif
 
-        <x-sb.common.buttons.default type="button" x-on:click="createProperty()">
+        <x-sb.common.buttons.default type="button" x-on:click="createProperty()" class="!text-[12px] !py-2 !px-3 w-full">
             <span x-show="!loading">Create</span>
             <span x-show="loading" class="flex items-center justify-center">
-                        <x-sb.common.icons.spinner />
-                        Processing...
-                    </span>
+                <x-sb.common.icons.spinner />
+                Processing...
+            </span>
         </x-sb.common.buttons.default>
     </div>
 </div>
@@ -132,8 +139,7 @@
 
                 if (ajax.state.data) {
                     this.errors = {}
-                    this.$dispatch('property-created', ajax.state.data.data);
-                    this.$dispatch('close');
+                    this.$dispatch('property:created', ajax.state.data);
                     this.resetForm();
                 }
 

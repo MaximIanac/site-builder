@@ -16,8 +16,8 @@ class MCatalogDataProvider
     {
         $productQuery = MCatalogProduct::with([
             'category',
-            'propertyValues', 'propertyValues.property',
-            'offers', 'offers.propertyValues', 'offers.propertyValues.property'
+            'propertyValues',
+            'offers',
         ]);
         $propertyQuery = MCatalogProductProperty::query();
 

@@ -6,11 +6,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
 
 class MCatalogProductProperty extends Model
 {
     protected $table = 'm_catalog_product_properties';
     protected $guarded = [];
+    protected $casts = [
+        'usage_type' => PropertyUsageTypeEnum::class
+    ];
 
     public function categories(): BelongsToMany
     {
@@ -22,9 +26,14 @@ class MCatalogProductProperty extends Model
         );
     }
 
-    public function options(): HasMany
+    public function scopeForOffer($query)
     {
-        return $this->hasMany(MCatalogProductPropertyOption::class, 'property_id');
+        return $query->where('usage_type', PropertyUsageTypeEnum::OFFER);
+    }
+
+    public function scopeForCategory($query)
+    {
+        return $query->where('usage_type', PropertyUsageTypeEnum::CATEGORY);
     }
 
     public function productValues(): HasMany

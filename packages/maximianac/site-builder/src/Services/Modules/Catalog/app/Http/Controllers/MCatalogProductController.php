@@ -5,6 +5,7 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
@@ -12,9 +13,13 @@ use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogCategoryData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\CurrencyEnum;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MCatalogProductStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCurrency;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
 
@@ -33,36 +38,72 @@ class MCatalogProductController extends Controller
      */
     public function create()
     {
-        return view('cp.content.modules.catalog.categories.create', [
+        return view('cp.content.modules.catalog.products.create', [
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::all(),
             ),
-            'properties' => MCatalogProductPropertyData::collect(
-                MCatalogProductProperty::all()
-            ),
+//            'category_properties' => MCatalogProductPropertyData::collect(MCatalogProductProperty::forCategory()->get()),
+            'offer_properties' => MCatalogProductPropertyData::collect(MCatalogProductProperty::forOffer()->get()),
         ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(MCatalogCategoryStoreRequest $request): RedirectResponse
+    public function store(MCatalogProductStoreRequest $request): RedirectResponse
     {
-        $validated = $request->validated();
+        DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        $category = MCatalogCategory::create([
-            'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
-            'description' => $validated['description'] ?? null,
-            'parent_id' => $validated['parent_id'] ?? null,
-        ]);
+            $product = MCatalogProduct::create([
+                'name' => $validated['name'],
+                'slug' => Str::slug($validated['slug']),
+                'category_id' => $validated['category_id'],
+                'short_description' => $validated['short_description'],
+                'description' => $validated['description'],
+            ]);
 
-        $category->properties()->sync(array_merge(
-            $validated['inherited_properties'] ?? [],
-            $validated['added_properties'] ?? []
-        ));
+            if ($request->has('properties')) {
+                foreach ($request->input('properties') as $id => $value) {
+                    $product->properties()->sync([$id => ['value' => $value]]);
+                }
+            }
 
-        return redirect()->back()->with('success', 'Category created successfully.');
+            $offers = json_decode($request->input('offers'), true);
+
+
+            $currency = MCatalogCurrency::whereCode(CurrencyEnum::MDL)->first();
+            foreach ($offers as $offerData) {
+                $offer = $product->offers()->create([
+                    'sku' => $offerData['sku'],
+                    'quantity' => $offerData['stock']
+                ]);
+
+                $offer->currencies()->syncWithoutDetaching([
+                    $currency->id => ['price' => $offerData['price']]
+                ]);
+
+                foreach ($offerData['properties'] as $property) {
+                    $offer->properties()->sync([
+                        $property['id'] => ['value' => $property['value']]
+                    ]);
+                }
+            }
+
+            if ($request->hasFile('media')) {
+                $metas = json_decode($request->input('media_meta', []), true);
+                $metas = array_merge(...$metas);
+
+                foreach ($request->file('media') as $file) {
+                    $product
+                        ->addMedia($file)
+                        ->withCustomProperties($metas[$file->getClientOriginalName()])
+                        ->toMediaCollection('images');
+                }
+            }
+        });
+
+        return redirect()->back()->with('success', 'Product created successfully.');
     }
 
     /**
@@ -71,28 +112,22 @@ class MCatalogProductController extends Controller
     public function show(MCatalogProduct $product)
     {
         return view('cp.content.modules.catalog.products.show', [
-            'product' => MCatalogProductData::from($product->load([
-                'category', 'offers', 'offers.propertyValues', 'offers.propertyValues.property',
-                'propertyValues', 'propertyValues.property'
-            ])),
+            'product' => MCatalogProductData::from($product->load(['offers'])),
+            'properties' => MCatalogProductPropertyData::collect(MCatalogProductProperty::all()),
         ]);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(MCatalogCategory $category)
+    public function edit(MCatalogProduct $product)
     {
-        $category->load(['parent', 'properties']);
-
-        return view('cp.content.modules.catalog.categories.edit', [
+        return view('cp.content.modules.catalog.products.edit', [
+            'product' => MCatalogProductData::from($product),
             'categories' => MCatalogCategoryData::collect(
-                MCatalogCategory::where('name', '!=', $category->name)->get(),
+                MCatalogCategory::all(),
             ),
-            'properties' => MCatalogProductPropertyData::collect(
-                MCatalogProductProperty::all()
-            ),
-            'category' => MCatalogCategoryData::from($category),
+            'offer_properties' => MCatalogProductPropertyData::collect(MCatalogProductProperty::forOffer()->get()),
         ]);
     }
 

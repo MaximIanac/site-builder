@@ -10,6 +10,9 @@ class MCatalogProductPropertyValue extends Model
 {
     protected $table = 'm_catalog_product_property_values';
     protected $guarded = [];
+    protected $with = [
+        'property',
+    ];
 
     public function product(): BelongsTo
     {
@@ -20,14 +23,4 @@ class MCatalogProductPropertyValue extends Model
     {
         return $this->belongsTo(MCatalogProductProperty::class, 'property_id');
     }
-
-//    public function getValueProperty($value): float|bool|int
-//    {
-//        return match ($this->property->type) {
-//            'integer' => (int)$value,
-//            'float' => (float)$value,
-//            'boolean' => (bool)$value,
-//            default => $value
-//        };
-//    }
 }

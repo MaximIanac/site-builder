@@ -3,7 +3,7 @@
 @section('title', "Product")
 
 @section('content')
-    <div class="min-h-screen space-y-8">
+    <div class="space-y-8">
         <!-- Product Header -->
         <div class="flex justify-between items-center">
             <div class="flex gap-2 items-end">
@@ -18,39 +18,38 @@
             </div>
         </div>
 
-{{--        //TODO: Добавить работу с картинками, валютами, переводами --}}
+        {{--  //TODO: Добавить работу с картинками, валютами, переводами --}}
 
         <!-- Main Content Grid -->
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <!-- Image Gallery -->
             <div class="space-y-4">
-                <div class="bg-gray-800 rounded-xl overflow-hidden">
-                    <img src="{{ $product->main_image ?? "https://placehold.co/800x600/1f2937/ffffff?text=$product->name" }}"
-                         alt="Product Main Image"
+{{--                @php--}}
+{{--                    $mainImage = $product->media->firstWhere('meta.is_main', true);--}}
+{{--                    $otherImages = $product->media->where('meta.is_main', false)->sortBy('meta.sort_order');--}}
+{{--                @endphp--}}
+
+                <div class="bg-gray-800 rounded-xl overflow-hidden min-h-[300px]">
+                    <img src="{{ $product->thumbnail?->getUrl() ?? "https://placehold.co/800x600/1f2937/ffffff?text=$product->name" }}"
+                         alt="{{ $product->name }}"
                          class="w-full h-auto object-cover">
                 </div>
-                <div class="grid grid-cols-4 gap-2">
-                    <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer">
-                        <img src="https://placehold.co/200x150/1f2937/ffffff?text=1"
-                             alt="Product Image 1"
-                             class="w-full h-full object-cover">
+
+{{--                @dd($product->images)--}}
+
+                @if($product->images->count() > 0)
+                    <div class="grid grid-cols-4 gap-2">
+                        @foreach($product->images->filter(fn($item) => $item->uuid !== $product?->thumbnail?->uuid)  as $image)
+                            <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer h-[150px]">
+                                <img
+                                    src="{{ $image->getUrl() ?? "https://placehold.co/200x150/1f2937/ffffff?text=$product->name" }}"
+                                    alt="{{ $product->name . $loop->index . 'miniImage' }}"
+                                    class="w-full h-full object-cover"
+                                >
+                            </div>
+                        @endforeach
                     </div>
-                    <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer">
-                        <img src="https://placehold.co/200x150/1f2937/ffffff?text=2"
-                             alt="Product Image 2"
-                             class="w-full h-full object-cover">
-                    </div>
-                    <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer">
-                        <img src="https://placehold.co/200x150/1f2937/ffffff?text=3"
-                             alt="Product Image 3"
-                             class="w-full h-full object-cover">
-                    </div>
-                    <div class="bg-gray-800 rounded-lg overflow-hidden cursor-pointer">
-                        <img src="https://placehold.co/200x150/1f2937/ffffff?text=4"
-                             alt="Product Image 4"
-                             class="w-full h-full object-cover">
-                    </div>
-                </div>
+                @endif
             </div>
 
             <!-- Product Details -->
@@ -79,7 +78,10 @@
                                     @endforeach
                                 </div>
                                 <div class="text-right self-start">
-                                    <p class="text-base font-bold">${{$offer->price}}</p>
+                                    @if($offer->prices->count() > 0)
+                                        <p class="text-base font-bold">{{$offer->prices[0]->currency->value}} {{$offer->prices[0]->value}}</p>
+                                    @endif
+
                                     <p class="text-xs text-green-500 uppercase font-mono">In Stock: {{$offer->quantity}}</p>
                                 </div>
                             </div>

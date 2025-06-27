@@ -28,6 +28,9 @@
     }
 }
 
+.secondary-input {
+    @apply w-full bg-gray-800 border border-gray-700 rounded-md px-3 py-2 text-sm focus:ring-indigo-600 focus:border-indigo-600;
+}
 
 h1 {
     @apply text-4xl font-extrabold text-gray-900 dark:text-white tracking-tight;
@@ -53,3 +56,9 @@ hr {
 }
 
 [x-cloak] { display: none !important; }
+
+
+.invisible-scrollbar {
+ scrollbar-width: thin;
+ scrollbar-color: rgba(100, 100, 100, 0.3) transparent;
+}
