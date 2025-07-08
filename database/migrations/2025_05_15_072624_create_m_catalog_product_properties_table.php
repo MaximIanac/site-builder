@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('m_catalog_product_properties', function (Blueprint $table) {
             $table->id();
-            $table->string('name', 20);
+            $table->json('name');
             $table->string('code', 40);
             $table->string('type', 20)->comment("string, text, integer, float, boolean, select");
             $table->string('usage_type', 20)->comment("category, offer");
@@ -39,7 +39,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('product_id')->constrained('m_catalog_products')->cascadeOnDelete();
             $table->foreignId('property_id')->constrained('m_catalog_product_properties')->cascadeOnDelete();
-            $table->string('value');
+            $table->json('value');
         });
     }
 

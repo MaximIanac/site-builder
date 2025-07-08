@@ -10,16 +10,23 @@ use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
 use Spatie\MediaLibrary\MediaCollections\Models\Media;
+use Spatie\Translatable\HasTranslations;
 
 class MCatalogProduct extends Model implements HasMedia
 {
-    use InteractsWithMedia;
+    use InteractsWithMedia, HasTranslations;
 
     protected $table = 'm_catalog_products';
     protected $guarded = [];
     protected $with = [
         'media', 'propertyValues', 'category', 'offers',
     ];
+    public array $translatable = ['name', 'short_description', 'description'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function properties(): BelongsToMany
     {
@@ -53,11 +60,6 @@ class MCatalogProduct extends Model implements HasMedia
             ->merge($category->getAllChildCategories()->pluck('id'));
 
         return $query->whereIn('category_id', $categoryIds);
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 
     public function getImagesAttribute(): MediaCollection

@@ -18,10 +18,12 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeE
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MCatalogProductStoreRequest;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MCatalogProductUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCurrency;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
+use Spatie\LaravelData\PaginatedDataCollection;
 
 class MCatalogProductController extends Controller
 {
@@ -30,7 +32,12 @@ class MCatalogProductController extends Controller
      */
     public function index()
     {
-        return view('cp.content.modules.catalog.products.index');
+        return view('cp.content.modules.catalog.products.index', [
+            'products' => MCatalogProductData::collect(
+                MCatalogProduct::query()->paginate(20),
+                PaginatedDataCollection::class
+            ),
+        ]);
     }
 
     /**
@@ -134,23 +141,79 @@ class MCatalogProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(MCatalogCategoryUpdateRequest $request, MCatalogCategory $category): RedirectResponse
+    public function update(MCatalogProductUpdateRequest $request, MCatalogProduct $product): RedirectResponse
     {
-        $validated = $request->validated();
+        DB::transaction(function () use ($request, $product) {
+            $validated = $request->validated();
 
-        $category->update([
-            'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
-            'description' => $validated['description'],
-            'parent_id' => $validated['parent_id'],
-        ]);
+            $product->update([
+                'name' => $validated['name'],
+                'slug' => Str::slug($validated['slug']),
+                'category_id' => $validated['category_id'],
+                'short_description' => $validated['short_description'],
+                'description' => $validated['description'],
+            ]);
 
-        $category->properties()->sync(array_merge(
-            $validated['inherited_properties'] ?? [],
-            $validated['added_properties'] ?? []
-        ));
+            if ($request->has('properties')) {
+                foreach ($request->input('properties') as $id => $value) {
+                    if (is_null($value)) {
+                        continue;
+                    }
 
-        return redirect()->route('cp.content.modules.catalog.category.show', $category->slug)->with('success', 'Category updated successfully.');
+                    $product->properties()->sync([$id => ['value' => $value]], false);
+                }
+            }
+
+            $offers = json_decode($request->input('offers'), true);
+
+            $currency = MCatalogCurrency::whereCode(CurrencyEnum::MDL)->first();
+            foreach ($offers as $offerData) {
+                $offer = $product->offers()->updateOrCreate(
+                    ['sku' => $offerData['sku']],
+                    ['quantity' => $offerData['stock']]
+                );
+
+                $offer->currencies()->syncWithoutDetaching([
+                    $currency->id => ['price' => $offerData['price']]
+                ]);
+
+                foreach ($offerData['properties'] as $property) {
+                    $offer->properties()->sync([
+                        $property['id'] => ['value' => $property['value']]
+                    ]);
+                }
+            }
+
+//            dd($request);
+
+            $metas = json_decode($request->input('media_meta', []), true);
+            $metas = array_merge(...$metas);
+
+            if ($request->hasFile('media')) {
+                foreach ($request->file('media') as $file) {
+                    $product
+                        ->addMedia($file)
+                        ->withCustomProperties($metas[$file->getClientOriginalName()])
+                        ->toMediaCollection('images');
+                }
+            }
+
+            $mediaDeletedIds = json_decode($request->input('media_deleted_ids', []));
+
+            foreach ($mediaDeletedIds as $mediaId) {
+                $product->deleteMedia($mediaId);
+            }
+
+            foreach ($product->images as $image) {
+                if (isset($metas[$image->file_name])) {
+                    $image->custom_properties = $metas[$image->file_name];
+                    $image->save();
+                }
+            }
+
+        });
+
+        return redirect()->route('cp.content.modules.catalog.products.edit', $product->slug)->with('success', 'Product updated successfully.');
     }
 
     /**

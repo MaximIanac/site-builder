@@ -7,11 +7,21 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
+use Spatie\Translatable\HasTranslations;
 
 class MCatalogCategory extends Model
 {
+    use HasTranslations;
+
     protected $table = 'm_catalog_categories';
     protected $guarded = [];
+
+    public array $translatable = ['name', 'description'];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function parent(): BelongsTo
     {
@@ -78,10 +88,5 @@ class MCatalogCategory extends Model
             'category_id',
             'property_id'
         );
-    }
-
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
     }
 }

@@ -9,9 +9,6 @@
     @endif
 >
     @csrf
-    @if(isset($method) && !in_array(strtoupper($method), ['GET', 'POST']))
-        @method($method)
-    @endif
 
     {{ $slot }}
 </form>

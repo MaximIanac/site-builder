@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->foreignId('category_id')->constrained('m_catalog_categories')->cascadeOnDelete();
 
-            $table->string('name');
+            $table->json('name');
             $table->string('slug')->unique();
-            $table->string('short_description')->nullable();
-            $table->text('description')->nullable();
+            $table->json('short_description')->nullable();
+            $table->json('description')->nullable();
             $table->string('status', 10)->default('draft')->comment('visible, draft');
 
             $table->timestamps();

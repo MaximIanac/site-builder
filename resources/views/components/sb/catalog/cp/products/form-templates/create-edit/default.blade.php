@@ -4,8 +4,6 @@
     'categories' => [],
 ])
 
-@dump($product)
-
 @php
     $productImages = $product?->images->map(function($m) {
          return [
@@ -81,9 +79,9 @@
                                 alt="Preview"
                                 class="rounded-lg border-2 shadow-xl w-full h-full object-cover"
                                 :class="{
-                                            'border-indigo-600': fileData.main,
-                                            'dark:border-gray-700 border-gray-300': !fileData.main
-                                        }"
+                                    'border-indigo-600': fileData.main,
+                                    'dark:border-gray-700 border-gray-300': !fileData.main
+                                }"
                                 x-show="fileData.preview"
                             >
                             <div x-show="fileData.main" class="absolute top-0 left-0 bg-indigo-600 text-white text-xs px-2 py-1 rounded">Main</div>
@@ -99,13 +97,15 @@
                     </template>
                 </div>
 
-                <input type="hidden" name="media_meta" :value="mediaImagesMeta">
+                <input type="hidden" name="media_meta" :value="mediaMeta">
+                <input type="hidden" name="media_deleted_ids" :value="deletedMediaIdsJson">
             </div>
         </x-sb.common.wrappers.cp-default>
 
         <!-- Product Offers -->
         <x-sb.catalog.cp.products.partials.product-offers-form-block
             :properties="$offer_properties"
+            :offers="$product?->offers"
         />
     </div>
 
@@ -219,7 +219,9 @@
         }
         function multipleFilesManager() {
             return {
-                mediaImages: @json($productImages),
+                mediaImages: @json($productImages ?? []),
+                uploadedFiles: [],
+                deletedMediaIds: [],
 
                 setMain(id) {
                     this.mediaImages = this.mediaImages.map(item => ({
@@ -230,28 +232,40 @@
 
                 addFile(fileData) {
                     this.mediaImages.push(fileData);
+                    this.uploadedFiles.push(fileData);
                     this.refreshFileInput();
                 },
 
                 removeFile(id) {
-                    this.mediaImages = this.mediaImages.filter(item => item.id !== id);
+                    if (typeof id !== 'string' && this.mediaImages.some(img => img.id === id)) {
+                        this.deletedMediaIds.push(id);
+                        this.mediaImages = this.mediaImages.filter(img => img.id !== id);
+
+                        return;
+                    }
+
+                    this.uploadedFiles = this.uploadedFiles.filter(item => item.id !== id);
+                    this.mediaImages = this.mediaImages.filter(img => img.id !== id);
                     this.refreshFileInput();
                 },
 
                 refreshFileInput() {
-                    const dataTransfer = new DataTransfer();
+                    const dt = new DataTransfer();
 
-                    this.mediaImages.forEach(item => dataTransfer.items.add(item.file));
+                    this.uploadedFiles.forEach(item => dt.items.add(item.file));
 
-                    if (this.$refs.mediaFileInput) this.$refs.mediaFileInput.files = dataTransfer.files;
+                    if (this.$refs.mediaFileInput) this.$refs.mediaFileInput.files = dt.files;
                 },
 
-                get mediaImagesMeta() {
+                get mediaMeta() {
                     return JSON.stringify(
                         this.mediaImages.map(img => ({
                             [img.file.name]: { main: img.main }
                         }))
                     );
+                },
+                get deletedMediaIdsJson() {
+                    return JSON.stringify(this.deletedMediaIds);
                 }
             }
         }

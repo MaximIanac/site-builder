@@ -7,14 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
+use Spatie\Translatable\HasTranslations;
 
 class MCatalogProductProperty extends Model
 {
+    use HasTranslations;
+
     protected $table = 'm_catalog_product_properties';
     protected $guarded = [];
     protected $casts = [
         'usage_type' => PropertyUsageTypeEnum::class
     ];
+    public array $translatable = ['name'];
 
     public function categories(): BelongsToMany
     {

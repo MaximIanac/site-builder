@@ -22,8 +22,8 @@ class MCatalogCategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255', 'regex:/^[a-zA-Z0-9\s\-]+$/'],
-            'description' => ['nullable', 'string'],
+            'name' => ['required', 'array', 'max:255'],
+            'description' => ['nullable', 'array'],
             'parent_id' => ['nullable', 'exists:m_catalog_categories,id'],
             'inherited_properties' => ['array'],
             'inherited_properties.*' => ['integer', 'exists:m_catalog_product_properties,id'],

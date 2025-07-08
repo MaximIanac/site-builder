@@ -1,5 +1,6 @@
 @props([
     'label' => 'Property',
+    'usageType' => 'category',
     'showMini' => false
 ])
 
@@ -7,20 +8,52 @@
     {{ $label }}
 
     @if(!$showMini)
-        <hr class="border-gray-700">
+{{--        <hr class="border-gray-700">--}}
     @endif
 
-    <div class="flex {{ $showMini ? 'flex-col gap-4' : 'justify-between gap-8' }}">
-        <div class="flex-1">
-            <x-sb.common.inputs.label for="property-name">Name</x-sb.common.inputs.label>
-            <span class="text-sm text-red-500 font-semibold" x-text="errors.name"></span>
-            <x-sb.common.inputs.text id="property-name" x-model="payload.name"/>
+    <div class="flex flex-col gap-4">
+        <div class="relative">
+            <div class="flex border-b border-gray-200 dark:border-gray-700">
+                @foreach(site_locales() as $locale)
+                    <button
+                        type="button"
+                        @click="activeLocale = '{{ $locale }}'"
+                        class="relative px-4 py-3 text-sm font-medium transition-all duration-300 text-gray-500 dark:text-gray-400"
+                        :class="{
+                            'text-indigo-600 dark:text-indigo-400': activeLocale === '{{ $locale }}',
+                            'hover:text-gray-700 dark:hover:text-gray-300': activeLocale !== '{{ $locale }}'
+                        }"
+                    >
+                        {{ strtoupper($locale) }}
+                        <span
+                            class="absolute inset-x-1 -bottom-px h-0.5 bg-indigo-500 transition-all duration-300"
+                            x-cloak
+                            :class="{
+                        'scale-x-100': activeLocale === '{{ $locale }}',
+                        'scale-x-0': activeLocale !== '{{ $locale }}'
+                    }"
+                        ></span>
+                    </button>
+                @endforeach
+            </div>
+            <div class="mt-4">
+                <template x-for="locale in locales" :key="locale">
+                    <div
+                        x-show="activeLocale === locale"
+                        x-cloak
+                    >
+                        <x-sb.common.inputs.label for="property-name">Name (<span x-text="locale"></span>)</x-sb.common.inputs.label>
+                        <span class="text-sm text-red-500 font-semibold" x-text="errors.name?.[locale]"></span>
+                        <x-sb.common.inputs.text id="property-name" x-model="payload.name[locale]"/>
+                    </div>
+                </template>
+            </div>
         </div>
 
-        <div class="flex-1">
+        <div x-show="errors.code">
             <x-sb.common.inputs.label for="property-code">Code</x-sb.common.inputs.label>
-            <span class="text-sm text-red-500 font-semibold" x-text="errors.code"></span>
-            <x-sb.common.inputs.text id="property-code" x-model="payload.code" class="text-gray-500 dark:text-gray-700 font-mono" placeholder="Auto-generated from name"/>
+            <span class="text-sm text-red-500 font-semibold" x-text="errors.code?.[0]"></span>
+            <x-sb.common.inputs.text id="property-code" x-model="payload.code" class="text-gray-500 dark:text-gray-600 font-mono" placeholder="Auto-generated from name"/>
         </div>
     </div>
 
@@ -35,11 +68,6 @@
                 <option value="text">Text</option>
             </x-sb.common.select.default>
         </div>
-
-        <div class="flex-1">
-            <x-sb.common.inputs.label for="property-required">Is required</x-sb.common.inputs.label>
-            <x-sb.common.inputs.checkbox id="property-required" x-model="payload.is_required"/>
-        </div>
     </div>
 
     <div class="flex justify-between gap-8">
@@ -49,7 +77,7 @@
             </x-secondary-button>
         @endif
 
-        <x-sb.common.buttons.default type="button" x-on:click="createProperty()" class="!text-[12px] !py-2 !px-3 w-full">
+        <x-sb.common.buttons.default type="button" x-on:click="createProperty()" class="!text-[12px] !py-2 !px-3 {{ $showMini ? 'w-full' : ''}}">
             <span x-show="!loading">Create</span>
             <span x-show="loading" class="flex items-center justify-center">
                 <x-sb.common.icons.spinner />
@@ -63,66 +91,24 @@
     function propertyManager() {
         return {
             errors: {},
+            locales: @json(site_locales()),
             payload: {
-                name: '',
-                code: '',
-                type: 'string',
-                is_required: false,
+                name: {},
+                code: null,
+                type: '',
+                usage_type: @json($usageType),
             },
             loading: false,
+            activeLocale: @json(app()->getLocale() ?? site_locales()[0] ?? 'en'),
 
             init() {
-                this.$watch('payload.name', value => {
-                    const isValid = /^[A-Za-z0-9\s\-]*$/.test(value);
-                    if (!isValid) {
-                        this.payload.name = value.replace(/[^A-Za-z0-9\s\-]/g, '');
-                    }
-
-                    this.payload.code = this.slugify(value);
-                });
-            },
-
-            validate() {
-                this.errors = {};
-                let isValid = true;
-
-                if (!this.payload.name.trim()) {
-                    this.errors.name = 'Name is required';
-                    isValid = false;
-                }
-
-                if (!this.payload.code.trim()) {
-                    this.errors.code = 'Code is required';
-                    isValid = false;
-                }
-
-                if (!this.payload.type) {
-                    this.errors.type = 'Type is required';
-                    isValid = false;
-                }
-
-                return isValid;
-            },
-
-            slugify(value) {
-                return value
-                    .toString()
-                    .normalize('NFD')
-                    .replace(/[\u0300-\u036f]/g, '')
-                    .replace(/\s+/g, '-')
-                    .replace(/[^\w\-]+/g, '')
-                    .replace(/\-\-+/g, '-')
-                    .replace(/^-+/, '')
-                    .replace(/-+$/, '')
-                    .toLowerCase();
+                this.payload.name = Object.fromEntries(
+                    this.locales.map(locale => [locale, ''])
+                );
             },
 
             async createProperty() {
                 if (this.loading) return;
-
-                if (!this.validate()) {
-                    return;
-                }
 
                 this.loading = true;
 
@@ -135,6 +121,8 @@
 
                 if (ajax.state.error) {
                     this.errors = ajax.state.error;
+                    this.payload.code = this.errors.code[1];
+                    console.log(this.errors)
                 }
 
                 if (ajax.state.data) {
@@ -143,15 +131,17 @@
                     this.resetForm();
                 }
 
+                if (this.payload.usage_type === 'category') {
+                    this.$dispatch('close');
+                }
+
                 this.loading = false;
             },
 
             resetForm() {
                 this.payload = {
-                    name: '',
-                    code: '',
+                    name: {},
                     type: 'string',
-                    is_required: false,
                 };
                 this.errors = {};
             }

@@ -19,7 +19,10 @@
             @include('layouts.cp.partials.header')
 
             <div class="flex flex-1 my-6 mx-1">
-                @include('layouts.cp.partials.nav')
+                <div class="w-64"></div>
+                <div class="fixed h-full w-64">
+                    @include('layouts.cp.partials.nav')
+                </div>
 
                 <main class="flex-1">
                     <div class="max-w-7xl mx-auto px-4 text-[var(--text-primary)]">

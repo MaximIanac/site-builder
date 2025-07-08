@@ -4,6 +4,8 @@
 
 @section('content')
     <x-sb.common.forms.default action="{{ route('cp.content.modules.catalog.products.update', $product->slug) }}" method="POST"  enctype="multipart/form-data">
+        @method('PUT')
+
         <!-- Header -->
         <div class="flex justify-end mb-8">
             <x-sb.common.buttons.default type="submit">Update Product</x-sb.common.buttons.default>

@@ -1,7 +1,7 @@
-@props(['properties' => []])
-
-<style>
-</style>
+@props([
+    'offers' => [],
+    'properties' => [],
+])
 
 <div
     x-data="offerManager()"
@@ -217,17 +217,39 @@
     <script>
         function offerManager() {
             return {
-                offers: @json(old('offers')) ? JSON.parse(@json(old('offers'))) : [],
+                offers: [],
                 errors: @json($errors->getMessages()),
                 allProperties: @json($properties),
                 searchInProperties: '',
                 chosenProperties: [],
 
                 init() {
-                    if (this.offers.length < 1) this.addOffer();
-                    else {
-                        this.chosenProperties = this.offers[0].properties.map(({ value, ...rest }) => rest);
+                    this.initOffers(@json(old('offers', $offers) ?? []));
+                },
+
+                initOffers(offers) {
+                    if (typeof offers === 'string') {
+                        offers = JSON.parse(offers);
                     }
+
+                    if (!offers || offers.length === 0) {
+                        return this.addOffer();
+                    }
+
+                    this.offers = offers.map(offer => ({
+                        sku: offer.sku,
+                        price: offer.prices?.[0]?.value ?? 0,
+                        stock: offer.quantity ?? 0,
+                        properties:
+                            offer.properties
+                            ?? offer.propertyValues?.map(({ value, property }) => ({
+                                ...property,
+                                value,
+                            }))
+                            ?? [],
+                    }));
+
+                    this.chosenProperties = this.offers[0]?.properties?.map(({ value, ...rest }) => rest) ?? [];
                 },
 
                 toggleProperty(property, checked) {

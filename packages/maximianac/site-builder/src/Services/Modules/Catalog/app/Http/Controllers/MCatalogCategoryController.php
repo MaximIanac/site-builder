@@ -54,11 +54,12 @@ class MCatalogCategoryController extends Controller
      */
     public function store(MCatalogCategoryStoreRequest $request): RedirectResponse
     {
+//        dd($request);
         $validated = $request->validated();
 
         $category = MCatalogCategory::create([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => Str::slug($validated['name']['en']),
             'description' => $validated['description'] ?? null,
             'parent_id' => $validated['parent_id'] ?? null,
         ]);
@@ -97,12 +98,12 @@ class MCatalogCategoryController extends Controller
 
         return view('cp.content.modules.catalog.categories.edit', [
             'categories' => MCatalogCategoryData::collect(
-                MCatalogCategory::where('name', '!=', $category->name)->get(),
+                MCatalogCategory::where('slug', '!=', $category->slug)->get(),
             ),
             'properties' => MCatalogProductPropertyData::collect(
                 MCatalogProductProperty::all()
             ),
-            'category' => MCatalogCategoryData::from($category),
+            'category' => MCatalogCategoryData::from($category, ['translatable' => $category->translations]),
         ]);
     }
 
@@ -115,9 +116,9 @@ class MCatalogCategoryController extends Controller
 
         $category->update([
             'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']),
+            'slug' => Str::slug($validated['name']['en']),
             'description' => $validated['description'],
-            'parent_id' => $validated['parent_id'],
+            'parent_id' => $validated['parent_id'] ?? null,
         ]);
 
         $category->properties()->sync(array_merge(

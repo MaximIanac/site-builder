@@ -14,9 +14,9 @@ return new class extends Migration
         Schema::create('m_catalog_categories', function (Blueprint $table) {
             $table->id();
             $table->foreignId('parent_id')->nullable()->constrained('m_catalog_categories')->nullOnDelete();
-            $table->string('name');
+            $table->json('name');
             $table->string('slug')->unique();
-            $table->text('description')->nullable();
+            $table->json('description')->nullable();
             $table->timestamps();
         });
     }

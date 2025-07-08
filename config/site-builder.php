@@ -83,5 +83,7 @@ return [
 
     'utils' => [
         'breadcrumbs' => \Maximianac\SiteBuilder\Services\Utils\Breadcrumb\Breadcrumbs::class
-    ]
+    ],
+
+    'locales' => ['en', 'ru'],
 ];

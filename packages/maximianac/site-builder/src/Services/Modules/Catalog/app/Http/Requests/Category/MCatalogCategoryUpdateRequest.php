@@ -22,17 +22,10 @@ class MCatalogCategoryUpdateRequest extends FormRequest
      */
     public function rules(): array
     {
-        $categoryId = $this->route('category');
 
         return [
-            'name' => [
-                'sometimes',
-                'string',
-                'max:255',
-                'regex:/^[a-zA-Z0-9\s\-]+$/',
-                Rule::unique('m_catalog_categories', 'name')->ignore($categoryId)
-            ],
-            'description' => 'nullable|string',
+            'name' => 'sometimes|array',
+            'description' => 'nullable|array',
             'parent_id' => 'nullable|exists:m_catalog_categories,id',
             'inherited_properties' => 'sometimes|array',
             'inherited_properties.*' => 'integer|exists:m_catalog_product_properties,id',

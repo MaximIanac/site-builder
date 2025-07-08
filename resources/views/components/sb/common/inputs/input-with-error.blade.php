@@ -31,7 +31,7 @@
         :name="$name"
         :value="old($name, $value)"
         type="{{ $type }}"
-        placehloder="{{ $placeholder }}"
+        placeholder="{{ $placeholder }}"
         class="{{$size}}"
     />
 </div>

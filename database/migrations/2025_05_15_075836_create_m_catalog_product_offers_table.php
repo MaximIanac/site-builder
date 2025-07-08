@@ -23,7 +23,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('offer_id')->constrained('m_catalog_product_offers')->cascadeOnDelete();
             $table->foreignId('property_id')->constrained('m_catalog_product_properties')->cascadeOnDelete();
-            $table->string('value');
+            $table->json('value');
         });
 
         Schema::create('currencies', function (Blueprint $table) {

@@ -4,58 +4,57 @@
     'category' => null,
 ])
 
-<div x-data="categoryManager()" class="space-y-6" @property-created.window="newPropertyCreated($event.detail)">
+<div
+    class="space-y-6"
+    x-data="categoryManager()"
+    @property:created.window="newPropertyCreated($event.detail)"
+>
     <div class="flex gap-8">
         <div class="flex-1 space-y-8">
             <!-- Base info -->
-            <x-sb.common.wrappers.cp-default>
+            <x-sb.common.wrappers.cp-default class="space-y-4">
                 <h4 class="text-base text-text-secondary">Base Information</h4>
                 <hr class="my-4 border-gray-300/50 dark:border-gray-600/50">
 
-                <div class="flex flex-col gap-4">
-                    <div class="flex justify-between gap-8">
-                        <div class="flex-1">
-                            <x-sb.common.inputs.input-with-error label="Name" name="name" value="{{ $category->name ?? '' }}" />
-                        </div>
-{{--                        <div class="flex-1">--}}
-{{--                            <x-sb.common.inputs.input-with-error label="Slug" name="slug" />--}}
-{{--                        </div>--}}
-                    </div>
+                <div class="w-full">
+                    <x-input-label for="parent_id">Parent Category</x-input-label>
+                    <div class="flex items-center gap-3">
+                        <x-select.default name="parent_id" class="w-full" x-model="selectedCategory" @change="fetchProperties">
+                            @foreach($categories as $cat)
+                                <option value="{{ $cat->id }}">{{ $cat->name }}</option>
+                            @endforeach
+                        </x-select.default>
 
-                    <div class="w-full pr-8">
-                        <x-input-label for="parent_id">Parent Category</x-input-label>
-                        <div class="flex items-center gap-3">
-                            <x-select.default name="parent_id" class="w-1/2" x-model="selectedCategory" @change="fetchProperties">
-                                @foreach($categories as $cat)
-                                    <option value="{{ $cat->id }}">{{ $cat->name }}</option>
-                                @endforeach
-                            </x-select.default>
-
-                            <button
-                                x-show="selectedCategory" x-cloak
-                                @click="deselectParentCategory()"
-                                type="button"
-                                class="bg-indigo-600 p-1 rounded-full"
-                            >
-                                <x-sb.common.icons.x-mark class="w-5 h-5" />
-                            </button>
-                        </div>
+                        <button
+                            x-show="selectedCategory" x-cloak
+                            @click="deselectParentCategory()"
+                            type="button"
+                            class="bg-indigo-600 p-1 rounded-full"
+                        >
+                            <x-sb.common.icons.x-mark class="w-5 h-5" />
+                        </button>
                     </div>
                 </div>
 
-                <div class="mt-4">
-                    <div class="flex gap-2 items-center">
-                        <x-input-label for="description">Description</x-input-label>
-                        @error('description')
-                            <x-sb.common.inputs.error :messages="$message" />
-                        @enderror
-                    </div>
-                    <textarea
-                        id="description"
-                        name="description"
-                        rows="2"
-                        class="w-full px-4 py-2 border-gray-300 dark:border-gray-700 dark:bg-gray-900 dark:text-gray-300 border rounded-md text-white focus:ring-2 focus:ring-indigo-600 focus:border-indigo-600 outline-none transition"
-                    >{{ $category->description ?? '' }}</textarea>
+                <div class="mb-8">
+                    <x-sb.common.panels.locale-tabs
+                        :fields="[
+                            [
+                                'type' => 'input',
+                                'name' => 'name',
+                                'label' => 'Name',
+                                'value' => fn($locale) => $category?->translatable['name'][$locale],
+                                'placeholder' => 'Enter category name'
+                            ],
+                            [
+                                'type' => 'textarea',
+                                'name' => 'description',
+                                'label' => 'Description',
+                                'value' => fn($locale) => $category?->translatable['description'][$locale],
+                                'rows' => 4
+                            ]
+                        ]"
+                    />
                 </div>
             </x-sb.common.wrappers.cp-default>
 
@@ -74,29 +73,28 @@
                         <!-- Inherited Properties Column -->
                         <div class="space-y-3">
                             <div class="flex items-center justify-between">
-                                    <span class="font-mono text-xs uppercase text-text-secondary">
-                                        Inherited Properties
-                                        <span x-show="inheritedProperties.length > 0"
-                                              class="ml-2 text-xs font-normal text-gray-500"
-                                              x-text="`(${inheritedProperties.length})`">
-                                        </span>
+                                <span class="font-mono text-xs uppercase text-text-secondary">
+                                    Inherited Properties
+                                    <span x-show="inheritedProperties.length > 0"
+                                          class="ml-2 text-xs font-normal text-gray-500"
+                                          x-text="`(${inheritedProperties.length})`">
                                     </span>
-                                <span x-show="inheritedProperties.length === 0"
-                                      class="text-xs italic text-gray-500">
-                                        No inherited properties
-                                    </span>
+                                </span>
+                                <span x-show="inheritedProperties.length === 0" class="text-xs italic text-gray-500">
+                                    No inherited properties
+                                </span>
                             </div>
 
                             <div class="flex flex-wrap gap-2 min-h-[40px] border border-dashed border-gray-200 dark:border-gray-700 rounded-lg p-2">
                                 <template x-for="property in inheritedProperties" :key="property.id">
                                     <x-sb.common.badges.default class="max-w-[200px] group">
-                                            <span class="truncate flex items-center">
-                                                <span x-show="property.is_required" class="text-red-400 mr-1">*</span>
-                                                <span x-text="property.name" class="font-medium"></span>
-                                                <span class="mx-1 text-gray-400">-</span>
-                                                <span x-text="property.code" class="lowercase font-mono text-gray-400 text-xs"></span>
-                                                <span class="ml-1 text-gray-400/70 text-[9px] font-mono" x-text="`(${property.type})`"></span>
-                                            </span>
+                                        <span class="truncate flex items-center">
+                                            <span x-show="property.is_required" class="text-red-400 mr-1">*</span>
+                                            <span x-text="property.name" class="font-medium"></span>
+                                            <span class="mx-1 text-gray-400">-</span>
+                                            <span x-text="property.code" class="lowercase font-mono text-gray-400 text-xs"></span>
+                                            <span class="ml-1 text-gray-400/70 text-[9px] font-mono" x-text="`(${property.type})`"></span>
+                                        </span>
                                     </x-sb.common.badges.default>
                                 </template>
                             </div>
@@ -148,7 +146,7 @@
                     </div>
                 </div>
             </x-sb.common.wrappers.cp-default>
-        </div>
+         </div>
 
         <!-- All Properties-->
         <x-sb.common.wrappers.cp-default class="w-1/4 min-w-[150px] lg:min-w-[300px] max-h-[700px] overflow-y-auto">
@@ -160,7 +158,6 @@
                     <x-input-label class="flex items-center gap-2 cursor-pointer">
                         <x-inputs.checkbox
                             x-bind:id="property.name"
-                            x-bind:name="property.code"
                             x-bind:checked="isAdded(property) || isInherited(property)"
                             x-bind:disabled="isInherited(property)"
                             @change="toggleProperty(property, $event.target.checked)"
@@ -203,6 +200,8 @@
                             .map(id => this.allProperties.find(p => p.id === Number(id)))
                             .filter(Boolean);
                     }
+                } else {
+                    this.addedProperties = @json(old('added_properties', $category?->properties) ?? []);
                 }
             },
 
