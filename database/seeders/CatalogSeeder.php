@@ -14,42 +14,67 @@ class CatalogSeeder extends Seeder
      */
     public function run(): void
     {
-        $mdlId = DB::table('currencies')->insertGetId([
-            'code' => 'MDL',
-            'symbol' => 'L',
-            'rate' => 1.000000,
-            'is_default' => true,
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+//        $mdlId = DB::table('currencies')->insertGetId([
+//            'code' => 'MDL',
+//            'symbol' => 'L',
+//            'rate' => 1.000000,
+//            'is_default' => true,
+//            'created_at' => now(),
+//            'updated_at' => now(),
+//        ]);
 
         $categories = [
             'Electronics' => [
+                'name' => [
+                    'en' => 'Electronics',
+                    'ru' => 'Электроника'
+                ],
+                'description' => [
+                    'en' => 'Category for electronics and gadgets',
+                    'ru' => 'Категория для электроники и гаджетов'
+                ],
                 'category_properties' => ['Brand', 'Model', 'Warranty'],
                 'offer_properties' => ['RAM', 'Storage', 'Color'],
                 'images' => ['electronics-1.jpg', 'electronics-2.jpg', 'electronics-3.jpg']
             ],
             'Furniture' => [
+                'name' => [
+                    'en' => 'Furniture',
+                    'ru' => 'Мебель'
+                ],
+                'description' => [
+                    'en' => 'Category for home and office furniture',
+                    'ru' => 'Категория для домашней и офисной мебели'
+                ],
                 'category_properties' => ['Material', 'Style', 'Dimensions'],
                 'offer_properties' => ['Color', 'Assembly Required'],
                 'images' => ['furniture-1.jpg', 'furniture-2.jpg', 'furniture-3.jpg']
             ],
             'Clothing' => [
+                'name' => [
+                    'en' => 'Clothing',
+                    'ru' => 'Одежда'
+                ],
+                'description' => [
+                    'en' => 'Category for clothing and accessories',
+                    'ru' => 'Категория для одежды и аксессуаров'
+                ],
                 'category_properties' => ['Gender', 'Season', 'Style'],
                 'offer_properties' => ['Size', 'Color', 'Fabric'],
                 'images' => ['clothing-1.jpg', 'clothing-2.jpg', 'clothing-3.jpg']
             ],
         ];
 
-        foreach ($categories as $catName => $props) {
-            // Создаем категорию
+        foreach ($categories as $catKey => $props) {
             $categoryId = DB::table('m_catalog_categories')->insertGetId([
-                'name' => $catName,
-                'slug' => Str::slug($catName),
-                'description' => "Category for $catName",
+                'name' => json_encode($props['name']), // JSON с переводами
+                'slug' => Str::slug($catKey),
+                'description' => json_encode($props['description']), // JSON с переводами
                 'created_at' => now(),
                 'updated_at' => now(),
             ]);
+
+            continue;
 
             // Свойства категории
             foreach ($props['category_properties'] as $attr) {

@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Inertia\Inertia;
 use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
 use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Module;
@@ -71,16 +72,16 @@ class ModulesController extends Controller
      */
     public function show(Request $request, string|null $slug = null)
     {
-        $module = Module::whereName($slug)->firstOrFail();
-
-        if (!view()->exists("cp.content.modules.{$module->name}.show")) {
-            abort(404, 'Template not found.');
-        }
-
-        return view("cp.content.modules.{$module->name}.show", [
-            'module' => $module,
-            'data' => app(config("site-builder.modules.{$module->name}.components.providers.data"))::handle($request),
-        ]);
+//        $module = Module::whereName($slug)->firstOrFail();
+//
+//        try {
+//            return Inertia::render("сp/сontent/Modules/{$module->name}/Show", [
+//                'module' => $module,
+//                'data' => app(config("site-builder.modules.{$module->name}.components.providers.data"))::handle($request),
+//            ]);
+//        } catch (\Throwable $e) {
+//            abort(404, 'Template not found.');
+//        }
     }
 
     /**

@@ -6,6 +6,7 @@ use Illuminate\Support\Facades\Route;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\api\MCatalogCategoryApiController;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\api\MCatalogPropertyApiController;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogCategoryController;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController;
 use Maximianac\SiteBuilder\Services\Modules\Core\Providers\BaseModuleServiceProvider;
 use stdClass;
@@ -24,6 +25,7 @@ class CatalogServiceProvider extends BaseModuleServiceProvider
 
     protected function mapRoutes(): void
     {
+        Route::get('/', [MCatalogController::class, 'index'])->name('index');
         Route::resource('categories', MCatalogCategoryController::class);
         Route::resource('products', MCatalogProductController::class);
     }

@@ -11,9 +11,9 @@ class InstallModuleCommand extends Command
 
     public function handle(): void
     {
-        $moduleName = ctype_lower($this->argument('module'));
+        $moduleName = strtolower($this->argument('module'));
 
-        if (!class_exists(config("site-builder.modules.$moduleName"))) {
+        if (!class_exists(config("site-builder.modules.$moduleName.class"))) {
             $this->error("Module {$moduleName} not found!");
             return;
         }
