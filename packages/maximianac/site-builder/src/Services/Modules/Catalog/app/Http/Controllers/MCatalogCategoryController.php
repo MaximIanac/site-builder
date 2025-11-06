@@ -7,6 +7,7 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Inertia\Inertia;
 use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogCategoryData;
@@ -39,7 +40,7 @@ class MCatalogCategoryController extends Controller
      */
     public function create()
     {
-        return view('cp.content.modules.catalog.categories.create', [
+        return Inertia::render('cp/modules/catalog/categories/Create', [
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::all(),
             ),
@@ -47,6 +48,15 @@ class MCatalogCategoryController extends Controller
                 MCatalogProductProperty::all()
             ),
         ]);
+
+//        return view('cp.content.modules.catalog.categories.create', [
+//            'categories' => MCatalogCategoryData::collect(
+//                MCatalogCategory::all(),
+//            ),
+//            'properties' => MCatalogProductPropertyData::collect(
+//                MCatalogProductProperty::all()
+//            ),
+//        ]);
     }
 
     /**

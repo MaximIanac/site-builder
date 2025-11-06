@@ -67,7 +67,7 @@ const submitCategory = () => {
 
             <div class="flex items-center justify-end">
                 <Link
-                    :href="route('cp.content.modules.catalog.categories.edit', category.slug)"
+                    :href="route('cp.modules.catalog.categories.edit', category.slug)"
                     class="p-1 text-accent-primary hover:text-accent-secondary"
                     :title="`Edit ${category.name}`"
                 >

@@ -60,12 +60,12 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
 
     protected function getRoutePrefix(): string
     {
-        return "cp/content/modules/" . strtolower($this->getModuleName());
+        return "cp/modules/" . strtolower($this->getModuleName());
     }
 
     protected function getRouteNamePrefix(): string
     {
-        return "cp.content.modules." . strtolower($this->getModuleName()) . ".";
+        return "cp.modules." . strtolower($this->getModuleName()) . ".";
     }
 
 //    protected function mapApiRoutes(): void

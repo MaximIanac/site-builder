@@ -1,11 +1,7 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { Link, router } from '@inertiajs/vue3'
-
-import { Trash2, SquarePen, ChevronRight } from 'lucide-vue-next';
-import CategoryChildrenList from "@/components/cp/modules/categories/CategoryChildrenList.vue";
-import {DropdownMenuTrigger} from "@/components/ui/dropdown-menu/index.js";
-import {Button} from "@/components/ui/button/index.js";
+import CategoryChildrenList from "@/components/cp/modules/catalog/categories/CategoryChildrenList.vue";
 
 const props = defineProps({
     category: {
@@ -20,19 +16,6 @@ const props = defineProps({
         default: () => 1
     }
 })
-
-const hasChildren = computed(() => {
-    return props.category.children && props.category.children.length > 0
-})
-
-const submitCategory = () => {
-    router.get(route().current(), {
-        chosen_category: props.category.slug
-    }, {
-        preserveState: true,
-        preserveScroll: true
-    })
-}
 
 </script>
 

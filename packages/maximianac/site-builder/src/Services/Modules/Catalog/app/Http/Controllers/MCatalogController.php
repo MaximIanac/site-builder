@@ -33,7 +33,7 @@ class MCatalogController extends Controller
      */
     public function index(Request $request)
     {
-        return Inertia::render("cp/content/modules/catalog/Index", [
+        return Inertia::render("cp/modules/catalog/Index", [
             'pageData' => app(config("site-builder.modules.catalog.components.providers.data"))::handle($request),
         ]);
     }
