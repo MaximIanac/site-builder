@@ -22,10 +22,12 @@ class MCatalogPropertyApiController extends Controller
     public function store(Request $request): JsonResource
     {
         $validated = $request->validate([
-            'name' => ['required', 'array'],
-            'code' => ['sometimes', 'nullable', 'string', 'max:20', 'alpha_dash'],
+            'code' => ['required', 'string', 'max:30', 'alpha_dash', 'unique:m_catalog_product_properties,code'],
             'type' => ['required', Rule::in(['string', 'text', 'integer', 'float', 'boolean'])],
             'usage_type' => ['required', new Enum(PropertyUsageTypeEnum::class)],
+            'locales' => ['required', 'array'],
+            'locales.name' => ['required', 'array'],
+            'locales.name.*' => ['required', 'string'],
         ]);
 
         $code = $validated['code'] ?? Str::slug(
@@ -43,7 +45,7 @@ class MCatalogPropertyApiController extends Controller
 
         return JsonResource::make(MCatalogProductPropertyData::from(
             MCatalogProductProperty::create([
-                'name' => json_encode($validated['name'], JSON_UNESCAPED_UNICODE),
+                'name' => $validated['locales']['name'],
                 'code' => $code,
                 'type' => $validated['type'],
                 'usage_type' => $validated['usage_type'],

@@ -1,7 +1,7 @@
 <script setup>
-import {Head, usePage} from '@inertiajs/vue3';
+import {Head} from '@inertiajs/vue3';
 import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
-import CreateCategoryForm from "@/components/cp/modules/catalog/categories/forms/create/CreateCategoryForm.vue";
+import CategoryCreateEditForm from "@/components/cp/modules/catalog/categories/forms/create/CategoryCreateEditForm.vue";
 
 const breadcrumbs = [
     {
@@ -25,7 +25,7 @@ const props = defineProps({
 
     <ControlPanelLayout :breadcrumbs="breadcrumbs">
         <div class="mx-auto space-y-8">
-            <CreateCategoryForm
+            <CategoryCreateEditForm
                 :categories="categories"
                 :properties="properties"
             />

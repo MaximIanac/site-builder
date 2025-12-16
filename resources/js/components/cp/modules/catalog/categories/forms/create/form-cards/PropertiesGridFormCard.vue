@@ -5,14 +5,28 @@ import {Badge} from "@/components/ui/badge/index.ts";
 import {Button} from "@/components/ui/button/index.ts";
 import PropertyCreateModalForm
     from "@/components/cp/modules/catalog/properties/forms/create/PropertyCreateModalForm.vue";
+import {PropertyUsageType} from "@/enums/PropertyUsageType.js";
 
-const inheritedProperties = ref([])
-const addedProperties = ref([])
+const props = defineProps({
+    addedProperties: {
+        type: Array,
+        default: () => [],
+    },
+    inheritedProperties: {
+        type: Array,
+        default: () => [],
+    },
+})
 
+
+const emits = defineEmits(['created:property'])
+
+const handleCreatedProperty = (property) => {
+    emits('created:property', property)
+}
 </script>
 
 <template>
-
     <Card>
         <CardHeader>
             <CardTitle class="text-base">Category Properties Configuration</CardTitle>
@@ -79,7 +93,10 @@ const addedProperties = ref([])
                     </CardContent>
                 </Card>
 
-                <PropertyCreateModalForm />
+                <PropertyCreateModalForm
+                    :usage_type="PropertyUsageType.CATEGORY"
+                    @created:property="handleCreatedProperty"
+                />
             </div>
         </CardContent>
     </Card>

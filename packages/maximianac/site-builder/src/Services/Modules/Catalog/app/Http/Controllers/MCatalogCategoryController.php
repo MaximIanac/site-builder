@@ -5,6 +5,7 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Inertia\Inertia;
@@ -64,20 +65,21 @@ class MCatalogCategoryController extends Controller
      */
     public function store(MCatalogCategoryStoreRequest $request): RedirectResponse
     {
-//        dd($request);
         $validated = $request->validated();
 
-        $category = MCatalogCategory::create([
-            'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']['en']),
-            'description' => $validated['description'] ?? null,
-            'parent_id' => $validated['parent_id'] ?? null,
-        ]);
+        DB::transaction(function () use ($validated) {
+            $category = MCatalogCategory::create([
+                'name' => $validated['locales']['name'],
+                'slug' => Str::slug($validated['locales']['name']['en']),
+                'description' => $validated['locales']['description'] ?? null,
+                'parent_id' => $validated['parent_id'] ?? null,
+            ]);
 
-        $category->properties()->sync(array_merge(
-            $validated['inherited_properties'] ?? [],
-            $validated['added_properties'] ?? []
-        ));
+            $category->properties()->sync(array_merge(
+                $validated['inherited_properties'] ?? [],
+                $validated['added_properties'] ?? []
+            ));
+        });
 
         return redirect()->back()->with('success', 'Category created successfully.');
     }
@@ -106,7 +108,7 @@ class MCatalogCategoryController extends Controller
     {
         $category->load(['parent', 'properties']);
 
-        return view('cp.content.modules.catalog.categories.edit', [
+        return Inertia::render('cp/modules/catalog/categories/Edit', [
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::where('slug', '!=', $category->slug)->get(),
             ),
@@ -124,19 +126,21 @@ class MCatalogCategoryController extends Controller
     {
         $validated = $request->validated();
 
-        $category->update([
-            'name' => $validated['name'],
-            'slug' => Str::slug($validated['name']['en']),
-            'description' => $validated['description'],
-            'parent_id' => $validated['parent_id'] ?? null,
-        ]);
+        DB::transaction(function () use ($category, $validated) {
+            $category->update([
+                'name' => $validated['locales']['name'],
+                'slug' => Str::slug($validated['locales']['name']['en']),
+                'description' => $validated['locales']['description'] ?? null,
+                'parent_id' => $validated['parent_id'] ?? null,
+            ]);
 
-        $category->properties()->sync(array_merge(
-            $validated['inherited_properties'] ?? [],
-            $validated['added_properties'] ?? []
-        ));
+            $category->properties()->sync(array_merge(
+                $validated['inherited_properties'] ?? [],
+                $validated['added_properties'] ?? []
+            ));
+        });
 
-        return redirect()->route('cp.content.modules.catalog.categories.show', $category->slug)->with('success', 'Category updated successfully.');
+        return redirect()->route('cp.modules.catalog.categories.edit', $category->slug);
     }
 
     /**

@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import ControlPanelSidebarLayout from "@/layouts/cp/partials/ControlPanelSidebarLayout.vue";
+import { Toaster } from 'vue-sonner'
+import 'vue-sonner/style.css'
 
 defineProps({
     breadcrumbs: {
@@ -11,6 +13,7 @@ defineProps({
 
 <template>
     <ControlPanelSidebarLayout :breadcrumbs="breadcrumbs">
+        <Toaster :expand="true" richColors />
         <div class="p-4 h-full">
             <slot />
         </div>

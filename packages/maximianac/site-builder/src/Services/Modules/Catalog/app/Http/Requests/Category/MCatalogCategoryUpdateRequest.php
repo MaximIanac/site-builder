@@ -24,9 +24,14 @@ class MCatalogCategoryUpdateRequest extends FormRequest
     {
 
         return [
-            'name' => 'sometimes|array',
-            'description' => 'nullable|array',
-            'parent_id' => 'nullable|exists:m_catalog_categories,id',
+            'parent_id' => ['nullable', 'exists:m_catalog_categories,id'],
+
+            'locales' => ['required', 'array'],
+            'locales.name' => ['required', 'array'],
+            'locales.name.*' => ['required', 'string', 'unique:m_catalog_categories,name'],
+            'locales.description' => ['nullable', 'array'],
+            'locales.description.*' => ['nullable', 'string'],
+
             'inherited_properties' => 'sometimes|array',
             'inherited_properties.*' => 'integer|exists:m_catalog_product_properties,id',
             'added_properties' => 'sometimes|array',

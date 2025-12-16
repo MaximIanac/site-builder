@@ -1,10 +1,12 @@
 import axios from 'axios';
+import {reactive} from "vue";
 
 export default function useAjax() {
-    const state = {
-        error: null,
+    const state = reactive({
+        errors: null,
         data: null,
-    };
+        loading: false,
+    });
 
     const instance = axios.create({
         headers: {
@@ -41,7 +43,7 @@ export default function useAjax() {
         headers = {}
     ) => {
         state.loading = true;
-        state.error = null;
+        state.errors = null;
         state.data = null;
 
         try {
@@ -60,7 +62,9 @@ export default function useAjax() {
 
             return response;
         } catch (error) {
-            state.error = handleError(error);
+            state.errors = handleError(error);
+        } finally {
+            state.loading = false
         }
     }
 

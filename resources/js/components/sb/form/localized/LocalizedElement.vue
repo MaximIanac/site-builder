@@ -1,8 +1,8 @@
 <script setup>
 import {computed} from "vue";
-import {Input} from "@/components/ui/input";
-import {Label} from "@/components/ui/label";
-import { Textarea } from "@/components/ui/textarea"
+import {Input} from "@/components/ui/input/index.ts";
+import {Label} from "@/components/ui/label/index.ts";
+import { Textarea } from "@/components/ui/textarea/index.ts"
 
 const props = defineProps({
     field: Object,

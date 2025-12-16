@@ -14,6 +14,7 @@ import {computed, ref} from "vue";
 import {Link} from "@inertiajs/vue3";
 import {Checkbox} from "@/components/ui/checkbox/index.js";
 import {useCategorySelection} from "@/composables/modules/useCategorySelection.js";
+import { edit } from "@/routes/cp/modules/catalog/categories/";
 
 const props = defineProps({
     category: Object
@@ -85,6 +86,15 @@ const handleCheckboxChange = (category, event) => {
 
                 {{ category.name }}
 
+                <Link
+                    @click.stop
+                    :href="edit(category.slug)"
+                    :title="`Edit ${category.name}`"
+                    class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
+                >
+                    <SquarePen class="w-4 h-4" />
+                </Link>
+
                 <ChevronRight
                     class="w-5 h-5 transform transition-transform duration-200"
                     :class="{'rotate-90': open }"
@@ -127,43 +137,51 @@ const handleCheckboxChange = (category, event) => {
 
                         <span>{{ child.name }}</span>
                     </div>
+
+                    <Link
+                        @click.stop
+                        :href="edit(child.slug)"
+                        :title="`Edit ${child.name}`"
+                        class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
+                    >
+                        <SquarePen class="w-4 h-4" />
+                    </Link>
+
                     <ChevronRight v-if="child.children && child.children.length > 0" class="w-4 h-4" />
                 </DropdownMenuItem>
 
-                <DropdownMenuSeparator v-if="currentChildren.length > 0" />
+<!--                <DropdownMenuItem @select.prevent class="p-0 cursor-default focus:bg-transparent">-->
+<!--                    <div class="flex flex-col items-center justify-between w-full py-2 gap-4">-->
+<!--                        <div class="flex items-center gap-2">-->
+<!--                            <Settings class="w-4 h-4 text-gray-500" />-->
+<!--                            <span class="text-sm font-medium text-gray-400">-->
+<!--                                Actions for:-->
+<!--                            </span>-->
+<!--                            <span class="text-sm text-gray-300 font-semibold truncate max-w-[120px]">-->
+<!--                                {{ chosenCategoryToAction.name }}-->
+<!--                            </span>-->
+<!--                        </div>-->
 
-                <DropdownMenuItem @select.prevent class="p-0 cursor-default focus:bg-transparent">
-                    <div class="flex flex-col items-center justify-between w-full py-2 gap-4">
-                        <div class="flex items-center gap-2">
-                            <Settings class="w-4 h-4 text-gray-500" />
-                            <span class="text-sm font-medium text-gray-400">
-                                Actions for:
-                            </span>
-                            <span class="text-sm text-gray-300 font-semibold truncate max-w-[120px]">
-                                {{ chosenCategoryToAction.name }}
-                            </span>
-                        </div>
-
-                        <div class="flex items-center justify-around gap-1 w-full">
-                            <Button as-child :variant="'outline'">
-                                <Link
-                                    :href="route('cp.modules.catalog.categories.edit', chosenCategoryToAction.slug)"
-                                    class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
-                                    :title="`Edit ${chosenCategoryToAction.name}`"
-                                >
-                                    <SquarePen class="w-4 h-4" /> Edit
-                                </Link>
-                            </Button>
-                            <Button
-                                :variant="'ghost'"
-                                class="cursor-pointer text-red-600 hover:text-red-500"
-                                :title="`Delete ${chosenCategoryToAction.name}`"
-                            >
-                                <Trash2 class="w-4 h-4" /> Delete
-                            </Button>
-                        </div>
-                    </div>
-                </DropdownMenuItem>
+<!--                        <div class="flex items-center justify-around gap-1 w-full">-->
+<!--                            <Button as-child :variant="'outline'">-->
+<!--                                <Link-->
+<!--                                    :href="route('cp.modules.catalog.categories.edit', chosenCategoryToAction.slug)"-->
+<!--                                    class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"-->
+<!--                                    :title="`Edit ${chosenCategoryToAction.name}`"-->
+<!--                                >-->
+<!--                                    <SquarePen class="w-4 h-4" /> Edit-->
+<!--                                </Link>-->
+<!--                            </Button>-->
+<!--                            <Button-->
+<!--                                :variant="'ghost'"-->
+<!--                                class="cursor-pointer text-red-600 hover:text-red-500"-->
+<!--                                :title="`Delete ${chosenCategoryToAction.name}`"-->
+<!--                            >-->
+<!--                                <Trash2 class="w-4 h-4" /> Delete-->
+<!--                            </Button>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </DropdownMenuItem>-->
             </DropdownMenuGroup>
         </DropdownMenuContent>
     </DropdownMenu>

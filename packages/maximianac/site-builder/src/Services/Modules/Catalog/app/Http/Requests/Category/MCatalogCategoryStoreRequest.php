@@ -3,6 +3,8 @@
 namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
 
 class MCatalogCategoryStoreRequest extends FormRequest
 {
@@ -22,12 +24,17 @@ class MCatalogCategoryStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'array', 'max:255'],
-            'description' => ['nullable', 'array'],
             'parent_id' => ['nullable', 'exists:m_catalog_categories,id'],
-            'inherited_properties' => ['array'],
+
+            'locales' => ['required', 'array'],
+            'locales.name' => ['required', 'array'],
+            'locales.name.*' => ['required', 'string', 'unique:m_catalog_categories,name'],
+            'locales.description' => ['nullable', 'array'],
+            'locales.description.*' => ['nullable', 'string'],
+
+            'inherited_properties' => ['array', 'nullable', 'sometimes'],
             'inherited_properties.*' => ['integer', 'exists:m_catalog_product_properties,id'],
-            'added_properties' => ['array'],
+            'added_properties' => ['array', 'nullable', 'sometimes'],
             'added_properties.*' => ['integer', 'exists:m_catalog_product_properties,id'],
         ];
     }
