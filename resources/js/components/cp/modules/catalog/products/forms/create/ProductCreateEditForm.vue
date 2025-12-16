@@ -1,7 +1,14 @@
 <script setup>
 import {Button} from "@/components/ui/button/index.js";
 import {Field} from "@/components/ui/field/index.js";
+import ProductBaseInfoFormCard from "@/components/cp/modules/catalog/products/forms/create/form-cards/ProductBaseInfoFormCard.vue";
+import FilePondFile from "@/components/sb/files/FilePondFile.vue";
 
+const props = defineProps({
+    product: Object,
+    categories: Array,
+    offer_properties: Array,
+})
 </script>
 
 <template>
@@ -15,6 +22,19 @@ import {Field} from "@/components/ui/field/index.js";
                     <span>Create</span>
                 </Button>
             </Field>
+
+            <div class="flex gap-8">
+                <div class="flex-1 space-y-8">
+                    <ProductBaseInfoFormCard
+                        :categories="categories"
+                        :properties="offer_properties"
+                    />
+
+                    <FilePondFile />
+
+                </div>
+            </div>
+
         </div>
     </form>
 </template>

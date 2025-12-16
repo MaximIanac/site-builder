@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:33
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:34
  * @route '/cp/modules/catalog/products'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -79,7 +79,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     index.form = indexForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -94,7 +94,7 @@ create.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -103,7 +103,7 @@ create.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -112,7 +112,7 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -122,7 +122,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -132,7 +132,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -141,7 +141,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::create
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:46
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:47
  * @route '/cp/modules/catalog/products/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -157,7 +157,7 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     create.form = createForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::store
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:60
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:69
  * @route '/cp/modules/catalog/products'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -172,7 +172,7 @@ store.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::store
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:60
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:69
  * @route '/cp/modules/catalog/products'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -181,7 +181,7 @@ store.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::store
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:60
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:69
  * @route '/cp/modules/catalog/products'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -191,7 +191,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::store
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:60
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:69
  * @route '/cp/modules/catalog/products'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -201,7 +201,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::store
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:60
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:69
  * @route '/cp/modules/catalog/products'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -212,7 +212,7 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     store.form = storeForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
 export const show = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -227,7 +227,7 @@ show.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
 show.url = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -260,7 +260,7 @@ show.url = (args: { product: string | { slug: string } } | [product: string | { 
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
 show.get = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -269,7 +269,7 @@ show.get = (args: { product: string | { slug: string } } | [product: string | { 
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
 show.head = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -279,7 +279,7 @@ show.head = (args: { product: string | { slug: string } } | [product: string | {
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
     const showForm = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -289,7 +289,7 @@ show.head = (args: { product: string | { slug: string } } | [product: string | {
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
         showForm.get = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -298,7 +298,7 @@ show.head = (args: { product: string | { slug: string } } | [product: string | {
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::show
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:119
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:128
  * @route '/cp/modules/catalog/products/{product}'
  */
         showForm.head = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -314,7 +314,7 @@ show.head = (args: { product: string | { slug: string } } | [product: string | {
     show.form = showForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
 export const edit = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -329,7 +329,7 @@ edit.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
 edit.url = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -362,7 +362,7 @@ edit.url = (args: { product: string | { slug: string } } | [product: string | { 
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
 edit.get = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -371,7 +371,7 @@ edit.get = (args: { product: string | { slug: string } } | [product: string | { 
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
 edit.head = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -381,7 +381,7 @@ edit.head = (args: { product: string | { slug: string } } | [product: string | {
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
     const editForm = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -391,7 +391,7 @@ edit.head = (args: { product: string | { slug: string } } | [product: string | {
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
         editForm.get = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -400,7 +400,7 @@ edit.head = (args: { product: string | { slug: string } } | [product: string | {
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::edit
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:130
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:139
  * @route '/cp/modules/catalog/products/{product}/edit'
  */
         editForm.head = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -416,7 +416,7 @@ edit.head = (args: { product: string | { slug: string } } | [product: string | {
     edit.form = editForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
 export const update = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -431,7 +431,7 @@ update.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
 update.url = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
@@ -464,7 +464,7 @@ update.url = (args: { product: string | { slug: string } } | [product: string | 
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
 update.put = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
@@ -473,7 +473,7 @@ update.put = (args: { product: string | { slug: string } } | [product: string | 
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
 update.patch = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
@@ -483,7 +483,7 @@ update.patch = (args: { product: string | { slug: string } } | [product: string 
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
     const updateForm = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -498,7 +498,7 @@ update.patch = (args: { product: string | { slug: string } } | [product: string 
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
         updateForm.put = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -512,7 +512,7 @@ update.patch = (args: { product: string | { slug: string } } | [product: string 
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::update
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:144
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:153
  * @route '/cp/modules/catalog/products/{product}'
  */
         updateForm.patch = (args: { product: string | { slug: string } } | [product: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -528,7 +528,7 @@ update.patch = (args: { product: string | { slug: string } } | [product: string 
     update.form = updateForm
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::destroy
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:222
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:231
  * @route '/cp/modules/catalog/products/{product}'
  */
 export const destroy = (args: { product: string | number } | [product: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -543,7 +543,7 @@ destroy.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::destroy
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:222
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:231
  * @route '/cp/modules/catalog/products/{product}'
  */
 destroy.url = (args: { product: string | number } | [product: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -571,7 +571,7 @@ destroy.url = (args: { product: string | number } | [product: string | number ] 
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::destroy
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:222
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:231
  * @route '/cp/modules/catalog/products/{product}'
  */
 destroy.delete = (args: { product: string | number } | [product: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -581,7 +581,7 @@ destroy.delete = (args: { product: string | number } | [product: string | number
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::destroy
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:222
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:231
  * @route '/cp/modules/catalog/products/{product}'
  */
     const destroyForm = (args: { product: string | number } | [product: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -596,7 +596,7 @@ destroy.delete = (args: { product: string | number } | [product: string | number
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogProductController::destroy
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:222
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogProductController.php:231
  * @route '/cp/modules/catalog/products/{product}'
  */
         destroyForm.delete = (args: { product: string | number } | [product: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

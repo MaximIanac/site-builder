@@ -1,7 +1,7 @@
 <script setup>
 import {Head, usePage} from '@inertiajs/vue3';
 import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
-import CategoryList from "@/components/cp/modules/catalog/categories/CategoryList.vue";
+import CategoryList from "@/components/cp/modules/catalog/categories/blocks/filters/CategoryList.vue";
 
 const breadcrumbs = [
     {

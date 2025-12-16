@@ -39,6 +39,8 @@
         "vee-validate": "^4.15.1",
         "vite": "^7.0.4",
         "vue": "^3.5.13",
+        "vue-file-upload": "^0.1.12",
+        "vue-filepond": "^7.0.4",
         "vue-sonner": "^2.0.9",
         "ziggy-js": "^2.4.2",
         "zod": "^3.25.76"

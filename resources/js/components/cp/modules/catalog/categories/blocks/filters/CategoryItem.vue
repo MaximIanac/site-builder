@@ -1,7 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
-import { Link, router } from '@inertiajs/vue3'
-import CategoryChildrenList from "@/components/cp/modules/catalog/categories/CategoryChildrenList.vue";
+import CategoryChildrenList from "@/components/cp/modules/catalog/categories/blocks/filters/CategoryChildrenList.vue";
 
 const props = defineProps({
     category: {

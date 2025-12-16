@@ -2,8 +2,8 @@
 import {
     Card,
     CardContent,
-} from '@/components/ui/card/index.js'
-import CategoryItem from "@/components/cp/modules/catalog/categories/CategoryItem.vue";
+} from '@/components/ui/card/index.ts'
+import CategoryItem from "@/components/cp/modules/catalog/categories/blocks/filters/CategoryItem.vue";
 import {Button} from "@/components/ui/button/index.ts";
 import {router, Link} from "@inertiajs/vue3";
 import { SquarePlus } from 'lucide-vue-next';

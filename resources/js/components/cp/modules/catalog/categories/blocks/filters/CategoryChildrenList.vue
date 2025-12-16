@@ -1,5 +1,5 @@
 <script setup>
-import { Button } from "@/components/ui/button/index.js"
+import { Button } from "@/components/ui/button/index.ts"
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -8,13 +8,14 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu/index.js"
-import {ChevronRight, ChevronLeft, Trash2, SquarePen, Settings} from "lucide-vue-next";
+} from "@/components/ui/dropdown-menu/index.ts"
+import {ChevronRight, ChevronLeft, SquarePen} from "lucide-vue-next";
 import {computed, ref} from "vue";
 import {Link} from "@inertiajs/vue3";
-import {Checkbox} from "@/components/ui/checkbox/index.js";
+import {Checkbox} from "@/components/ui/checkbox/index.ts";
 import {useCategorySelection} from "@/composables/modules/useCategorySelection.js";
-import { edit } from "@/routes/cp/modules/catalog/categories/";
+import { edit } from "@/routes/cp/modules/catalog/categories/index.ts";
+import CategoryItemTrigger from "@/components/cp/modules/catalog/categories/blocks/filters/CategoryItemTrigger.vue";
 
 const props = defineProps({
     category: Object
@@ -61,7 +62,6 @@ const goBack = () => {
 }
 
 const {
-    checkedCategories,
     toggleCategory,
     getCheckboxState,
 } = useCategorySelection()
@@ -73,33 +73,14 @@ const handleCheckboxChange = (category, event) => {
 </script>
 
 <template>
-    <DropdownMenu v-model:open="open">
+    <DropdownMenu v-if="category.children.length" v-model:open="open">
         <DropdownMenuTrigger as-child>
-            <Button variant="outline" class="flex gap-2 items-center text-sm font-medium truncate py-1 cursor-pointer">
-                <div @click.stop class="flex items-center">
-                    <Checkbox
-                        class="cursor-pointer"
-                        :model-value="getCheckboxState(category)"
-                        @click="handleCheckboxChange(category, $event)"
-                    />
-                </div>
-
-                {{ category.name }}
-
-                <Link
-                    @click.stop
-                    :href="edit(category.slug)"
-                    :title="`Edit ${category.name}`"
-                    class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
-                >
-                    <SquarePen class="w-4 h-4" />
-                </Link>
-
-                <ChevronRight
-                    class="w-5 h-5 transform transition-transform duration-200"
-                    :class="{'rotate-90': open }"
-                />
-            </Button>
+            <CategoryItemTrigger
+                :open="open"
+                :category="category"
+                :model-value="getCheckboxState(category)"
+                @change="handleCheckboxChange(category, $event)"
+            />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="start" class="w-[300px]">
             <DropdownMenuLabel v-if="chosenCategory" class="flex justify-between items-center">
@@ -138,16 +119,18 @@ const handleCheckboxChange = (category, event) => {
                         <span>{{ child.name }}</span>
                     </div>
 
-                    <Link
-                        @click.stop
-                        :href="edit(child.slug)"
-                        :title="`Edit ${child.name}`"
-                        class="p-2 text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
-                    >
-                        <SquarePen class="w-4 h-4" />
-                    </Link>
+                    <div class="flex gap-2 items-center">
+                        <Link
+                            @click.stop
+                            :href="edit(child.slug)"
+                            :title="`Edit ${child.name}`"
+                            class="text-blue-500 hover:text-blue-400 rounded-lg transition-all duration-200"
+                        >
+                            <SquarePen class="w-4 h-4" />
+                        </Link>
 
-                    <ChevronRight v-if="child.children && child.children.length > 0" class="w-4 h-4" />
+                        <ChevronRight v-if="child.children && child.children.length > 0" class="w-4 h-4" />
+                    </div>
                 </DropdownMenuItem>
 
 <!--                <DropdownMenuItem @select.prevent class="p-0 cursor-default focus:bg-transparent">-->
@@ -185,6 +168,16 @@ const handleCheckboxChange = (category, event) => {
             </DropdownMenuGroup>
         </DropdownMenuContent>
     </DropdownMenu>
+
+    <CategoryItemTrigger
+        v-else
+        :open="open"
+        :category="category"
+        :model-value="getCheckboxState(category)"
+        @change="handleCheckboxChange(category, $event)"
+        :show-arrow="false"
+    />
+
 </template>
 
 <style>
