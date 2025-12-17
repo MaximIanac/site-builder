@@ -33,7 +33,7 @@ const selectedOption = computed(() => {
         <PopoverTrigger as-child>
             <Button
                 variant="outline"
-                class="w-auto"
+                class="flex flex-grow"
             >
                 <template v-if="selectedOption">
                     {{ selectedOption?.label }}

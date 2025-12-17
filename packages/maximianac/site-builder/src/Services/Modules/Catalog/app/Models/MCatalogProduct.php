@@ -19,7 +19,7 @@ class MCatalogProduct extends Model implements HasMedia
     protected $table = 'm_catalog_products';
     protected $guarded = [];
     protected $with = [
-        'media', 'propertyValues', 'category', 'offers',
+        'media', 'propertyValues', 'category', 'variant',
     ];
     public array $translatable = ['name', 'short_description', 'description'];
 

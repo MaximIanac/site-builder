@@ -2,6 +2,7 @@
 import {onBeforeUnmount, ref, watch} from 'vue'
 import {Button} from "@/components/ui/button/index.js";
 import {Badge} from "@/components/ui/badge/index.js";
+import { Image, Eye, Star, Trash2, X, ArrowBigLeft, ArrowBigRight, Plus } from 'lucide-vue-next';
 
 const props = defineProps({
     modelValue: {
@@ -14,7 +15,7 @@ const props = defineProps({
     },
     maxFileSize: {
         type: Number,
-        default: 5 * 1024 * 1024 // 5MB
+        default: 25 * 1024 * 1024 // 5MB
     },
     acceptedTypes: {
         type: String,
@@ -22,7 +23,7 @@ const props = defineProps({
     },
     helpText: {
         type: String,
-        default: 'Первое фото будет главным в галерее'
+        default: 'First image will be the main'
     },
     required: {
         type: Boolean,
@@ -52,26 +53,23 @@ const formatFileSize = (bytes) => {
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i]
 }
 
-// Триггер выбора файла
 const triggerFileInput = () => {
     fileInput.value?.click()
 }
 
-// Обработка выбора файлов
 const handleFileSelect = (event) => {
     const selectedFiles = Array.from(event.target.files)
     addFiles(selectedFiles)
-    event.target.value = '' // Сброс input
+    event.target.value = ''
 }
 
-// Добавление файлов
 const addFiles = (fileList) => {
     const remainingSlots = props.maxFiles - files.value.length
     const filesToAdd = fileList.slice(0, remainingSlots)
 
     filesToAdd.forEach(file => {
         if (file.size > props.maxFileSize) {
-            alert(`Файл ${file.name} превышает максимальный размер ${formatFileSize(props.maxFileSize)}`)
+            alert(`File ${file.name} exceeds maximum size ${formatFileSize(props.maxFileSize)}`)
             return
         }
 
@@ -110,14 +108,12 @@ const handleDrop = (event) => {
     addFiles(droppedFiles)
 }
 
-// Удаление файла
 const removeFile = (index) => {
     URL.revokeObjectURL(files.value[index].preview)
     files.value.splice(index, 1)
     emitUpdate()
 }
 
-// Очистка всех файлов
 const clearAll = () => {
     files.value.forEach(file => {
         URL.revokeObjectURL(file.preview)
@@ -126,14 +122,12 @@ const clearAll = () => {
     emitUpdate()
 }
 
-// Сделать главным
 const makePrimary = (index) => {
     const file = files.value.splice(index, 1)[0]
     files.value.unshift(file)
     emitUpdate()
 }
 
-// Просмотр изображения
 const viewImage = (index) => {
     viewingIndex.value = index
 }
@@ -142,7 +136,6 @@ const closeViewer = () => {
     viewingIndex.value = null
 }
 
-// Drag & Drop для сортировки
 const handleDragStart = (index) => {
     dragIndex.value = index
 }
@@ -157,13 +150,11 @@ const handleDropReorder = (dropIndex) => {
     emitUpdate()
 }
 
-// Эмит обновления
 const emitUpdate = () => {
     const fileObjects = files.value.map(f => f.file)
     emit('update:modelValue', fileObjects)
 }
 
-// Очистка при размонтировании
 onBeforeUnmount(() => {
     files.value.forEach(file => {
         URL.revokeObjectURL(file.preview)
@@ -185,16 +176,16 @@ onBeforeUnmount(() => {
         <!-- GALLERY HEADER -->
         <div class="flex justify-between">
             <div class="space-y-1.5">
-                <label class="text-sm font-medium leading-none">
+                <label class="text-base font-semibold leading-none">
                     Gallery
                 </label>
                 <p v-if="helpText" class="text-sm text-muted-foreground">{{ helpText }}</p>
             </div>
 
             <div class="flex items-end gap-8">
-                    <span class="text-xs text-muted-foreground">
-                      Uploaded: {{ files.length }}{{ maxFiles ? ` / ${maxFiles}` : '' }}
-                    </span>
+                <span class="text-xs text-muted-foreground">
+                  Uploaded: {{ files.length }}{{ maxFiles ? ` / ${maxFiles}` : '' }}
+                </span>
                 <div class="space-x-2">
                     <Button
                         type="button"
@@ -203,7 +194,7 @@ onBeforeUnmount(() => {
                         @click.stop="triggerFileInput"
 
                     >
-                        + add
+                        <Plus /> add
                     </Button>
                     <Button
                         type="button"
@@ -231,9 +222,7 @@ onBeforeUnmount(() => {
         >
             <div class="max-w-xs mx-auto space-y-4">
                 <div class="flex justify-center">
-                    <svg class="h-12 w-12 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                    </svg>
+                    <Image class="size-8" />
                 </div>
                 <div>
                     <p class="text-sm font-medium mb-1">Add photo</p>
@@ -256,7 +245,7 @@ onBeforeUnmount(() => {
                     <img
                         :src="file.preview"
                         :alt="file.name"
-                        class="h-40 w-auto object-cover transition-transform group-hover:scale-105"
+                        class="h-40 w-full object-cover transition-transform group-hover:scale-105"
                     />
 
                     <div
@@ -267,41 +256,34 @@ onBeforeUnmount(() => {
                         class="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100 cursor-move"
                     >
                         <div class="flex h-full items-center justify-center space-x-2">
-                            <!-- Посмотреть -->
-                            <button
+                            <Button
                                 @click.stop="viewImage(index)"
                                 type="button"
-                                class="rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
+                                class="rounded-full !px-2"
+                                variant="outline"
                             >
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
-                                </svg>
-                            </button>
+                                <Eye class="size-5"/>
+                            </Button>
 
-                            <!-- Сделать главным -->
-                            <button
+                            <Button
                                 v-if="index !== 0"
                                 @click.stop="makePrimary(index)"
                                 type="button"
-                                class="rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
-                                title="Сделать главным"
+                                class="rounded-full !px-2"
+                                variant="outline"
+                                title="Make main"
                             >
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                </svg>
-                            </button>
+                                <Star class="size-5" />
+                            </Button>
 
-                            <!-- Удалить -->
-                            <button
+                            <Button
                                 @click.stop="removeFile(index)"
                                 type="button"
-                                class="rounded-full bg-destructive/80 p-2 text-white hover:bg-destructive"
+                                class="rounded-full !px-2"
+                                variant="destructive"
                             >
-                                <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                                </svg>
-                            </button>
+                                <Trash2 class="size-5" />
+                            </Button>
                         </div>
                     </div>
 
@@ -319,39 +301,39 @@ onBeforeUnmount(() => {
             @click="closeViewer"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
         >
-            <div @click.stop class="relative max-h-[80vh] max-w-[80vw]">
-                <button
+            <div @click.stop class="">
+                <Button
                     @click="closeViewer"
-                    class="absolute -right-15 top-0 rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
+                    type="button"
+                    variant="secondary"
+                    class="absolute right-25 top-15 rounded-full !px-2"
                 >
-                    <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                    </svg>
-                </button>
+                    <X class="size-6"/>
+                </Button>
                 <img
                     :src="files[viewingIndex].preview"
                     :alt="files[viewingIndex].name"
                     class="max-h-[80vh] max-w-[80vw] object-contain"
                 />
-                <div class="absolute -bottom-15 left-1/2 flex -translate-x-1/2 space-x-2">
-                    <button
-                        v-if="viewingIndex > 0"
+                <div class="absolute bottom-10 left-1/2 flex -translate-x-1/2 space-x-2">
+                    <Button
                         @click.stop="viewingIndex--"
-                        class="rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
+                        :disabled="viewingIndex < 1"
+                        type="button"
+                        variant="secondary"
+                        class="rounded-full !px-2"
                     >
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
-                        </svg>
-                    </button>
-                    <button
-                        v-if="viewingIndex < files.length - 1"
+                        <ArrowBigLeft class="size-6"/>
+                    </Button>
+                    <Button
                         @click.stop="viewingIndex++"
-                        class="rounded-full bg-white/20 p-2 text-white hover:bg-white/30"
+                        :disabled="viewingIndex === files.length - 1"
+                        type="button"
+                        variant="secondary"
+                        class="rounded-full !px-2"
                     >
-                        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
-                        </svg>
-                    </button>
+                        <ArrowBigRight class="size-6"/>
+                    </Button>
                 </div>
             </div>
         </div>

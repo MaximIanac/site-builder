@@ -85,7 +85,7 @@ class MCatalogProductController extends Controller
                 }
             }
 
-            $offers = json_decode($request->input('offers'), true);
+            $offers = json_decode($request->input('variant'), true);
 
 
             $currency = MCatalogCurrency::whereCode(CurrencyEnum::MDL)->first();
@@ -128,7 +128,7 @@ class MCatalogProductController extends Controller
     public function show(MCatalogProduct $product)
     {
         return view('cp.content.modules.catalog.products.show', [
-            'product' => MCatalogProductData::from($product->load(['offers'])),
+            'product' => MCatalogProductData::from($product->load(['variant'])),
             'properties' => MCatalogProductPropertyData::collect(MCatalogProductProperty::all()),
         ]);
     }
@@ -173,7 +173,7 @@ class MCatalogProductController extends Controller
                 }
             }
 
-            $offers = json_decode($request->input('offers'), true);
+            $offers = json_decode($request->input('variant'), true);
 
             $currency = MCatalogCurrency::whereCode(CurrencyEnum::MDL)->first();
             foreach ($offers as $offerData) {

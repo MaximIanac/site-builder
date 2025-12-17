@@ -4,7 +4,7 @@ import {ref} from "vue";
 import {Badge} from "@/components/ui/badge/index.ts";
 import {Button} from "@/components/ui/button/index.ts";
 import PropertyCreateModalForm
-    from "@/components/cp/modules/catalog/properties/forms/create/PropertyCreateModalForm.vue";
+    from "@/components/cp/modules/catalog/properties/forms/create/PropertyCreateDialogForm.vue";
 import {PropertyUsageType} from "@/enums/PropertyUsageType.js";
 
 const props = defineProps({

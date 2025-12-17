@@ -16,9 +16,6 @@ const props = defineProps({
     description: String,
     rules: [String, Object]
 });
-
-
-console.log('BaseFormField props:', props)
 </script>
 
 <template>
@@ -30,16 +27,16 @@ console.log('BaseFormField props:', props)
 
             <slot
                 v-bind="{
-                        field,
-                        errors,
-                        meta,
-                        placeholder: placeholder,
-                        label: label,
-                        description: description,
-                        name: name
-                    }"
+                    field,
+                    errors,
+                    meta,
+                    placeholder,
+                    label,
+                    description,
+                    name
+                }"
             >
-                <!-- Fallback если слот пустой -->
+                <!-- Fallback -->
                 <div style="background: yellow; padding: 10px;">
                     DEFAULT SLOT CONTENT (slot is empty!)
                 </div>

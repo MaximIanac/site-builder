@@ -147,7 +147,6 @@ const handleParentCategory = async (id) => {
 
     setFieldValue('inherited_properties', ajax.state.data.properties)
 }
-
 </script>
 
 <template>

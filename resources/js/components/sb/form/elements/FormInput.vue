@@ -2,6 +2,13 @@
 import {Input} from "@/components/ui/input/index.ts";
 import BaseFormField from "@/components/sb/form/elements/BaseFormField.vue";
 
+defineProps({
+    type: {
+        type: String,
+        default: "text"
+    }
+})
+
 </script>
 
 <template>
@@ -9,6 +16,7 @@ import BaseFormField from "@/components/sb/form/elements/BaseFormField.vue";
         <template #default="{ field, placeholder, errors }">
             <Input
                 :id="field.name"
+                :type="type"
                 v-bind="{
                     ...field,
                     ...$attrs,

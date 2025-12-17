@@ -1,5 +1,5 @@
 @props([
-    'offers' => [],
+    'variant' => [],
     'properties' => [],
 ])
 
@@ -224,7 +224,7 @@
                 chosenProperties: [],
 
                 init() {
-                    this.initOffers(@json(old('offers', $offers) ?? []));
+                    this.initOffers(@json(old('variant', $offers) ?? []));
                 },
 
                 initOffers(offers) {

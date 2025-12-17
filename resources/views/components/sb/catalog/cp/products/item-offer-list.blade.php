@@ -1,5 +1,5 @@
 @props([
-    'offers' => [],
+    'variant' => [],
     'propertyValues' => [],
 ])
 

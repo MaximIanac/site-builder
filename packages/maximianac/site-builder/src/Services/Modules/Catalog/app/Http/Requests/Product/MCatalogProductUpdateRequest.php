@@ -37,7 +37,7 @@ class MCatalogProductUpdateRequest extends FormRequest
             'category_id' => 'required|exists:m_catalog_categories,id',
             'short_description' => 'nullable|string',
             'description' => 'nullable|string',
-            'offers' => 'required|json',
+            'variant' => 'required|json',
             'properties' => 'nullable|array',
             'media' => 'nullable|array',
             'media.*' => 'nullable|image|max:5096'
@@ -59,20 +59,20 @@ class MCatalogProductUpdateRequest extends FormRequest
      */
     protected function validateOffersJson(): void
     {
-        $offers = json_decode($this->input('offers'), true);
+        $offers = json_decode($this->input('variant'), true);
 
-        $validator = Validator::make(['offers' => $offers], [
-            'offers.*.sku' => ['required', 'string'],
-            'offers.*.price' => ['required', 'numeric', 'min:0'],
-            'offers.*.stock' => ['required', 'integer', 'min:0'],
-            'offers.*.properties' => ['nullable', 'array'],
-            'offers.*.properties.*.id' => ['nullable', 'integer', 'exists:m_catalog_product_properties,id'],
-            'offers.*.properties.*.value' => ['nullable', 'string'],
+        $validator = Validator::make(['variant' => $offers], [
+            'variant.*.sku' => ['required', 'string'],
+            'variant.*.price' => ['required', 'numeric', 'min:0'],
+            'variant.*.stock' => ['required', 'integer', 'min:0'],
+            'variant.*.properties' => ['nullable', 'array'],
+            'variant.*.properties.*.id' => ['nullable', 'integer', 'exists:m_catalog_product_properties,id'],
+            'variant.*.properties.*.value' => ['nullable', 'string'],
         ]);
 
         if ($validator->fails()) {
             throw ValidationException::withMessages([
-                'offers' => ['Error in offers data.']
+                'variant' => ['Error in variant data.']
             ]);
         }
     }
