@@ -8,6 +8,10 @@ const props = defineProps({
     field: Object,
     locale: String,
     modelValue: String,
+    isErrored: {
+        type: Boolean,
+        default: () => false
+    },
 })
 const emit = defineEmits(['update:modelValue'])
 
@@ -22,19 +26,20 @@ const value = computed({
         <!-- Input field -->
         <div v-if="field.type === 'input'">
             <Label :for="`${field.name}_${locale}`" class="text-sm font-medium">
-                {{ field.label }} ({{ locale }})
+                {{ field.label }} <span class="text-muted-foreground text-xs font-mono">({{ locale }})</span>
             </Label>
             <Input
                 :id="`${field.name}_${locale}`"
                 v-model="value"
                 :placeholder="field.placeholder"
+                :aria-invalid="isErrored"
             />
         </div>
 
         <!-- Textarea field -->
         <div v-else-if="field.type === 'textarea'">
             <Label :for="`${field.name}_${locale}`" class="text-sm font-medium">
-                {{ field.label }} ({{ locale }})
+                {{ field.label }} <span class="text-muted-foreground text-xs font-mono">({{ locale }})</span>
             </Label>
             <Textarea
                 :id="`${field.name}_${locale}`"

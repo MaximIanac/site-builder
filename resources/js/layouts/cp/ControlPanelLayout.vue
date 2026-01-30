@@ -13,7 +13,7 @@ defineProps({
 
 <template>
     <ControlPanelSidebarLayout :breadcrumbs="breadcrumbs">
-        <Toaster :expand="true" richColors />
+        <Toaster theme="system" :expand="true" richColors />
         <div class="p-4 h-full">
             <slot />
         </div>

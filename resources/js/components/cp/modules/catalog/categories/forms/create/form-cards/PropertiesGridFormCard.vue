@@ -94,7 +94,6 @@ const handleCreatedProperty = (property) => {
                 </Card>
 
                 <PropertyCreateModalForm
-                    :usage_type="PropertyUsageType.CATEGORY"
                     @created:property="handleCreatedProperty"
                 />
             </div>

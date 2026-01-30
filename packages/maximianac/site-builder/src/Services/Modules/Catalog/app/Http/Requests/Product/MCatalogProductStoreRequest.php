@@ -24,48 +24,32 @@ class MCatalogProductStoreRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255',
             'slug' => 'required|string|max:255|unique:m_catalog_products,slug',
-            'category_id' => 'required|exists:m_catalog_categories,id',
-            'short_description' => 'nullable|string',
-            'description' => 'nullable|string',
-            'variant' => 'required|json',
+            'name' => 'required|array',
+            'name.*' => 'required|string',
+            'short_description' => 'nullable|array',
+            'short_description.*' => 'nullable|string|max:255',
+            'description' => 'nullable|array',
+            'description.*' => 'nullable|string|max:800',
+            'category_id' => 'nullable|integer|exists:m_catalog_categories,id',
+
             'properties' => 'nullable|array',
+            'properties.*.id' => 'nullable|integer|exists:m_catalog_properties,id',
+            'properties.*.value' => 'nullable|array',
+            'properties.*.value.*' => 'nullable|string',
+
+            'variants' => 'array',
+            'variants.*.sku' => 'required|string',
+            'variants.*.price' => 'required|numeric',
+            'variants.*.stock' => 'required|integer',
+
+            'variants.*.properties' => 'array',
+            'variants.*.properties.*.id' => 'required|integer|exists:m_catalog_properties,id',
+            'variants.*.properties.*.value' => 'nullable|array',
+            'variants.*.properties.*.value.*' => 'nullable|string',
+
             'media' => 'nullable|array',
             'media.*' => 'nullable|image|max:5096'
         ];
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    public function validateResolved(): void
-    {
-        parent::validateResolved();
-
-        $this->validateOffersJson();
-    }
-
-    /**
-     * @throws ValidationException
-     */
-    protected function validateOffersJson(): void
-    {
-        $offers = json_decode($this->input('variant'), true);
-
-        $validator = Validator::make(['variant' => $offers], [
-            'variant.*.sku' => ['required', 'string', 'unique:m_catalog_product_offers,sku'],
-            'variant.*.price' => ['required', 'numeric', 'min:0'],
-            'variant.*.stock' => ['required', 'integer', 'min:0'],
-            'variant.*.properties' => ['nullable', 'array'],
-            'variant.*.properties.*.id' => ['nullable', 'integer', 'exists:m_catalog_product_properties,id'],
-            'variant.*.properties.*.value' => ['nullable', 'string'],
-        ]);
-
-        if ($validator->fails()) {
-            throw ValidationException::withMessages([
-                'variant' => ['Error in variant data.']
-            ]);
-        }
     }
 }

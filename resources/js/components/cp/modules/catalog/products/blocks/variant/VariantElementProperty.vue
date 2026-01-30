@@ -1,61 +1,92 @@
 <script setup>
-import {Label} from "@/components/ui/label/index.js";
-import {Input} from "@/components/ui/input/index.js";
-import {Button} from "@/components/ui/button/index.js";
-import {Badge} from "@/components/ui/badge/index.js";
-import {X} from "lucide-vue-next";
-import {Card, CardContent} from "@/components/ui/card/index.js";
+import { Label } from "@/components/ui/label/index.js";
+import { Input } from "@/components/ui/input/index.js";
+import { Badge } from "@/components/ui/badge/index.js";
+import { X, ChevronRight, Asterisk, Type } from "lucide-vue-next";
+import FormInput from "@/components/sb/form/shared/FormInput.vue";
+import {computed} from "vue";
 
 const props = defineProps({
     property: {
         type: Object,
         required: true,
-    }
-})
-const emits = defineEmits(['toggle:property'])
+    },
+    modelValue: {
+        type: String,
+        required: true,
+    },
+    inputName: {
+        type: String,
+        required: true
+    },
+    locale: {
+        type: String,
+        required: true
+    },
+});
 
+const emits = defineEmits(['update:modelValue', 'toggle:property']);
+
+const value = computed({
+    get: () => props.modelValue || '',
+    set: (val) => emits('update:modelValue', val)
+})
 </script>
 
 <template>
-    <Card>
-        <CardContent class="px-4 py-2 space-y-2">
-            <Label class="flex items-center gap-2">
-                <span>{{ property.name }}</span>
-                <Badge variant="outline" class="text-xs font-mono lowercase">
-                    {{ property.code }}
-                </Badge>
+    <div class="group relative space-y-1">
+        <div
+            v-if="property.is_required"
+            class="absolute -left-1 top-4"
+            title="Required field"
+        >
+            <div class="w-2 h-2 bg-destructive rounded-full"></div>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <span class="text-sm font-medium text-foreground">
+                {{ property.name }}
+            </span>
+            <Badge
+                variant="secondary"
+                class="text-xs font-normal h-5 px-1.5 bg-muted text-muted-foreground border-border"
+            >
+                {{ property.code }}
+            </Badge>
+
+            <span class="text-muted-foreground text-xs font-mono">({{ locale }})</span>
+        </div>
+
+        <FormInput
+            v-if="property.type === 'string'"
+            v-model="value"
+            type="text"
+            :name="`${inputName}value.${locale}`"
+            :placeholder="`Enter ${property.name.toLowerCase()}`"
+        />
+
+<!--        <Input-->
+<!--            v-if="property.type === 'string'"-->
+<!--            v-model="property.value"-->
+<!--            type="text"-->
+<!--            :placeholder="`Enter ${property.name.toLowerCase()}`"-->
+<!--            class="w-full bg-background border-input focus:border-primary focus:ring-1 focus:ring-ring"-->
+<!--        />-->
+
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-2">
                 <Badge
-                    v-if="property.is_required"
-                    variant="destructive"
-                    class="text-xs"
+                    variant="outline"
+                    class="text-xs font-mono h-6 px-2 border-border bg-background text-foreground"
                 >
-                    Required
-                </Badge>
-            </Label>
-
-            <Input
-                v-if="property.type === 'string'"
-                v-model="property.value"
-                type="text"
-                :placeholder="`Enter ${property.name.toLowerCase()}`"
-            />
-
-            <div class="flex justify-between items-center">
-                <Badge variant="outline" class="text-xs capitalize">
                     {{ property.type }}
                 </Badge>
-
-                <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    @click="emits('toggle:property', property)"
-                    class="h-7 text-xs text-muted-foreground hover:text-destructive"
-                >
-                    <X class="mr-1 h-3 w-3" />
-                    Remove
-                </Button>
             </div>
-        </CardContent>
-    </Card>
+        </div>
+
+        <div
+            v-if="property.is_required"
+            class="absolute left-0 top-0 bottom-0 w-0.5 bg-primary"
+        ></div>
+    </div>
 </template>

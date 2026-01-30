@@ -83,8 +83,8 @@ class MCatalogCategory extends Model
     public function properties(): BelongsToMany
     {
         return $this->belongsToMany(
-            MCatalogProductProperty::class,
-            'm_catalog_category_product_property',
+            MCatalogProperty::class,
+            'm_catalog_category_property',
             'category_id',
             'property_id'
         );

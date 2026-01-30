@@ -11,19 +11,25 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('m_catalog_product_offers', function (Blueprint $table) {
+        Schema::create('m_catalog_product_variants', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('m_catalog_products')->cascadeOnDelete();
             $table->string('sku')->unique();
-            $table->unsignedInteger('quantity');
+            $table->unsignedInteger('quantity')->default(0);
             $table->timestamps();
+
+            $table->index('product_id');
         });
 
-        Schema::create('m_catalog_product_offer_property_values', function (Blueprint $table) {
+        Schema::create('m_catalog_product_variant_property', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('offer_id')->constrained('m_catalog_product_offers')->cascadeOnDelete();
-            $table->foreignId('property_id')->constrained('m_catalog_product_properties')->cascadeOnDelete();
+            $table->foreignId('variant_id')->constrained('m_catalog_product_variants')->cascadeOnDelete();
+            $table->foreignId('property_id')->constrained('m_catalog_properties')->cascadeOnDelete();
             $table->json('value');
+            $table->string('origin', 20)->default('product')->comment('category, product, variant');
+
+            $table->unique(['variant_id', 'property_id']);
+            $table->index('property_id');
         });
 
         Schema::create('currencies', function (Blueprint $table) {
@@ -35,12 +41,14 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('m_catalog_product_offer_prices', function (Blueprint $table) {
+        Schema::create('m_catalog_product_variant_prices', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('offer_id')->constrained('m_catalog_product_offers')->cascadeOnDelete();
+            $table->foreignId('variant_id')->constrained('m_catalog_product_variants')->cascadeOnDelete();
             $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
             $table->decimal('price', 10, 2);
-            $table->unique(['offer_id', 'currency_id']);
+
+            $table->unique(['variant_id', 'currency_id']);
+            $table->index('variant_id');
         });
     }
 

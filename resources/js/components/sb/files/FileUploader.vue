@@ -163,7 +163,7 @@ onBeforeUnmount(() => {
 </script>
 
 <template>
-    <div class="space-y-4">
+    <div class="space-y-2">
         <input
             ref="fileInput"
             type="file"
@@ -186,7 +186,7 @@ onBeforeUnmount(() => {
                 <span class="text-xs text-muted-foreground">
                   Uploaded: {{ files.length }}{{ maxFiles ? ` / ${maxFiles}` : '' }}
                 </span>
-                <div class="space-x-2">
+                <div class="flex items-center gap-2">
                     <Button
                         type="button"
                         variant="outline"

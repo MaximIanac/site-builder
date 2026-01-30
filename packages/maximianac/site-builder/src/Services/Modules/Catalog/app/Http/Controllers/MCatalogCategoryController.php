@@ -17,7 +17,7 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogPro
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 
 class MCatalogCategoryController extends Controller
 {
@@ -46,7 +46,7 @@ class MCatalogCategoryController extends Controller
                 MCatalogCategory::all(),
             ),
             'properties' => MCatalogProductPropertyData::collect(
-                MCatalogProductProperty::all()
+                MCatalogProperty::all()
             ),
         ]);
 
@@ -55,7 +55,7 @@ class MCatalogCategoryController extends Controller
 //                MCatalogCategory::all(),
 //            ),
 //            'properties' => MCatalogProductPropertyData::collect(
-//                MCatalogProductProperty::all()
+//                MCatalogProperty::all()
 //            ),
 //        ]);
     }
@@ -113,7 +113,7 @@ class MCatalogCategoryController extends Controller
                 MCatalogCategory::where('slug', '!=', $category->slug)->get(),
             ),
             'properties' => MCatalogProductPropertyData::collect(
-                MCatalogProductProperty::all()
+                MCatalogProperty::all()
             ),
             'category' => MCatalogCategoryData::from($category, ['translatable' => $category->translations]),
         ]);

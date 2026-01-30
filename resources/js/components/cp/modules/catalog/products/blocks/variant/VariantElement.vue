@@ -1,15 +1,14 @@
 <script setup>
-import {MoveVertical, Trash2, ArrowBigUp, ArrowBigDown} from "lucide-vue-next";
+import {Trash2, ArrowBigUp, ArrowBigDown} from "lucide-vue-next";
 import {Button} from "@/components/ui/button";
-import FormInput from "@/components/sb/form/elements/FormInput.vue";
+import FormInput from "@/components/sb/form/shared/FormInput.vue";
 import {Separator} from "@/components/ui/separator";
 import {FieldGroup} from "@/components/ui/field/index.js";
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card/index.js";
-import {Label} from "@/components/ui/label/index.js";
-import {Input} from "@/components/ui/input/index.js";
-import {Badge} from "@/components/ui/badge/index.js";
-import {ref} from "vue";
+import {computed, ref, watch} from "vue";
 import VariantElementProperty from "@/components/cp/modules/catalog/products/blocks/variant/VariantElementProperty.vue";
+import LocalizedGroup from "@/components/sb/form/localized/LocalizedGroup.vue";
+import useConfig from "@/composables/useConfig.js";
 
 const props = defineProps({
     variant: {
@@ -29,10 +28,9 @@ const props = defineProps({
         default: () => []
     }
 })
-const emits = defineEmits(["move:up", "move:down", "remove"])
+const emits = defineEmits(["remove"])
 
-const propertiesData = ref(props.variantProperties)
-
+const propertiesData = computed(() => props.variantProperties)
 </script>
 
 <template>
@@ -44,28 +42,6 @@ const propertiesData = ref(props.variantProperties)
                 </CardTitle>
 
                 <div class="flex items-center gap-2">
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        :disabled="index === 0"
-                        @click="emits('move:up', index)"
-                        class="h-8 w-8 p-0"
-                    >
-                        <ArrowBigUp class="size-5" />
-                    </Button>
-
-                    <Button
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        :disabled="index === variantsCount - 1"
-                        @click="emits('move:down', index)"
-                        class="h-8 w-8 p-0"
-                    >
-                        <ArrowBigDown class="size-5" />
-                    </Button>
-
                     <Button
                         v-if="variantsCount > 1"
                         type="button"
@@ -82,20 +58,23 @@ const propertiesData = ref(props.variantProperties)
         <CardContent>
             <FieldGroup class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormInput
-                    name="sku"
+                    v-model="variant.sku"
+                    :name="`variants.${index}.sku`"
                     label="SKU"
                     placeholder="Enter the product unique SKU"
                 />
 
                 <FormInput
-                    name="price"
+                    v-model="variant.price"
+                    :name="`variants.${index}.price`"
                     label="Price (MDL)"
                     type="number"
                     placeholder="0.00"
                 />
 
                 <FormInput
-                    name="storck"
+                    v-model="variant.stock"
+                    :name="`variants.${index}.stock`"
                     label="Stock"
                     type="number"
                     placeholder="0"
@@ -105,15 +84,21 @@ const propertiesData = ref(props.variantProperties)
             <div v-if="propertiesData.length > 0">
                 <Separator class="my-4" />
 
-                <h4 class="font-medium text-sm mb-3">Properties</h4>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <VariantElementProperty
-                        v-for="property in variant.properties"
-                        :key="property.id"
-                        :property="property"
-                    />
-                </div>
+                <LocalizedGroup
+                    :locales="useConfig().APP_LOCALES"
+                >
+                    <template v-slot="{ locale }">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <VariantElementProperty
+                                v-for="(property, propIndex) in propertiesData"
+                                :key="property.id"
+                                :inputName="`variants.${index}.properties.${propIndex}.`"
+                                :property="property"
+                                :locale="locale"
+                            />
+                        </div>
+                    </template>
+                </LocalizedGroup>
             </div>
         </CardContent>
     </Card>

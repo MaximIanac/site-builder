@@ -6,6 +6,7 @@ import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, Sid
 import { Link } from '@inertiajs/vue3';
 import { BookOpen, Folder, BookText } from 'lucide-vue-next';
 import ControlPanelLogo from './ControlPanelLogo.vue';
+import ModeToggle from "@/components/sb/ModeToggle.vue";
 
 const mainNavItems = [
     {
@@ -48,6 +49,7 @@ const footerNavItems = [
         </SidebarContent>
 
         <SidebarFooter>
+            <ModeToggle />
             <NavFooter :items="footerNavItems" />
             <NavUser />
         </SidebarFooter>

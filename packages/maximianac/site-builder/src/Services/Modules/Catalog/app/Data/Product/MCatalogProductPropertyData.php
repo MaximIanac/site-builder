@@ -12,6 +12,5 @@ class MCatalogProductPropertyData extends Data
         public string                        $name,
         public string                        $code,
         public string                        $type,
-        public PropertyUsageTypeEnum         $usage_type,
     ) {}
 }

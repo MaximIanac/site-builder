@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Support\Collection;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\CurrencyEnum;
 
-class MCatalogProductOffer extends Model
+class MCatalogVariant extends Model
 {
-    protected $table = 'm_catalog_product_offers';
+    protected $table = 'm_catalog_product_variants';
     protected $guarded = [];
     protected $with = [
         'propertyValues',
@@ -26,31 +26,31 @@ class MCatalogProductOffer extends Model
     public function properties(): BelongsToMany
     {
         return $this->belongsToMany(
-            MCatalogProductProperty::class,
-            'm_catalog_product_offer_property_values',
-            'offer_id',
+            MCatalogProperty::class,
+            'm_catalog_product_variant_property',
+            'variant_id',
             'property_id'
         );
     }
 
     public function propertyValues(): HasMany
     {
-        return $this->hasMany(MCatalogProductOfferPropertyValue::class, 'offer_id');
+        return $this->hasMany(MCatalogVariantProperty::class, 'variant_id');
     }
 
     public function currencies(): BelongsToMany
     {
         return $this->belongsToMany(
             MCatalogCurrency::class,
-            'm_catalog_product_offer_prices',
-            'offer_id',
+            'm_catalog_product_variant_prices',
+            'variant_id',
             'currency_id',
         )->withPivot('price');
     }
 
     public function prices(): HasMany
     {
-        return $this->hasMany(MCatalogOfferPrice::class, 'offer_id');
+        return $this->hasMany(MCatalogVariantPrice::class, 'variant_id');
     }
 
     public function priceForCurrency(CurrencyEnum $currencyCode): ?float

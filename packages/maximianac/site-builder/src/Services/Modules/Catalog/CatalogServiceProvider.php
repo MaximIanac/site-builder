@@ -41,7 +41,7 @@ class CatalogServiceProvider extends BaseModuleServiceProvider
 
         Route::prefix('properties')->name('properties.')
             ->group(function () {
-                Route::resource('/', MCatalogPropertyApiController::class)->only('store');
+                Route::resource('/', MCatalogPropertyApiController::class)->only('index', 'store');
             }
         );
     }

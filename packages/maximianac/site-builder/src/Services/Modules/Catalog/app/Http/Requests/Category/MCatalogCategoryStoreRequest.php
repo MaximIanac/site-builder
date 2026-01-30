@@ -33,9 +33,9 @@ class MCatalogCategoryStoreRequest extends FormRequest
             'locales.description.*' => ['nullable', 'string'],
 
             'inherited_properties' => ['array', 'nullable', 'sometimes'],
-            'inherited_properties.*' => ['integer', 'exists:m_catalog_product_properties,id'],
+            'inherited_properties.*' => ['integer', 'exists:m_catalog_properties,id'],
             'added_properties' => ['array', 'nullable', 'sometimes'],
-            'added_properties.*' => ['integer', 'exists:m_catalog_product_properties,id'],
+            'added_properties.*' => ['integer', 'exists:m_catalog_properties,id'],
         ];
     }
 }

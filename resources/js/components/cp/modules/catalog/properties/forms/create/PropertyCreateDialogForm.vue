@@ -26,7 +26,6 @@ const props = defineProps({
 
         <template #content>
             <PropertyCreateForm
-                :usage_type="usage_type"
                 @created:property="($event) => emits('created:property', $event)"
             />
         </template>

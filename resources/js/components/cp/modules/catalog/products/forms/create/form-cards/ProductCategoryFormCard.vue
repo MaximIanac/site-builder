@@ -6,15 +6,15 @@ import {Button} from "@/components/ui/button/index.js";
 import LocalizedGroup from "@/components/sb/form/localized/LocalizedGroup.vue";
 import {X} from "lucide-vue-next";
 import { Field as VeeField } from 'vee-validate'
-import BaseFormField from "@/components/sb/form/elements/BaseFormField.vue";
+import BaseFormField from "@/components/sb/form/shared/BaseFormField.vue";
 import {Input} from "@/components/ui/input/index.js";
 
-const emits = defineEmits(['update:category_id'])
+const emits = defineEmits(['update:modelValue'])
 const props = defineProps({
     categories: {
         type: Array,
     },
-    values: Array,
+    modelValue: Number,
 })
 
 </script>
@@ -38,13 +38,13 @@ const props = defineProps({
                                 :options="categories"
                                 :field-map="{ label: 'name', value: 'id'}"
                                 :model-value="field.value"
-                                @update:modelValue="(v) => emits('update:category_id', v)"
+                                @update:modelValue="(v) => emits('update:modelValue', v)"
                             />
 
                             <Button
-                                v-if="values.category_id"
+                                v-if="modelValue"
                                 type="button"
-                                @click="() => emits('update:category_id', null)"
+                                @click="() => emits('update:modelValue', null)"
                                 variant="outline"
                                 size="sm"
                             >

@@ -12,7 +12,7 @@ use Maximianac\SiteBuilder\Models\ContentEntry;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Models\Panel;
 
-class MCatalogOfferPrice extends Pivot
+class MCatalogVariantPrice extends Pivot
 {
     protected $guarded = [];
     protected $table = 'm_catalog_product_offer_prices';
@@ -20,9 +20,9 @@ class MCatalogOfferPrice extends Pivot
         'currency',
     ];
 
-    public function offer(): BelongsTo
+    public function variant(): BelongsTo
     {
-        return $this->belongsTo(MCatalogProductOffer::class, 'offer_id');
+        return $this->belongsTo(MCatalogVariant::class, 'variant_id');
     }
 
     public function currency(): BelongsTo

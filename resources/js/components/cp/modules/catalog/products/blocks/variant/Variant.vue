@@ -5,7 +5,7 @@ import {MoveVertical, Plus, Trash2, X} from "lucide-vue-next";
 import {Button} from "@/components/ui/button/index.js";
 import {Badge} from "@/components/ui/badge/index.js";
 import {FieldGroup} from "@/components/ui/field/index.js";
-import FormInput from "@/components/sb/form/elements/FormInput.vue";
+import FormInput from "@/components/sb/form/shared/FormInput.vue";
 import {Separator} from "@/components/ui/separator/index.js";
 import VariantElement from "@/components/cp/modules/catalog/products/blocks/variant/VariantElement.vue";
 

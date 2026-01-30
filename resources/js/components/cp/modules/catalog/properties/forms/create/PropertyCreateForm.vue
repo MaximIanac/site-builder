@@ -19,13 +19,6 @@ import { toast } from 'vue-sonner'
 import {Check} from "lucide-vue-next";
 
 const emits = defineEmits(['created:property'])
-const props = defineProps({
-    usage_type: {
-        type: String,
-        validator: (v) => Object.values(PropertyUsageType).includes(v),
-        required: true,
-    }
-})
 
 const ajax = useAjax();
 
@@ -34,14 +27,12 @@ const createPropertySchema = toTypedSchema(z.object({
     locales: z.object({
         name: z.record(z.string(), z.string()),
     }),
-    usage_type: z.string(),
     type: z.string()
 }));
 
 const { handleSubmit, setFieldValue, isSubmitting, setErrors } = useForm({
     validationSchema: createPropertySchema,
     initialValues: {
-        usage_type: props.usage_type,
         type: 'string',
     },
 })

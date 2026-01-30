@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {reactive} from "vue";
+import {toast} from "vue-sonner";
 
 export default function useAjax() {
     const state = reactive({

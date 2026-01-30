@@ -19,7 +19,7 @@ class MCatalogProduct extends Model implements HasMedia
     protected $table = 'm_catalog_products';
     protected $guarded = [];
     protected $with = [
-        'media', 'propertyValues', 'category', 'variant',
+        'media', 'category', 'variants',
     ];
     public array $translatable = ['name', 'short_description', 'description'];
 
@@ -31,22 +31,23 @@ class MCatalogProduct extends Model implements HasMedia
     public function properties(): BelongsToMany
     {
         return $this->belongsToMany(
-            MCatalogProductProperty::class,
-            'm_catalog_product_property_values',
+            MCatalogProperty::class,
+            'm_catalog_product_property',
             'product_id',
             'property_id'
-        );
+        )
+            ->withPivot(['value', 'origin']);
     }
 
     // TODO: Добавить при тип свойства при создании нового
-    public function propertyValues(): HasMany
-    {
-        return $this->hasMany(MCatalogProductPropertyValue::class, 'product_id');
-    }
+//    public function propertyValues(): HasMany
+//    {
+//        return $this->hasMany(MCatalogProductProperty::class, 'product_id');
+//    }
 
-    public function offers(): HasMany
+    public function variants(): HasMany
     {
-        return $this->hasMany(MCatalogProductOffer::class, 'product_id');
+        return $this->hasMany(MCatalogVariant::class, 'product_id');
     }
 
     public function category(): BelongsTo

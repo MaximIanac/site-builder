@@ -12,19 +12,48 @@ use Illuminate\Validation\ValidationException;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 
 class MCatalogPropertyApiController extends Controller
 {
     /**
      * @throws ValidationException
      */
+    public function index(Request $request): JsonResource
+    {
+        $request->validate([
+            'search' => ['nullable', 'string'],
+            'exclude_ids' => ['nullable', 'array'],
+            'exclude_ids.*' => ['integer'],
+        ]);
+
+        $query = MCatalogProperty::query();
+
+        if ($search = $request->input('search')) {
+            $query
+                ->whereJsonContainsLocales('name', config('site-builder.locales'), "%$search%", "like" );
+        }
+
+        if ($excludeIds = $request->input('exclude_ids')) {
+            $query->whereNotIn('id', $excludeIds);
+        }
+
+        return JsonResource::collection(
+            $query->orderBy('id')->get()->map(
+                fn ($property) => MCatalogProductPropertyData::from($property)
+            )
+        );
+    }
+
+
+    /**
+     * @throws ValidationException
+     */
     public function store(Request $request): JsonResource
     {
         $validated = $request->validate([
-            'code' => ['required', 'string', 'max:30', 'alpha_dash', 'unique:m_catalog_product_properties,code'],
+            'code' => ['required', 'string', 'max:30', 'alpha_dash', 'unique:m_catalog_properties,code'],
             'type' => ['required', Rule::in(['string', 'text', 'integer', 'float', 'boolean'])],
-            'usage_type' => ['required', new Enum(PropertyUsageTypeEnum::class)],
             'locales' => ['required', 'array'],
             'locales.name' => ['required', 'array'],
             'locales.name.*' => ['required', 'string'],
@@ -34,7 +63,7 @@ class MCatalogPropertyApiController extends Controller
             $validated['name']['en'] ?? collect($validated['name'])->first()
         );
 
-        if (empty($validated['code']) && MCatalogProductProperty::where('code', $code)->exists()) {
+        if (empty($validated['code']) && MCatalogProperty::where('code', $code)->exists()) {
             throw ValidationException::withMessages([
                 'code' => [
                     'message' =>'The code generated already exists. Please use a different code.',
@@ -44,11 +73,10 @@ class MCatalogPropertyApiController extends Controller
         }
 
         return JsonResource::make(MCatalogProductPropertyData::from(
-            MCatalogProductProperty::create([
+            MCatalogProperty::create([
                 'name' => $validated['locales']['name'],
                 'code' => $code,
                 'type' => $validated['type'],
-                'usage_type' => $validated['usage_type'],
             ])
         ));
     }

@@ -7,7 +7,7 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogPro
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 use Spatie\LaravelData\PaginatedDataCollection;
 
 class MCatalogDataProvider
@@ -19,7 +19,7 @@ class MCatalogDataProvider
             'propertyValues',
             'variant',
         ]);
-        $propertyQuery = MCatalogProductProperty::query();
+        $propertyQuery = MCatalogProperty::query();
 
         if ($request->has('chosen_category')) {
             $category = MCatalogCategory::where('slug', $request->query('chosen_category'))->first();

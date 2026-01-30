@@ -23,7 +23,7 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MC
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCurrency;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProductProperty;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 use Spatie\LaravelData\PaginatedDataCollection;
 
 class MCatalogController extends Controller
