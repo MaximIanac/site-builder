@@ -1,7 +1,7 @@
 import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition } from './../../../../../../../../../wayfinder'
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -16,7 +16,7 @@ index.definition = {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -25,7 +25,7 @@ index.url = (options?: RouteQueryOptions) => {
 
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -34,7 +34,7 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
 })
 /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -44,7 +44,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
     /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -54,7 +54,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -63,7 +63,7 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
         })
             /**
 * @see \Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers\MCatalogController::index
- * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:34
+ * @see packages/maximianac/site-builder/src/Services/Modules/Catalog/app/Http/Controllers/MCatalogController.php:14
  * @route '/cp/modules/catalog'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({

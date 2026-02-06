@@ -1,13 +1,19 @@
 <script setup>
-import {onBeforeUnmount, ref, watch} from 'vue'
+import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {Button} from "@/components/ui/button/index.js";
 import {Badge} from "@/components/ui/badge/index.js";
-import { Image, Eye, Star, Trash2, X, ArrowBigLeft, ArrowBigRight, Plus } from 'lucide-vue-next';
+import { Image, Eye, Star, Trash2, X, ArrowBigLeft, ArrowBigRight, Plus, ArchiveRestore } from 'lucide-vue-next';
+import {getErrorMessages} from "@/lib/utils.js";
+import {FieldError} from "@/components/ui/field/index.js";
 
 const props = defineProps({
     modelValue: {
+        type: Object,
+        default: () => [],
+        required: true,
+    },
+    errors: {
         type: Array,
-        default: () => []
     },
     maxFiles: {
         type: Number,
@@ -15,7 +21,7 @@ const props = defineProps({
     },
     maxFileSize: {
         type: Number,
-        default: 25 * 1024 * 1024 // 5MB
+        default: 25 * 1024 * 1024 // 25MB
     },
     acceptedTypes: {
         type: String,
@@ -38,12 +44,51 @@ const fileInput = ref(null)
 const isDragging = ref(false)
 const viewingIndex = ref(null)
 const dragIndex = ref(null)
+const existingMedia = ref([])
+const newFiles = ref([])
 
-watch(() => props.modelValue, (newValue) => {
-    if (newValue.length === 0) {
+const errors = computed(() => props.errors)
+
+onMounted(() => {
+    initializeFiles()
+})
+
+const initializeFiles = () => {
+    if (!props.modelValue || props.modelValue.length === 0) {
         files.value = []
+        existingMedia.value = []
+        newFiles.value = []
+
+        return;
     }
-}, { immediate: true })
+
+    existingMedia.value = props.modelValue.map(
+        media => ({
+            ...media,
+            isExisting: true,
+            id: media.id,
+            file: null,
+            name: media.file_name || media.name,
+            size: media.size,
+            type: media.mime_type,
+            preview: media.original_url,
+            lastModified: null,
+            originalData: {
+                id: media.id,
+                uuid: media.uuid,
+                file_name: media.file_name,
+                collection_name: media.collection_name
+            }
+        })
+    )
+
+    files.value = [...existingMedia.value]
+}
+
+// watch(() => props.modelValue, (newValue) => {
+//     console.log(newValue)
+//
+// }, { immediate: true })
 
 const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes'
@@ -73,22 +118,73 @@ const addFiles = (fileList) => {
             return
         }
 
-        const reader = new FileReader()
-        reader.onload = (e) => {
-            files.value.push({
+        // const reader = new FileReader()
+        // reader.onload = (e) => {
+            const fileObject = {
                 id: Date.now() + Math.random(),
                 file: file,
                 name: file.name,
                 size: file.size,
                 type: file.type,
-                preview: e.target.result,
-                lastModified: file.lastModified
-            })
-            emitUpdate()
-        }
-        reader.readAsDataURL(file)
+                preview: URL.createObjectURL(file),
+                lastModified: file.lastModified,
+                isExisting: false,
+            }
+        // }
+
+        files.value.push(fileObject)
+        newFiles.value.push(fileObject)
+        emitUpdate()
+        // reader.readAsDataURL(file)
     })
 }
+
+const removeFile = (index) => {
+    const fileToRemove = files.value[index]
+
+    if (fileToRemove.isExisting) {
+        fileToRemove._destroy = true
+        fileToRemove.markedForDeletion = true
+    } else {
+        files.value.splice(index, 1)
+        newFiles.value = newFiles.value.filter(f => f.id !== fileToRemove.id)
+
+        if (fileToRemove.preview && fileToRemove.preview.startsWith('blob:')) {
+            URL.revokeObjectURL(fileToRemove.preview)
+        }
+    }
+
+    emitUpdate()
+}
+
+const restoreFile = (index) => {
+    const file = files.value[index]
+    if (!file.isExisting || !file.markedForDeletion) return;
+
+    file._destroy = false
+    file.markedForDeletion = false
+
+    emitUpdate()
+}
+
+const clearAll = () => {
+    // files.value.forEach(file => {
+    //     URL.revokeObjectURL(file.preview)
+    // })
+    // files.value = []
+    // emitUpdate()
+}
+
+const sortFiles = () => {
+    files.value.sort((a, b) => {
+        if (a.markedForDeletion && b.markedForDeletion) return 0
+        if (a.markedForDeletion) return 1
+        if (b.markedForDeletion) return -1
+
+        return a.originalIndex - b.originalIndex
+    })
+}
+
 
 const handleDragOver = () => {
     if (files.value.length < props.maxFiles) {
@@ -106,20 +202,6 @@ const handleDrop = (event) => {
         file.type.startsWith('image/')
     )
     addFiles(droppedFiles)
-}
-
-const removeFile = (index) => {
-    URL.revokeObjectURL(files.value[index].preview)
-    files.value.splice(index, 1)
-    emitUpdate()
-}
-
-const clearAll = () => {
-    files.value.forEach(file => {
-        URL.revokeObjectURL(file.preview)
-    })
-    files.value = []
-    emitUpdate()
 }
 
 const makePrimary = (index) => {
@@ -151,8 +233,9 @@ const handleDropReorder = (dropIndex) => {
 }
 
 const emitUpdate = () => {
-    const fileObjects = files.value.map(f => f.file)
-    emit('update:modelValue', fileObjects)
+    sortFiles();
+
+    emit('update:modelValue', files.value)
 }
 
 onBeforeUnmount(() => {
@@ -186,6 +269,7 @@ onBeforeUnmount(() => {
                 <span class="text-xs text-muted-foreground">
                   Uploaded: {{ files.length }}{{ maxFiles ? ` / ${maxFiles}` : '' }}
                 </span>
+
                 <div class="flex items-center gap-2">
                     <Button
                         type="button"
@@ -196,17 +280,19 @@ onBeforeUnmount(() => {
                     >
                         <Plus /> add
                     </Button>
-                    <Button
-                        type="button"
-                        variant="secondary"
-                        @click="clearAll"
-                        v-if="files.length"
-                    >
-                        Clear All
-                    </Button>
+<!--                    <Button-->
+<!--                        type="button"-->
+<!--                        variant="secondary"-->
+<!--                        @click="clearAll"-->
+<!--                        v-if="files.length"-->
+<!--                    >-->
+<!--                        Clear All-->
+<!--                    </Button>-->
                 </div>
             </div>
         </div>
+
+        <FieldError :errors="errors.map(i => ({message: i}))" />
 
         <!-- GALLERY DnD -->
         <div
@@ -240,15 +326,42 @@ onBeforeUnmount(() => {
                     :key="file.id"
                     class="group relative overflow-hidden rounded-lg border bg-card"
                 >
-                    <Badge v-if="index === 0" class="absolute left-2 top-2 z-10">Main</Badge>
+                    <Badge v-if="index === 0 && !file.markedForDeletion" class="absolute left-2 top-2 z-10">Main</Badge>
 
                     <img
                         :src="file.preview"
                         :alt="file.name"
-                        class="h-40 w-full object-cover transition-transform group-hover:scale-105"
+                        class="h-40 w-full object-cover transition-transform"
+                        :class="[
+                            file.markedForDeletion
+                                ? 'opacity-50 grayscale blur-[1px] cursor-not-allowed'
+                                : 'group-hover:scale-105'
+                        ]"
                     />
 
                     <div
+                        v-if="file.markedForDeletion"
+                        class="absolute inset-0 pointer-events-none"
+                    >
+                        <div
+                            class="absolute inset-0 opacity-[0.03]"
+                            style="background: repeating-linear-gradient(45deg, #9ca3af, #9ca3af 1px, transparent 1px, transparent 10px);"
+                        ></div>
+
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 flex items-center justify-center pointer-events-auto">
+                            <Button
+                                @click.stop="restoreFile(index)"
+                                type="button"
+                                class="rounded-full !px-2"
+                                variant="secondary"
+                            >
+                                <ArchiveRestore class="size-5" />
+                            </Button>
+                        </div>
+                    </div>
+
+                    <div
+                        v-if="!file.markedForDeletion"
                         @dragstart="handleDragStart(index)"
                         @dragover.prevent
                         @drop.prevent="handleDropReorder(index)"
@@ -301,7 +414,7 @@ onBeforeUnmount(() => {
             @click="closeViewer"
             class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4"
         >
-            <div @click.stop class="">
+            <div @click.stop>
                 <Button
                     @click="closeViewer"
                     type="button"
@@ -314,7 +427,15 @@ onBeforeUnmount(() => {
                     :src="files[viewingIndex].preview"
                     :alt="files[viewingIndex].name"
                     class="max-h-[80vh] max-w-[80vw] object-contain"
+                    :class="{'grayscale blur-[1px] cursor-not-allowed' : files[viewingIndex].markedForDeletion}"
                 />
+
+                <div v-if="files[viewingIndex].markedForDeletion" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-[-45deg]">
+                    <span class="text-7xl font-mono font-bold tracking-[.8em] text-neutral-500/50 select-none border-4 border-neutral-500/50 p-8 rounded-lg cursor-not-allowed">
+                        REMOVED
+                    </span>
+                </div>
+
                 <div class="absolute bottom-10 left-1/2 flex -translate-x-1/2 space-x-2">
                     <Button
                         @click.stop="viewingIndex--"

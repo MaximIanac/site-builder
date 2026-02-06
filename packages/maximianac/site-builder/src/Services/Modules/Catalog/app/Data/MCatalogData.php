@@ -3,7 +3,6 @@
 namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data;
 
 use Illuminate\Support\Collection;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductData;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
@@ -17,8 +16,5 @@ class MCatalogData extends Data
 
         #[DataCollectionOf(MCatalogProductData::class)]
         public PaginatedDataCollection $products,
-
-        #[DataCollectionOf(MCatalogProductPropertyData::class)]
-        public Collection              $properties,
     ) {}
 }

@@ -8,7 +8,7 @@ use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
-class MCatalogProductOfferPriceData extends Data
+class MCatalogProductVariantPriceData extends Data
 {
     public function __construct(
         public float                     $value,

@@ -4,7 +4,7 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Cate
 
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyOriginEnum;
 
 class MCatalogCategoryStoreRequest extends FormRequest
 {

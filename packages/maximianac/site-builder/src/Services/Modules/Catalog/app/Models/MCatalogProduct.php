@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyOriginEnum;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
 use Spatie\MediaLibrary\MediaCollections\Models\Collections\MediaCollection;
@@ -36,14 +37,9 @@ class MCatalogProduct extends Model implements HasMedia
             'product_id',
             'property_id'
         )
+            ->using(MCatalogProductPropertyPivot::class)
             ->withPivot(['value', 'origin']);
     }
-
-    // TODO: Добавить при тип свойства при создании нового
-//    public function propertyValues(): HasMany
-//    {
-//        return $this->hasMany(MCatalogProductProperty::class, 'product_id');
-//    }
 
     public function variants(): HasMany
     {
@@ -68,8 +64,8 @@ class MCatalogProduct extends Model implements HasMedia
         return $this->getMedia('images');
     }
 
-    public function getMainImageAttribute(): ?Media
+    public function getThumbnailAttribute(): ?Media
     {
-        return $this->images->firstWhere('custom_properties.main', true);
+        return $this->images->firstWhere('order_column', '=', 1);
     }
 }

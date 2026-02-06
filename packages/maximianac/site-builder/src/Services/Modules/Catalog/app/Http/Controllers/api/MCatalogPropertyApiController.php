@@ -7,11 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
-use Illuminate\Validation\Rules\Enum;
 use Illuminate\Validation\ValidationException;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogPropertyData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 
 class MCatalogPropertyApiController extends Controller
@@ -40,7 +37,7 @@ class MCatalogPropertyApiController extends Controller
 
         return JsonResource::collection(
             $query->orderBy('id')->get()->map(
-                fn ($property) => MCatalogProductPropertyData::from($property)
+                fn ($property) => MCatalogPropertyData::from($property)
             )
         );
     }
@@ -72,7 +69,7 @@ class MCatalogPropertyApiController extends Controller
             ]);
         }
 
-        return JsonResource::make(MCatalogProductPropertyData::from(
+        return JsonResource::make(MCatalogPropertyData::from(
             MCatalogProperty::create([
                 'name' => $validated['locales']['name'],
                 'code' => $code,

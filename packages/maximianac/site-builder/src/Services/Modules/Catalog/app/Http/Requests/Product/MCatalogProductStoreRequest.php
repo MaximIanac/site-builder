@@ -31,7 +31,7 @@ class MCatalogProductStoreRequest extends FormRequest
             'short_description.*' => 'nullable|string|max:255',
             'description' => 'nullable|array',
             'description.*' => 'nullable|string|max:800',
-            'category_id' => 'nullable|integer|exists:m_catalog_categories,id',
+            'category_id' => 'required|integer|exists:m_catalog_categories,id',
 
             'properties' => 'nullable|array',
             'properties.*.id' => 'nullable|integer|exists:m_catalog_properties,id',
@@ -41,7 +41,7 @@ class MCatalogProductStoreRequest extends FormRequest
             'variants' => 'array',
             'variants.*.sku' => 'required|string',
             'variants.*.price' => 'required|numeric',
-            'variants.*.stock' => 'required|integer',
+            'variants.*.quantity' => 'required|integer',
 
             'variants.*.properties' => 'array',
             'variants.*.properties.*.id' => 'required|integer|exists:m_catalog_properties,id',
@@ -49,7 +49,8 @@ class MCatalogProductStoreRequest extends FormRequest
             'variants.*.properties.*.value.*' => 'nullable|string',
 
             'media' => 'nullable|array',
-            'media.*' => 'nullable|image|max:5096'
+            'media.*' => 'nullable|array',
+            'media.*.file' => 'required|image|max:5096'
         ];
     }
 }

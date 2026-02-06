@@ -5,9 +5,10 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Spatie\Translatable\HasTranslations;
 
-class MCatalogProductProperty extends Model
+class MCatalogProductPropertyPivot extends Pivot
 {
     use HasTranslations;
 
@@ -16,6 +17,9 @@ class MCatalogProductProperty extends Model
     protected $guarded = [];
     protected $with = [
         'property',
+    ];
+    protected $casts = [
+        'value' => 'array'
     ];
 
     public function product(): BelongsTo

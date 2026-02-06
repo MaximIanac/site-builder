@@ -45,7 +45,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('variant_id')->constrained('m_catalog_product_variants')->cascadeOnDelete();
             $table->foreignId('currency_id')->constrained('currencies')->cascadeOnDelete();
-            $table->decimal('price', 10, 2);
+            $table->decimal('value', 10, 2);
 
             $table->unique(['variant_id', 'currency_id']);
             $table->index('variant_id');

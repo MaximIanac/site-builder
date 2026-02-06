@@ -1,11 +1,9 @@
 <script setup>
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card";
-import {Field, FieldGroup} from "@/components/ui/field";
-import FormInput from "@/components/sb/form/shared/FormInput.vue";
-import {computed, onMounted, watch} from "vue";
+import {FieldGroup} from "@/components/ui/field";
+import {computed} from "vue";
 import LocalizedGroup from "@/components/sb/form/localized/LocalizedGroup.vue";
 import useConfig from "@/composables/useConfig.js";
-import {useFieldArray, useForm} from "vee-validate";
 
 const props = defineProps({
     properties: {
@@ -14,6 +12,7 @@ const props = defineProps({
         default: () => [],
     }
 })
+const emits = defineEmits(['update:properties'])
 
 const mappedFields = computed(() => props.properties.map((item, index) => ({
     type: item.type === 'string' ? "input" : 'error',
@@ -21,6 +20,24 @@ const mappedFields = computed(() => props.properties.map((item, index) => ({
     label: item.name,
     placeholder: "value of " + String(item.name).toLowerCase(),
 })))
+
+const propertyValues = computed({
+    get: () =>
+        mappedFields.value.reduce((acc, item, index) => ({
+            ...acc,
+            [item.name]: props.properties[index].value
+        }), {}),
+    set: (newValues) => {
+        const updatedProperties = mappedFields.value.map((item, index) => ({
+            ...props.properties[index],
+            value: newValues[item.name]
+        }));
+
+        console.log(updatedProperties)
+
+        emits("update:properties", updatedProperties);
+    }
+})
 </script>
 
 <template>
@@ -33,6 +50,7 @@ const mappedFields = computed(() => props.properties.map((item, index) => ({
             <FieldGroup>
                 <LocalizedGroup
                     v-if="mappedFields.length > 0"
+                    v-model="propertyValues"
                     :locales="useConfig().APP_LOCALES"
                     :fields="mappedFields"
                 />

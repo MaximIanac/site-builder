@@ -1,12 +1,14 @@
 <script setup>
-import { ref, computed, onMounted, watch } from 'vue'
+import {ref, onMounted, watch, computed} from 'vue'
 import { Button } from '@/components/ui/button'
-import { X, Plus, Trash2, MoveVertical, Check } from 'lucide-vue-next'
+import { Plus } from 'lucide-vue-next'
 import VariantElement from "@/components/cp/modules/catalog/products/blocks/variant/VariantElement.vue";
 import PropertyPicker
     from "@/components/cp/modules/catalog/properties/list/PropertyPicker.vue";
 import VariantUniquePropertyDialog
     from "@/components/cp/modules/catalog/properties/shared/dialogs/VariantUniquePropertyDialog.vue";
+import { v4 as uuidv4 } from 'uuid';
+import useLocalizedSchema from "@/composables/validation/useLocalizedSchema.js";
 
 const props = defineProps({
     variants: {
@@ -19,48 +21,21 @@ const props = defineProps({
     }
 })
 
-const emits = defineEmits(['create:property', 'update:variant-properties'])
+const emits = defineEmits([
+    'create:property',
+    'update:variants',
+    'update:variant-properties',
+    'update:add-variant',
+    'update:remove-variant'
+])
 
-const variants = ref([])
 const variantProperties = ref([])
-const inheritedPropertiesRef = ref([])
+const inheritedPropertiesRef = ref(props.inheritedProperties)
 const uniquePropertiesRef = ref([])
-
 const showPropertiesModal = ref(false)
 
-const initVariants = (variantsData) => {
-    if (!variantsData || variantsData.length === 0) {
-        addOffer()
-        return
-    }
-
-    try {
-        const parsed = typeof variantsData === 'string' ? JSON.parse(variantsData) : variantsData
-        variants.value = parsed.map(offer => ({
-            sku: offer.sku || '',
-            price: offer.price || offer.prices?.[0]?.value || 0,
-            stock: offer.stock || offer.quantity || 0,
-            properties: offer.properties?.map(prop => ({
-                ...prop,
-                value: prop.value || ''
-            })) || offer.propertyValues?.map(({ value, property }) => ({
-                ...property,
-                value: value || ''
-            })) || []
-        }))
-
-        // Initialize chosen properties from first offer
-        if (variants.value.length > 0) {
-            inheritedProperties.value = variants.value[0].properties.map(({ value, ...rest }) => rest)
-        }
-    } catch (error) {
-        console.error('Error parsing variant:', error)
-        addOffer()
-    }
-}
-
 const setUniqueProperties = (properties) => {
-    uniquePropertiesRef.value = properties
+    uniquePropertiesRef.value = properties.filter(unique => !props.inheritedProperties.some(i => i.id === unique.id))
 
     const map = new Map();
 
@@ -77,12 +52,34 @@ const handleVariantProperties = (props) => {
     emits("update:variant-properties", variantProperties.value)
 }
 
-const addOffer = () => {
-    variants.value.push({
+const addVariant = () => {
+    emits("update:add-variant", {
+        id: uuidv4(),
         sku: '',
         price: 0,
-        stock: 0,
+        quantity: 0,
+        justCreated: true,
+        properties: uniquePropertiesRef.value
     })
+}
+
+const normalizeVariants = (variants) => {
+    setUniqueProperties(variants[0].properties)
+
+    emits(
+        'update:variants',
+        variants.map(variant => ({
+            ...variant,
+            properties:
+                variant.properties?.map(property => ({
+                    id: property.id,
+                    name: property.name,
+                    code: property.code,
+                    type: property.type,
+                    value: useLocalizedSchema().ensureObject(property?.pivot?.translations)
+                }))
+        }))
+    )
 }
 
 watch([() => props.inheritedProperties], ([inProps]) => {
@@ -94,7 +91,11 @@ watch([() => props.inheritedProperties], ([inProps]) => {
 }, { deep: true })
 
 onMounted(() => {
-    initVariants(props.variants)
+    if (!props.variants || props.variants.length === 0) {
+        addVariant()
+    } else {
+        normalizeVariants(props.variants)
+    }
 })
 </script>
 
@@ -134,13 +135,14 @@ onMounted(() => {
                 :index="index"
                 :variantsCount="variants.length"
                 :variant-properties="variantProperties"
+                @remove="(id) => emits('update:remove-variant', id)"
             />
 
             <!-- Add Offer Button -->
             <Button
                 type="button"
                 variant="outline"
-                @click="addOffer"
+                @click="addVariant"
                 class="w-full"
             >
                 <Plus class="mr-2 h-4 w-4" />

@@ -5,9 +5,10 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\Pivot;
 use Spatie\Translatable\HasTranslations;
 
-class MCatalogVariantProperty extends Model
+class MCatalogVariantPropertyPivot extends Pivot
 {
     use HasTranslations;
 

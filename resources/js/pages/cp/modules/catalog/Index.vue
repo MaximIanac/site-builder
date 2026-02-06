@@ -2,6 +2,7 @@
 import {Head, usePage} from '@inertiajs/vue3';
 import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
 import CategoryList from "@/components/cp/modules/catalog/categories/blocks/filters/CategoryList.vue";
+import ProductTable from "@/components/cp/modules/catalog/products/blocks/table/ProductTable.vue";
 
 const breadcrumbs = [
     {
@@ -13,6 +14,8 @@ const breadcrumbs = [
 const props = defineProps({
     pageData: Object,
 })
+
+console.log(props.pageData)
 </script>
 
 <template>
@@ -24,6 +27,8 @@ const props = defineProps({
                 <CategoryList :categories="pageData.categories" />
 <!--                <x-sb.catalog.cp.categories.list :categories="$data->categories" />-->
             </div>
+
+            <ProductTable :data="pageData.products.data" />
 
 <!--            <div class="flex gap-8">-->
 <!--                <div class="flex-1">-->

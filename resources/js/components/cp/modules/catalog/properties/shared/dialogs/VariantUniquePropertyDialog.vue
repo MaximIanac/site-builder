@@ -92,7 +92,7 @@ onUnmounted(() => {
 
 <template>
     <Dialog>
-        <DialogContent class="min-w-3/4 md:min-w-1/2 w-auto max-w-4xl">
+        <DialogContent class="min-w-3/4 md:min-w-3/5 max-w-4xl">
             <DialogHeader>
                 <DialogTitle>Add unique properties to product variants</DialogTitle>
             </DialogHeader>
@@ -125,7 +125,7 @@ onUnmounted(() => {
             </div>
 
             <!-- Properties Selection -->
-            <div class="flex basis-3xs flex-wrap gap-6">
+            <div class="flex flex-wrap gap-6">
                 <!-- Properties List -->
                 <div class="flex-grow space-y-4">
                     <div class="relative">
@@ -148,7 +148,7 @@ onUnmounted(() => {
 
                     <div class="overflow-hidden">
                         <div class="max-h-96 overflow-y-auto">
-                            <div class="grid grid-cols-1 lg:grid-cols-2 gap-2">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
                                 <CheckboxPropertyBadge
                                     v-for="property in filteredProperties"
                                     :key="property.id"
@@ -169,7 +169,7 @@ onUnmounted(() => {
                 </div>
 
                 <!-- Create New Property -->
-                <div class="flex-grow">
+                <div class="flex-grow basis-[300px]">
                     <Card>
                         <CardHeader>
                             <h4 class="font-medium">Create New Property</h4>
@@ -183,7 +183,3 @@ onUnmounted(() => {
         </DialogContent>
     </Dialog>
 </template>
-
-<style scoped>
-
-</style>

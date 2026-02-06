@@ -9,6 +9,7 @@ import {computed, ref, watch} from "vue";
 import VariantElementProperty from "@/components/cp/modules/catalog/products/blocks/variant/VariantElementProperty.vue";
 import LocalizedGroup from "@/components/sb/form/localized/LocalizedGroup.vue";
 import useConfig from "@/composables/useConfig.js";
+import {useField} from "vee-validate";
 
 const props = defineProps({
     variant: {
@@ -31,6 +32,11 @@ const props = defineProps({
 const emits = defineEmits(["remove"])
 
 const propertiesData = computed(() => props.variantProperties)
+const formNamePrefix = computed(() => `variants.${props.index}`)
+
+const { value: sku } = useField(`${formNamePrefix.value}.sku`)
+const { value: price } = useField(`${formNamePrefix.value}.price`)
+const { value: quantity } = useField(`${formNamePrefix.value}.quantity`)
 </script>
 
 <template>
@@ -41,41 +47,42 @@ const propertiesData = computed(() => props.variantProperties)
                     Variant {{ index + 1 }}
                 </CardTitle>
 
-                <div class="flex items-center gap-2">
-                    <Button
-                        v-if="variantsCount > 1"
-                        type="button"
-                        variant="ghost"
-                        size="sm"
-                        @click="emits('remove', index)"
-                        class="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"
-                    >
-                        <Trash2 class="size-4" />
-                    </Button>
-                </div>
+<!--                <div class="flex items-center gap-2">-->
+<!--                    <Button-->
+<!--                        v-if="variantsCount > 1"-->
+<!--                        type="button"-->
+<!--                        variant="ghost"-->
+<!--                        size="sm"-->
+<!--                        @click="emits('remove', variant.id)"-->
+<!--                        class="h-8 w-8 p-0 text-destructive hover:text-destructive hover:bg-destructive/10"-->
+<!--                    >-->
+<!--                        <Trash2 class="size-4" />-->
+<!--                    </Button>-->
+<!--                </div>-->
             </div>
         </CardHeader>
         <CardContent>
             <FieldGroup class="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <FormInput
-                    v-model="variant.sku"
-                    :name="`variants.${index}.sku`"
+                    v-model="sku"
+                    :name="`${formNamePrefix}.sku`"
+                    :disabled="!variant.justCreated"
                     label="SKU"
                     placeholder="Enter the product unique SKU"
                 />
 
                 <FormInput
-                    v-model="variant.price"
-                    :name="`variants.${index}.price`"
+                    v-model="price"
+                    :name="`${formNamePrefix}.price`"
                     label="Price (MDL)"
                     type="number"
                     placeholder="0.00"
                 />
 
                 <FormInput
-                    v-model="variant.stock"
-                    :name="`variants.${index}.stock`"
-                    label="Stock"
+                    v-model="quantity"
+                    :name="`${formNamePrefix}.quantity`"
+                    label="Quantity"
                     type="number"
                     placeholder="0"
                 />
@@ -92,7 +99,7 @@ const propertiesData = computed(() => props.variantProperties)
                             <VariantElementProperty
                                 v-for="(property, propIndex) in propertiesData"
                                 :key="property.id"
-                                :inputName="`variants.${index}.properties.${propIndex}.`"
+                                :inputName="`${formNamePrefix}.properties.${propIndex}.`"
                                 :property="property"
                                 :locale="locale"
                             />

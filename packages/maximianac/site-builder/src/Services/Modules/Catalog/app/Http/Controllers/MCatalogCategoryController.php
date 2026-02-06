@@ -4,16 +4,11 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
-use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogCategoryData;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductData;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogPropertyData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
@@ -45,7 +40,7 @@ class MCatalogCategoryController extends Controller
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::all(),
             ),
-            'properties' => MCatalogProductPropertyData::collect(
+            'properties' => MCatalogPropertyData::collect(
                 MCatalogProperty::all()
             ),
         ]);
@@ -54,7 +49,7 @@ class MCatalogCategoryController extends Controller
 //            'categories' => MCatalogCategoryData::collect(
 //                MCatalogCategory::all(),
 //            ),
-//            'properties' => MCatalogProductPropertyData::collect(
+//            'properties' => MCatalogPropertyData::collect(
 //                MCatalogProperty::all()
 //            ),
 //        ]);
@@ -112,7 +107,7 @@ class MCatalogCategoryController extends Controller
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::where('slug', '!=', $category->slug)->get(),
             ),
-            'properties' => MCatalogProductPropertyData::collect(
+            'properties' => MCatalogPropertyData::collect(
                 MCatalogProperty::all()
             ),
             'category' => MCatalogCategoryData::from($category, ['translatable' => $category->translations]),

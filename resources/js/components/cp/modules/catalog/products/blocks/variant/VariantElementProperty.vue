@@ -1,18 +1,12 @@
 <script setup>
-import { Label } from "@/components/ui/label/index.js";
-import { Input } from "@/components/ui/input/index.js";
 import { Badge } from "@/components/ui/badge/index.js";
-import { X, ChevronRight, Asterisk, Type } from "lucide-vue-next";
 import FormInput from "@/components/sb/form/shared/FormInput.vue";
 import {computed} from "vue";
+import {useField} from "vee-validate";
 
 const props = defineProps({
     property: {
         type: Object,
-        required: true,
-    },
-    modelValue: {
-        type: String,
         required: true,
     },
     inputName: {
@@ -25,12 +19,11 @@ const props = defineProps({
     },
 });
 
-const emits = defineEmits(['update:modelValue', 'toggle:property']);
+const emits = defineEmits(['update:modelValue']);
 
-const value = computed({
-    get: () => props.modelValue || '',
-    set: (val) => emits('update:modelValue', val)
-})
+const fieldName = computed(() => `${props.inputName}value.${props.locale}`)
+
+const { value: fieldValue, errorMessage } = useField(fieldName.value);
 </script>
 
 <template>
@@ -59,9 +52,9 @@ const value = computed({
 
         <FormInput
             v-if="property.type === 'string'"
-            v-model="value"
+            v-model="fieldValue"
             type="text"
-            :name="`${inputName}value.${locale}`"
+            :name="fieldName"
             :placeholder="`Enter ${property.name.toLowerCase()}`"
         />
 

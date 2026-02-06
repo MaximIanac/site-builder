@@ -1,5 +1,5 @@
 import { h } from 'vue'
-import {CheckCircle, DollarSign, Grid, Hash, Layers, Package, Tag, Image, Globe} from "lucide-vue-next";
+import {DollarSign, Hash, Package, Tag} from "lucide-vue-next";
 
 export function formatProductToast(values) {
     return h('div', { class: 'space-y-3 text-foreground w-[320px]' }, [
@@ -8,7 +8,7 @@ export function formatProductToast(values) {
                 class: 'relative w-12 h-12 rounded-lg overflow-hidden border border-border/50 flex-shrink-0'
             }, [
                 h('img', {
-                    src: URL.createObjectURL(values.media[0]),
+                    src: values.media[0]?.file ? URL.createObjectURL(values.media[0].file) : values.media[0].original_url,
                     class: 'w-full h-full object-cover',
                     alt: 'Product thumbnail'
                 }),
@@ -79,7 +79,7 @@ export function formatProductToast(values) {
                     h('div', { class: 'flex items-center justify-between text-xs text-muted-foreground' }, [
                         h('div', { class: 'flex items-center gap-1' }, [
                             h(Hash, { class: 'size-3' }),
-                            h('span', `Stock: ${values.variants[0].stock}`)
+                            h('span', `Quantity: ${values.variants[0].quantity}`)
                         ]),
                         // Свойства варианта (только коды)
                         values.variants[0].properties?.length > 0 && h('div', { class: 'flex items-center gap-1' }, [

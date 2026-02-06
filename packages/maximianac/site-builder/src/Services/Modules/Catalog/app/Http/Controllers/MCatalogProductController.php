@@ -4,20 +4,14 @@ namespace Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
-use Illuminate\Validation\Rule;
 use Inertia\Inertia;
-use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
-use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogCategoryData;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogPropertyData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductData;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductPropertyData;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\Product\MCatalogProductVariantData;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\CurrencyEnum;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryStoreRequest;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Category\MCatalogCategoryUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MCatalogProductStoreRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Http\Requests\Product\MCatalogProductUpdateRequest;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogCategory;
@@ -26,6 +20,7 @@ use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProduct;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogProperty;
 use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Models\MCatalogVariant;
 use Spatie\LaravelData\PaginatedDataCollection;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 
 class MCatalogProductController extends Controller
 {
@@ -50,20 +45,8 @@ class MCatalogProductController extends Controller
         return Inertia::render('cp/modules/catalog/products/Create', [
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::all(),
-            ),
-//            'category_properties' => MCatalogProductPropertyData::collect(MCatalogProperty::forCategory()->get()),
-//            'offer_properties' => MCatalogProductPropertyData::collect(
-//                MCatalogProperty::forVariant()->get()
-//            ),
+            )
         ]);
-
-//        return view('cp.content.modules.catalog.products.create', [
-//            'categories' => MCatalogCategoryData::collect(
-//                MCatalogCategory::all(),
-//            ),
-////            'category_properties' => MCatalogProductPropertyData::collect(MCatalogProperty::forCategory()->get()),
-//            'offer_properties' => MCatalogProductPropertyData::collect(MCatalogProperty::forOffer()->get()),
-//        ]);
     }
 
     /**
@@ -73,8 +56,6 @@ class MCatalogProductController extends Controller
     {
         DB::transaction(function () use ($request) {
             $validated = $request->validated();
-
-//            dd($validated);
 
             $product = MCatalogProduct::create([
                 'slug' => Str::slug($validated['slug']),
@@ -102,32 +83,30 @@ class MCatalogProductController extends Controller
             foreach ($validated['variants'] as $variantData) {
                 $variant = $product->variants()->create([
                     'sku' => $variantData['sku'],
-                    'quantity' => $variantData['stock'],
+                    'quantity' => $variantData['quantity'],
                 ]);
 
                 $variant->currencies()->sync([
                     $currency->id => ['price' => $variantData['price']]
                 ]);
 
-                $variant->properties()->sync(
-                    collect($variantData['properties'])
-                        ->keyBy('id')
-                        ->map(fn ($property) => [
-                            'value' => json_encode($property['value']),
-                            'origin' => 'variant',
-                        ])
-                        ->toArray()
-                );
+                if (isset($variantData['properties'])) {
+                    $variant->properties()->sync(
+                        collect($variantData['properties'])
+                            ->keyBy('id')
+                            ->map(fn ($property) => [
+                                'value' => json_encode($property['value']),
+                                'origin' => 'variant',
+                            ])
+                            ->toArray()
+                    );
+                }
             }
 
             if ($request->hasFile('media')) {
-                $metas = json_decode($request->input('media_meta', []), true);
-                $metas = array_merge(...$metas);
-
                 foreach ($request->file('media') as $file) {
                     $product
                         ->addMedia($file)
-                        ->withCustomProperties($metas[$file->getClientOriginalName()])
                         ->toMediaCollection('images');
                 }
             }
@@ -143,7 +122,7 @@ class MCatalogProductController extends Controller
     {
         return view('cp.content.modules.catalog.products.show', [
             'product' => MCatalogProductData::from($product->load(['variant'])),
-            'properties' => MCatalogProductPropertyData::collect(MCatalogProperty::all()),
+            'properties' => MCatalogPropertyData::collect(MCatalogProperty::all()),
         ]);
     }
 
@@ -152,12 +131,11 @@ class MCatalogProductController extends Controller
      */
     public function edit(MCatalogProduct $product)
     {
-        return view('cp.content.modules.catalog.products.edit', [
-            'product' => MCatalogProductData::from($product),
+        return Inertia::render('cp/modules/catalog/products/Edit', [
+            'product' => MCatalogProductData::from($product->load('properties')),
             'categories' => MCatalogCategoryData::collect(
                 MCatalogCategory::all(),
             ),
-            'offer_properties' => MCatalogProductPropertyData::collect(MCatalogProperty::forOffer()->get()),
         ]);
     }
 
@@ -170,73 +148,99 @@ class MCatalogProductController extends Controller
             $validated = $request->validated();
 
             $product->update([
-                'name' => $validated['name'],
                 'slug' => Str::slug($validated['slug']),
                 'category_id' => $validated['category_id'],
+                'name' => $validated['name'],
                 'short_description' => $validated['short_description'],
                 'description' => $validated['description'],
             ]);
 
             if ($request->has('properties')) {
-                foreach ($request->input('properties') as $id => $value) {
-                    if (is_null($value)) {
-                        continue;
-                    }
-
-                    $product->properties()->sync([$id => ['value' => $value]], false);
-                }
+                $product->properties()->sync(
+                    collect($validated['properties'])
+                        ->keyBy('id')
+                        ->map(fn ($property) => [
+                            'value' => $property['value'],
+                            'origin' => 'category',
+                        ])
+                        ->toArray()
+                );
             }
-
-            $offers = json_decode($request->input('variant'), true);
 
             $currency = MCatalogCurrency::whereCode(CurrencyEnum::MDL)->first();
-            foreach ($offers as $offerData) {
-                $offer = $product->offers()->updateOrCreate(
-                    ['sku' => $offerData['sku']],
-                    ['quantity' => $offerData['stock']]
-                );
 
-                $offer->currencies()->syncWithoutDetaching([
-                    $currency->id => ['price' => $offerData['price']]
+            /** @var MCatalogVariant $variant */
+            foreach ($validated['variants'] as $variantData) {
+                $variantModel = MCatalogVariant::whereSku($variantData['sku'])->first();
+
+                if ($variantModel) {
+                    $variantModel->update([
+                        'quantity' => $variantData['quantity'],
+                    ]);
+
+                    $variantModel->currencies()->sync([
+                        $currency->id => ['price' => $variantData['price']]
+                    ]);
+
+                    if (isset($variantData['properties'])) {
+                        $variantModel->properties()->sync(
+                            collect($variantData['properties'])
+                                ->keyBy('id')
+                                ->map(fn ($property) => [
+                                    'value' => $property['value'],
+                                    'origin' => 'variant',
+                                ])
+                                ->toArray()
+                        );
+                    }
+
+                    continue;
+                }
+
+                $variant = $product->variants()->create([
+                    'sku' => $variantData['sku'],
+                    'quantity' => $variantData['quantity'],
                 ]);
 
-                foreach ($offerData['properties'] as $property) {
-                    $offer->properties()->sync([
-                        $property['id'] => ['value' => $property['value']]
-                    ]);
-                }
+                $variant->currencies()->sync([
+                    $currency->id => ['price' => $variantData['price']]
+                ]);
+
+                $variant->properties()->sync(
+                    collect($variantData['properties'])
+                        ->keyBy('id')
+                        ->map(fn ($property) => [
+                            'value' => $property['value'],
+                            'origin' => 'variant',
+                        ])
+                        ->toArray()
+                );
+
             }
 
-//            dd($request);
+            foreach ($request->input('media') as $index => $media) {
+                if (!empty($media['_destroy'])) {
+                    $product->deleteMedia($media['id']);
+                    continue;
+                }
 
-            $metas = json_decode($request->input('media_meta', []), true);
-            $metas = array_merge(...$metas);
+                if (!empty($media['isExisting'])) {
+                    $mediaModel = $product->media()->whereKey($media['id'])->first();
+                    $mediaModel->order_column = $index + 1;
+                    $mediaModel->save();
 
-            if ($request->hasFile('media')) {
-                foreach ($request->file('media') as $file) {
+                    continue;
+                }
+
+                if ($request->hasFile("media.$index.file")) {
                     $product
-                        ->addMedia($file)
-                        ->withCustomProperties($metas[$file->getClientOriginalName()])
+                        ->addMedia($request->file("media.$index.file"))
                         ->toMediaCollection('images');
                 }
             }
-
-            $mediaDeletedIds = json_decode($request->input('media_deleted_ids', []));
-
-            foreach ($mediaDeletedIds as $mediaId) {
-                $product->deleteMedia($mediaId);
-            }
-
-            foreach ($product->images as $image) {
-                if (isset($metas[$image->file_name])) {
-                    $image->custom_properties = $metas[$image->file_name];
-                    $image->save();
-                }
-            }
-
         });
 
-        return redirect()->route('cp.content.modules.catalog.products.edit', $product->slug)->with('success', 'Product updated successfully.');
+        return redirect()->back()->with('success', 'Product updated successfully.');
     }
 
     /**

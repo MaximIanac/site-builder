@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyUsageTypeEnum;
+use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Enums\PropertyOriginEnum;
 use Spatie\Translatable\HasTranslations;
 
 class MCatalogProperty extends Model
@@ -28,23 +28,23 @@ class MCatalogProperty extends Model
         );
     }
 
-    public function scopeForVariant($query)
+    public function scopeVariantProperties($query)
     {
-        return $query->where('usage_type', PropertyUsageTypeEnum::VARIANT);
+        return $query->where('origin', PropertyOriginEnum::VARIANT);
     }
 
-    public function scopeForCategory($query)
+    public function scopeCategoryProperties($query)
     {
-        return $query->where('usage_type', PropertyUsageTypeEnum::CATEGORY);
+        return $query->where('origin', PropertyOriginEnum::CATEGORY);
     }
 
     public function productValues(): HasMany
     {
-        return $this->hasMany(MCatalogProductProperty::class, 'property_id');
+        return $this->hasMany(MCatalogProductPropertyPivot::class, 'property_id');
     }
 
     public function offerValues(): HasMany
     {
-        return $this->hasMany(MCatalogVariantProperty::class, 'property_id');
+        return $this->hasMany(MCatalogVariantPropertyPivot::class, 'property_id');
     }
 }

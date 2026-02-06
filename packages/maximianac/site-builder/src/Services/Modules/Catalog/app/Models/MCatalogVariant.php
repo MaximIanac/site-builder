@@ -14,7 +14,7 @@ class MCatalogVariant extends Model
     protected $table = 'm_catalog_product_variants';
     protected $guarded = [];
     protected $with = [
-        'propertyValues',
+        'properties',
         'prices',
     ];
 
@@ -30,12 +30,9 @@ class MCatalogVariant extends Model
             'm_catalog_product_variant_property',
             'variant_id',
             'property_id'
-        );
-    }
-
-    public function propertyValues(): HasMany
-    {
-        return $this->hasMany(MCatalogVariantProperty::class, 'variant_id');
+        )
+            ->using(MCatalogVariantPropertyPivot::class)
+            ->withPivot(['value', 'origin']);
     }
 
     public function currencies(): BelongsToMany

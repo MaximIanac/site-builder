@@ -27,20 +27,48 @@ class MCatalogProductUpdateRequest extends FormRequest
         $productSlug = $this->route('product');
 
         return [
-            'name' => 'required|string|max:255',
             'slug' => [
                 'required',
                 'string',
                 'max:255',
                 Rule::unique('m_catalog_products', 'slug')->ignore($productSlug),
             ],
-            'category_id' => 'required|exists:m_catalog_categories,id',
-            'short_description' => 'nullable|string',
-            'description' => 'nullable|string',
-            'variant' => 'required|json',
+            'name' => 'sometimes|array',
+            'name.*' => 'required|string',
+            'short_description' => 'nullable|array',
+            'short_description.*' => 'nullable|string|max:255',
+            'description' => 'nullable|array',
+            'description.*' => 'nullable|string|max:800',
+            'category_id' => 'required|integer|exists:m_catalog_categories,id',
+
             'properties' => 'nullable|array',
-            'media' => 'nullable|array',
-            'media.*' => 'nullable|image|max:5096'
+            'properties.*.id' => 'nullable|integer|exists:m_catalog_properties,id',
+            'properties.*.value' => 'nullable|array',
+            'properties.*.value.*' => 'nullable|string',
+
+            'variants' => 'array',
+            'variants.*.sku' => [
+                'required',
+                'string',
+                'distinct',
+                Rule::unique('m_catalog_product_variants', 'sku')
+                    ->where(fn ($q) => $q->whereNotIn(
+                        'sku',
+                        collect(request('variants'))->pluck('sku')->filter()
+                    )),
+            ],
+            'variants.*.price' => 'required|numeric',
+            'variants.*.quantity' => 'required|integer',
+
+            'variants.*.properties' => 'array',
+            'variants.*.properties.*.id' => 'required|integer|exists:m_catalog_properties,id',
+            'variants.*.properties.*.value' => 'nullable|array',
+            'variants.*.properties.*.value.*' => 'nullable|string',
+
+            'media' => 'sometimes|array',
+            'media.*' => 'sometimes|array',
+            'media.*.file' => 'nullable|file|image|max:5096',
+//            'media.*.file' => 'sometimes|nullable|file|image|max:5096',
         ];
     }
 

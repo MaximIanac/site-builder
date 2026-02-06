@@ -15,7 +15,7 @@ use Maximianac\SiteBuilder\Models\Panel;
 class MCatalogVariantPrice extends Pivot
 {
     protected $guarded = [];
-    protected $table = 'm_catalog_product_offer_prices';
+    protected $table = 'm_catalog_product_variant_prices';
     protected $with = [
         'currency',
     ];

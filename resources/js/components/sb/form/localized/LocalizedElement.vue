@@ -16,7 +16,7 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue'])
 
 const value = computed({
-    get: () => props.modelValue || '',
+    get: () => props.modelValue || null,
     set: (val) => emit('update:modelValue', val)
 })
 </script>
@@ -46,6 +46,7 @@ const value = computed({
                 v-model="value"
                 :rows="field.rows || 3"
                 :placeholder="field.placeholder"
+                :aria-invalid="isErrored"
             />
         </div>
     </div>
