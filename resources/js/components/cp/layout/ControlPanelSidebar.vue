@@ -4,15 +4,23 @@ import NavMain from '@/components/cp/layout/NavMain.vue';
 import NavUser from '@/components/cp/layout/NavUser.vue';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { Link } from '@inertiajs/vue3';
-import { BookOpen, Folder, BookText } from 'lucide-vue-next';
+import { BookOpen, Folder, BookText, GalleryVerticalEnd } from 'lucide-vue-next';
 import ControlPanelLogo from './ControlPanelLogo.vue';
 import ModeToggle from "@/components/sb/ModeToggle.vue";
 
-const mainNavItems = [
+const modulesNavItems = [
     {
         title: 'Catalog',
-        href: '/cp/content/modules/catalog',
+        href: '/cp/modules/catalog',
         icon: BookText ,
+    },
+];
+
+const contentNavItems = [
+    {
+        title: 'Pages',
+        href: '/cp/pages',
+        icon: GalleryVerticalEnd,
     },
 ];
 
@@ -45,7 +53,8 @@ const footerNavItems = [
         </SidebarHeader>
 
         <SidebarContent>
-            <NavMain :items="mainNavItems" />
+            <NavMain header="Content" :items="contentNavItems" />
+            <NavMain header="Modules" :items="modulesNavItems" />
         </SidebarContent>
 
         <SidebarFooter>

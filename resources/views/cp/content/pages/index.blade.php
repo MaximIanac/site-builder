@@ -17,7 +17,6 @@
             <p class="text-text-secondary text-sm mb-4">
                 No pages available.
             </p>
-
         </div>
     @else
         <div class="flex flex-col gap-2">
