@@ -15,7 +15,7 @@ return new class extends Migration
         Schema::create('cblocks', function (Blueprint $table) {
             $table->id();
             $table->foreignIdFor(Page::class)->constrained()->onDelete('cascade');
-            $table->string('type')->comment("hero, slider, text");
+            $table->string('key', 100);
             $table->boolean('is_active')->default(false);
             $table->json('meta')->nullable();
             $table->timestamps();
@@ -23,13 +23,22 @@ return new class extends Migration
 
         Schema::create('cblock_entries', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('content_block_id')->constrained()->onDelete('cascade');
+            $table->foreignId('cblock_id')->constrained()->onDelete('cascade');
+            $table->string('key', 100);
+            $table->string('type')->comment("hero, slider, image, text");
+            $table->json('value');
+            $table->timestamps();
+        });
+
+        Schema::create('cblock_entry_slides', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cblock_entry_id')->constrained()->onDelete('cascade');
             $table->string('image')->nullable();
             $table->json('value');
             $table->unsignedTinyInteger('order')->default(0);
             $table->timestamps();
 
-            $table->index(['content_block_id', 'order']);
+            $table->index(['cblock_entry_id', 'order']);
         });
     }
 

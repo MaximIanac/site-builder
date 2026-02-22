@@ -20,10 +20,10 @@ class SiteBuilderServiceProvider extends ServiceProvider
             'site-builder'
         );
 
-        $this->loadViewsFrom(
-            dirname(__DIR__, 2) . "/stubs/resources/views",
-            "sb"
-        );
+//        $this->loadViewsFrom(
+//            dirname(__DIR__, 2) . "/stubs/resources/views",
+//            "sb"
+//        );
 
         $this->app->singleton(ModuleManager::class, fn () =>
             new ModuleManager()

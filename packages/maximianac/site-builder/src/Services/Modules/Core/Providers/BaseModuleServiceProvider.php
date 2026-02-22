@@ -22,11 +22,11 @@ abstract class BaseModuleServiceProvider extends ServiceProvider
         $module = $this->getModuleName();
         $this->modulePath = dirname(__DIR__, 2) . '/' . ucfirst($module);
 
-        $this->publishes([
-            "{$this->modulePath}/stubs/resources/views/components" => resource_path("views/components/".static::NAMESPACE."/{$module}/"),
-        ], "{$module}-components");
-
-        $this->loadViewsFrom("{$this->modulePath}/stubs/resources/views", "sb-".strtolower($module));
+//        $this->publishes([
+//            "{$this->modulePath}/stubs/resources/views/components" => resource_path("views/components/".static::NAMESPACE."/{$module}/"),
+//        ], "{$module}-components");
+//
+//        $this->loadViewsFrom("{$this->modulePath}/stubs/resources/views", "sb-".strtolower($module));
     }
 
     public function boot(): void

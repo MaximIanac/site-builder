@@ -3,6 +3,7 @@ import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
 import {Head} from "@inertiajs/vue3";
 import pages from "@/routes/cp/pages/index.js";
 import {Button} from "@/components/ui/button/index.js";
+import PageCreateForm from "@/components/cp/content/pages/forms/create/PageCreateForm.vue";
 
 const breadcrumbs = [
     {
@@ -27,9 +28,7 @@ const breadcrumbs = [
                 </Button>
             </div>
 
-            <div>
-
-            </div>
+            <PageCreateForm />
         </div>
     </ControlPanelLayout>
 </template>
