@@ -4,15 +4,17 @@ namespace Maximianac\SiteBuilder\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
-use Illuminate\Http\Request;
-use Illuminate\Support\Str;
-use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
 use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
+use Maximianac\SiteBuilder\Http\Requests\Pages\PageStoreRequest;
 use Maximianac\SiteBuilder\Models\Page;
-use Maximianac\SiteBuilder\Services\Content\Managers\ContentManager;
+use Maximianac\SiteBuilder\Services\Content\Data\PageData;
+use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
+use Maximianac\SiteBuilder\Services\Managers\Clients\Page\Adapters\PageDataAdapter;
+use Maximianac\SiteBuilder\Services\Managers\Clients\Page\PageManager;
 use Maximianac\SiteBuilder\Services\Modules\Core\Template\TemplateService;
+use Throwable;
 
 class PageController extends Controller
 {
@@ -31,9 +33,7 @@ class PageController extends Controller
      */
     public function create()
     {
-        return Inertia::render('cp/pages/Create', [
-            'pages' => Page::all()
-        ]);
+        return Inertia::render('cp/pages/Create');
 
 //        return view('cp.content.pages.create', [
 //            'templates' => TemplateService::getPageTemplates()
@@ -42,31 +42,15 @@ class PageController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     * @throws ValidationException
+     * @throws Throwable
      */
-    public function store(Request $request): RedirectResponse
+    public function store(PageStoreRequest $request): RedirectResponse
     {
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'slug' => 'nullable|string|max:255|unique:pages,slug',
-            'template' => 'required|string',
-        ]);
+        $page = (new PageManager())->create(
+            PageDataAdapter::make()->transform($request->validated())->toArray()
+        );
 
-        $slug = $request->slug ?? Str::slug($request->title);
-
-        if (Page::where('slug', $slug)->exists()) {
-            throw ValidationException::withMessages([
-                'slug' => 'This slug is already taken. Please choose another one.',
-            ]);
-        }
-
-        $page = Page::create([
-            'title' => $request->title,
-            'slug' => $slug,
-            'template' => $request->template,
-        ]);
-
-        return redirect()->route('cp.content.pages.edit', $page)->with('success', 'Page created successfully!');
+        return redirect()->route('cp.pages.edit', $page);
     }
 
     /**
@@ -85,11 +69,15 @@ class PageController extends Controller
      */
     public function edit(Page $page)
     {
-        return view('cp.content.pages.edit', [
-            'page' => $page,
-            'contents' => ContentBlockData::collect($page->contents),
-            'templates' => TemplateService::getPageTemplates()
+        return Inertia::render('cp/pages/Edit', [
+            'page' => PageData::from($page)
         ]);
+
+//        return view('cp.content.pages.edit', [
+//            'page' => $page,
+//            'contents' => ContentBlockData::collect($page->contents),
+//            'templates' => TemplateService::getPageTemplates()
+//        ]);
     }
 
     /**
@@ -101,7 +89,7 @@ class PageController extends Controller
 
 //        dd($request->input('content', []));
         foreach ($request->input('content', []) as $content) {
-            ContentManager::from($page, $content['key'], $content['type'])
+            ContentManagerOld::from($page, $content['key'], $content['type'])
                 ->processor($request->files)
                 ->updateMany($content['data']);
         }

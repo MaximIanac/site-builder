@@ -26,19 +26,30 @@ return new class extends Migration
             $table->foreignId('cblock_id')->constrained()->onDelete('cascade');
             $table->string('key', 100);
             $table->string('type')->comment("hero, slider, image, text");
-            $table->json('value');
+            $table->json('value')->nullable();
+            $table->unsignedTinyInteger('order')->default(0);
             $table->timestamps();
         });
 
-        Schema::create('cblock_entry_slides', function (Blueprint $table) {
+        Schema::create('cblock_slides', function (Blueprint $table) {
             $table->id();
             $table->foreignId('cblock_entry_id')->constrained()->onDelete('cascade');
-            $table->string('image')->nullable();
-            $table->json('value');
             $table->unsignedTinyInteger('order')->default(0);
             $table->timestamps();
 
             $table->index(['cblock_entry_id', 'order']);
+        });
+
+        Schema::create('cblock_slide_entries', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('cblock_slide_id')->constrained()->onDelete('cascade');
+            $table->string('key', 100);
+            $table->string('type')->comment("hero, image, text");
+            $table->json('value');
+            $table->unsignedTinyInteger('order')->default(0);
+            $table->timestamps();
+
+            $table->index(['cblock_slide_id', 'order']);
         });
     }
 
@@ -47,6 +58,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('content_blocks_tables');
+        Schema::dropIfExists('cblock_slide_entries');
+        Schema::dropIfExists('cblock_slides');
+        Schema::dropIfExists('cblock_entries');
+        Schema::dropIfExists('cblocks');
     }
 };

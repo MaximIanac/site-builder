@@ -43,6 +43,7 @@
         "vee-validate": "^4.15.1",
         "vite": "^7.0.4",
         "vue": "^3.5.13",
+        "vue-draggable-next": "^2.3.0",
         "vue-file-upload": "^0.1.12",
         "vue-filepond": "^7.0.4",
         "vue-sonner": "^2.0.9",

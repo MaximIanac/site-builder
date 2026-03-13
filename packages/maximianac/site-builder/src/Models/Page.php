@@ -5,16 +5,19 @@ namespace Maximianac\SiteBuilder\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\Translatable\HasTranslations;
 
 class Page extends Model
 {
-    use SoftDeletes;
+    use HasTranslations, SoftDeletes;
 
     protected $guarded = [];
+    protected array $translatable = ['title'];
+    protected $with = ['cblocks'];
 
-    public function contents(): HasMany
+    public function cblocks(): HasMany
     {
-        return $this->hasMany(Content::class);
+        return $this->hasMany(CBlock::class);
     }
 
     /**

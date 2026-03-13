@@ -2,6 +2,13 @@
 import {Card, CardContent, CardHeader, CardTitle} from "@/components/ui/card/index.js";
 import CBlockFormContainer from "@/components/cp/content/pages/blocks/cblock/CBlockFormContainer.vue";
 
+const props = defineProps({
+    cblocks: {
+        type: Array,
+        default: () => ([]),
+    }
+})
+
 </script>
 
 

@@ -1,0 +1,101 @@
+<?php
+
+namespace Maximianac\SiteBuilder\Services\Managers\Traits;
+
+use Exception;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
+
+trait HasRelations
+{
+    protected function straightRelations(): array
+    {
+        return [];
+    }
+
+    protected function nestedRelations(): array
+    {
+        return [];
+    }
+
+    /**
+     * @throws Exception
+     */
+    protected function createRelationships(Model $item, array $data): void
+    {
+        foreach ($this->straightRelations() as $relation) {
+            if (!isset($data[$relation])) {
+                continue;
+            }
+
+            if (!method_exists($item, $relation)) {
+                throw new Exception("Relation {$relation} on model does not exist");
+            }
+
+            $values = $data[$relation];
+
+            if (is_array($values) && array_is_list($values)) {
+                foreach ($values as $value) {
+                    $this->createRelationWithChildren($item, $relation, $value);
+                }
+            } else {
+                $item->$relation()->create($values);
+            }
+        }
+    }
+
+    private function createRelationWithChildren(
+        Model $parent,
+        string $straightRelation,
+        array $data,
+        string $currNestedRelation = '',
+        string $nextNestedRelation = ''
+    ): Model {
+        $nextRelation = $nextNestedRelation ?: $this->getNextNestedRelation($straightRelation);
+        $currRelation = $currNestedRelation ?: $straightRelation;
+
+        $modelData = $data;
+        unset($modelData[$nextRelation]);
+
+        $child = $parent->$currRelation()->create($modelData);
+
+        if (isset($data[$nextRelation]) && $data[$nextRelation]) {
+            $nestedItems = array_is_list($data[$nextRelation])
+                ? $data[$nextRelation]
+                : [$data[$nextRelation]];
+
+            foreach ($nestedItems as $nestedItem) {
+                $this->createRelationWithChildren(
+                    $child,
+                    $straightRelation,
+                    $nestedItem,
+                    $nextRelation,
+                    Str::of($this->getNextNestedRelation($straightRelation, $nextRelation))
+                        ->afterLast('.')
+                );
+            }
+        }
+
+        return $child;
+    }
+
+    private function getNextNestedRelation(string $relation, string $currNestedRelation = ''): ?string
+    {
+        $goalIndex = null;
+        foreach ($this->nestedRelations()[$relation] as $index => $path) {
+            if ($path === $currNestedRelation) {
+                $goalIndex = $index + 1;
+            }
+        }
+
+        if (is_null($goalIndex)) {
+            return $this->nestedRelations()[$relation][0];
+        }
+
+        if (isset($this->nestedRelations()[$relation][$goalIndex])) {
+            return $this->nestedRelations()[$relation][$goalIndex];
+        }
+
+        return null;
+    }
+}

@@ -20,3 +20,17 @@ export function toUrl(href: NonNullable<InertiaLinkProps['href']>) {
 export const getErrorMessages = (errors: string[]) => {
     return errors.map(error => ({ message: error }));
 };
+
+/**
+ * Convert dot path to bracket notation
+ * eg: array.0.key => array[0].key
+ * @param path
+ */
+export const toBracketNotation = (path: string) => {
+    return path.split('.').map(part => {
+        if (/^\d+$/.test(part)) {
+            return `[${part}]`;
+        }
+        return part;
+    }).join('.').replace(/\.\[/g, '[');
+}

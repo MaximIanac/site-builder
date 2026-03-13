@@ -3,7 +3,6 @@ import {
     Field, FieldDescription, FieldError, FieldLabel,
 } from '@/components/ui/field/index.js'
 import { Field as VeeField } from 'vee-validate'
-import {Input} from "@/components/ui/input/index.ts";
 import {getErrorMessages} from "@/lib/utils.js";
 
 const props = defineProps({
@@ -42,7 +41,9 @@ const props = defineProps({
                 </div>
             </slot>
 
-            <FieldError :errors="getErrorMessages(errors)" />
+            <slot name="error">
+                <FieldError :errors="getErrorMessages(errors)" />
+            </slot>
 
             <FieldDescription v-if="description">
                 {{ description }}

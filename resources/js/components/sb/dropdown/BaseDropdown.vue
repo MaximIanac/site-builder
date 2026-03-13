@@ -23,10 +23,10 @@ const handleClick = (item) => {
 
 <template>
     <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger class="w-full">
             <slot name="trigger" />
         </DropdownMenuTrigger>
-        <DropdownMenuContent>
+        <DropdownMenuContent align="start">
             <slot name="content">
                 <DropdownMenuItem
                     v-for="item in items"

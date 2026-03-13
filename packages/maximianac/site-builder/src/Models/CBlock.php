@@ -11,11 +11,7 @@ class CBlock extends Model
 {
     protected $table = "cblocks";
     protected $guarded = [];
-
-
-    protected $casts = [
-        'type' => CBlockType::class,
-    ];
+    protected $with = ['entries'];
 
     public function page(): BelongsTo
     {
@@ -24,6 +20,6 @@ class CBlock extends Model
 
     public function entries(): HasMany
     {
-        return $this->hasMany(CBlockEntry::class);
+        return $this->hasMany(CBlockEntry::class, 'cblock_id');
     }
 }

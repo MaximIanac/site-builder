@@ -9,6 +9,9 @@ import useConfig from "@/composables/useConfig.js";
 import {forEach} from "lodash-es";
 
 const props = defineProps({
+    groupTitle: {
+        type: String,
+    },
     locales: {
         type: Array,
         default: () => useConfig().APP_LOCALES
@@ -103,7 +106,20 @@ onMounted(() => {
 
 <template>
     <Tabs :model-value="activeLocale" @update:model-value="activeLocale = $event" :unmountOnHide="false">
-        <div class="inline-flex rounded-t-lg bg-gray-50 dark:bg-neutral-800 px-1 pt-1">
+        <div class="flex justify-between rounded-t-lg bg-gray-50 dark:bg-neutral-800 px-1 pt-1">
+            <div v-if="groupTitle" class="flex items-center">
+
+<!--                <InlineEditLabel-->
+<!--                    :name="`${name}.__${locale}`"-->
+<!--                    :errorName="`${name}.key`"-->
+<!--                    v-model="entry.key"-->
+<!--                />-->
+
+
+                <h2 class="text-sm font-semibold text-foreground tracking-tight">
+                    {{ groupTitle }}
+                </h2>
+            </div>
             <TabsList class="flex gap-1 !p-0 rounded-none !rounded-t-lg">
                 <TabsTrigger
                     v-for="locale in locales"

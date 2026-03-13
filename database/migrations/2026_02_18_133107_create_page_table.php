@@ -3,25 +3,31 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Maximianac\SiteBuilder\Models\Site;
 
-return new class extends Migration {
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
     public function up(): void
     {
         Schema::create('pages', function (Blueprint $table) {
             $table->id();
 //            $table->foreignIdFor(Site::class)->constrained()->cascadeOnDelete();
-            $table->string('title');
-            $table->string('slug')->unique();
-            $table->string('template')->nullable();
+            $table->json('title');
+            $table->string('slug', 50)->unique();
+            $table->boolean('is_active');
             $table->json('meta')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
     }
 
+    /**
+     * Reverse the migrations.
+     */
     public function down(): void
     {
-        Schema::dropIfExists('pages');
+        Schema::dropIfExists('page');
     }
 };

@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
 use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Page;
-use Maximianac\SiteBuilder\Services\Content\Managers\ContentManager;
+use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
 use Maximianac\SiteBuilder\Services\Modules\Core\Template\TemplateService;
 
 class PageController extends Controller
@@ -96,7 +96,7 @@ class PageController extends Controller
 
 //        dd($request->input('content', []));
         foreach ($request->input('content', []) as $content) {
-            ContentManager::from($page, $content['key'], $content['type'])
+            ContentManagerOld::from($page, $content['key'], $content['type'])
                 ->processor($request->files)
                 ->updateMany($content['data']);
         }
