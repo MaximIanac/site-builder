@@ -7,4 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 abstract class ModelManager
 {
     abstract public function create(array $data): Model;
+    abstract public function update(Model $model, array $data): Model;
 }

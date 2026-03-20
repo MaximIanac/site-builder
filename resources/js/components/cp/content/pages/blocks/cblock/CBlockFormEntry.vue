@@ -6,7 +6,7 @@ import { Trash } from 'lucide-vue-next';
 import InlineEditLabel from "@/components/sb/labels/InlineEditLabel.vue";
 import Slider from "@/components/cp/content/pages/blocks/cblock/sliderEntry/Slider.vue";
 import ConfirmationPopover from "@/components/sb/popover/ConfirmationPopover.vue";
-
+const emits = defineEmits(['update:entry', "remove:entry"])
 const props = defineProps({
     entry: {
         type: Object,
@@ -21,7 +21,7 @@ const props = defineProps({
         required: true,
     },
 })
-const emits = defineEmits(['update:entry', "remove:entry"])
+
 provide('locale', props.locale)
 
 watch(

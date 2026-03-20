@@ -1,6 +1,6 @@
 <?php
 
-namespace Maximianac\SiteBuilder\Services\Content\Data;
+namespace Maximianac\SiteBuilder\Services\Content\Resources;
 
 use Illuminate\Support\Collection;
 use Illuminate\Support\Optional;
@@ -8,26 +8,33 @@ use Maximianac\SiteBuilder\Services\Content\Enums\CBlockEntryTypeEnum;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
 
-class CBlockEntryData extends Data
+class CBlockEntryResourceData extends Data
 {
     public function __construct(
         public string $key,
         public CBlockEntryTypeEnum $type,
-        public array|null $value,
+        public string|null $value,
         public int $order,
 
-        #[DataCollectionOf(CBlockSlideData::class)]
-        public Optional|Collection|array|null $slides,
+        #[DataCollectionOf(CBlockSlideResourceData::class)]
+        public Optional|Collection|null $slides,
+
+        public array|null $translations,
 
         public int|null $id = null,
 
     ) {
         if ($this->type === CBlockEntryTypeEnum::SLIDER) {
             $this->value = null;
+            $this->translations = null;
         }
 
         if ($this->type !== CBlockEntryTypeEnum::SLIDER) {
             $this->slides = null;
+        }
+
+        if ($this->slides instanceof Collection) {
+            $this->slides = CBlockSlideResourceData::collect($this->slides);
         }
     }
 }

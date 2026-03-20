@@ -1,0 +1,63 @@
+<script setup>
+import {AlertCircle, Braces, CheckCircle2, RotateCcw} from "lucide-vue-next";
+import {Badge} from "@/components/ui/badge/index.js";
+import {Field} from "@/components/ui/field/index.js";
+import {Button} from "@/components/ui/button/index.js";
+
+const emits = defineEmits(['reset'])
+const props = defineProps({
+    isDirty: Boolean,
+    isFormValid: Boolean,
+})
+
+</script>
+
+<template>
+    <div class="flex items-center justify-between gap-4">
+        <div class="flex items-center gap-3">
+            <Badge
+                variant="secondary"
+                :class="{
+                    'text-amber-600': isDirty && !isFormValid,
+                    'text-green-600': isDirty && isFormValid,
+                    '': !isDirty
+                }"
+            >
+                <AlertCircle v-if="isDirty && !isFormValid" class="size-4" />
+                <CheckCircle2 v-else-if="isDirty && isFormValid" class="size-4" />
+                <Braces v-else class="size-4" />
+
+                <span class="text-sm font-medium">
+                    <span v-if="!isDirty">No changes</span>
+                    <span v-else-if="!isFormValid">Form has errors</span>
+                    <span v-else>Ready to save</span>
+                </span>
+            </Badge>
+
+            <span v-if="isDirty" class="text-sm text-gray-500">
+                You have unsaved changes
+            </span>
+        </div>
+
+        <div class="flex items-center gap-2">
+            <Button
+                v-if="isDirty"
+                type="button"
+                variant="outline"
+                @click="$emit('reset')"
+                class="gap-2"
+            >
+                <RotateCcw class="w-4 h-4" />
+                Reset changes
+            </Button>
+
+            <Field orientation="horizontal" class="justify-end">
+                <slot />
+            </Field>
+        </div>
+    </div>
+</template>
+
+<style scoped>
+
+</style>

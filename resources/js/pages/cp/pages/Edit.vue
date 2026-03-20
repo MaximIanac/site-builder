@@ -21,14 +21,12 @@ const breadcrumbs = [
         href: pages.edit({page: props.page.id}),
     },
 ];
-
-console.log(props.page)
 </script>
 
 <template>
     <Head :title="page.title" />
 
     <ControlPanelLayout :breadcrumbs="breadcrumbs">
-        <PageCreateForm />
+        <PageCreateForm :page="page" />
     </ControlPanelLayout>
 </template>

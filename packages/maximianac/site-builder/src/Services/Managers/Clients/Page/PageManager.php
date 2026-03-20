@@ -4,6 +4,7 @@ namespace Maximianac\SiteBuilder\Services\Managers\Clients\Page;
 
 use DB;
 use Exception;
+use Illuminate\Database\Eloquent\Model;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Managers\Clients\ModelManager;
 use Maximianac\SiteBuilder\Services\Managers\Traits\HasRelations;
@@ -48,6 +49,35 @@ class PageManager extends ModelManager
             DB::commit();
 
             return $item->load($this->straightRelations());
+        } catch (Exception|Throwable $e) {
+            DB::rollBack();
+
+            throw $e;
+        }
+    }
+
+    /**
+     * @param Model|Page $model
+     * @param array $data
+     * @return Page
+     * @throws Throwable
+     */
+    public function update(Model|Page $model, array $data): Page
+    {
+        try {
+            DB::beginTransaction();
+
+            $modelWithoutRelations = collect($data)
+                ->except($this->straightRelations())
+                ->toArray();
+
+            $model->update($modelWithoutRelations);
+
+            $this->updateRelationships($model, $data);
+
+            DB::commit();
+
+            return $model->load($this->straightRelations());
         } catch (Exception|Throwable $e) {
             DB::rollBack();
 

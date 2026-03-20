@@ -40,7 +40,6 @@ const putEntry = (entryIndex, entry) => {
 
 const createEntry = (type) => {
     push({
-        id: Date.now() + Math.random(),
         key: `${type}_${cblockData.value.entries.length + 1}`,
         type: type,
         value: {},

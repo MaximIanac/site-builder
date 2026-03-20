@@ -1,7 +1,7 @@
-import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../wayfinder'
+import { queryParams, type RouteQueryOptions, type RouteDefinition, type RouteFormDefinition, applyUrlDefaults } from './../../../../../../wayfinder'
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
 export const index = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -15,8 +15,8 @@ index.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
 index.url = (options?: RouteQueryOptions) => {
@@ -24,8 +24,8 @@ index.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
 index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -33,8 +33,8 @@ index.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
 index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -43,8 +43,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
     const indexForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -53,8 +53,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
         indexForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -62,8 +62,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::index
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:22
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::index
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:24
  * @route '/cp/pages'
  */
         indexForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -78,8 +78,8 @@ index.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     index.form = indexForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
 export const create = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -93,8 +93,8 @@ create.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
 create.url = (options?: RouteQueryOptions) => {
@@ -102,8 +102,8 @@ create.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
 create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
@@ -111,8 +111,8 @@ create.get = (options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     method: 'get',
 })
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
 create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
@@ -121,8 +121,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
     const createForm = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -131,8 +131,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
         createForm.get = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -140,8 +140,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
             method: 'get',
         })
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::create
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:32
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::create
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:34
  * @route '/cp/pages/create'
  */
         createForm.head = (options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
@@ -156,8 +156,8 @@ create.head = (options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     
     create.form = createForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::store
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:48
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::store
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:47
  * @route '/cp/pages'
  */
 export const store = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -171,8 +171,8 @@ store.definition = {
 } satisfies RouteDefinition<["post"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::store
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:48
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::store
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:47
  * @route '/cp/pages'
  */
 store.url = (options?: RouteQueryOptions) => {
@@ -180,8 +180,8 @@ store.url = (options?: RouteQueryOptions) => {
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::store
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:48
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::store
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:47
  * @route '/cp/pages'
  */
 store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
@@ -190,8 +190,8 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::store
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:48
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::store
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:47
  * @route '/cp/pages'
  */
     const storeForm = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -200,8 +200,8 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::store
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:48
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::store
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:47
  * @route '/cp/pages'
  */
         storeForm.post = (options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -211,11 +211,11 @@ store.post = (options?: RouteQueryOptions): RouteDefinition<'post'> => ({
     
     store.form = storeForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-export const show = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const show = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
@@ -226,17 +226,17 @@ show.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-show.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+show.url = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { page: args.id }
+            if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+            args = { page: args.slug }
         }
     
     if (Array.isArray(args)) {
@@ -249,7 +249,7 @@ show.url = (args: { page: number | { id: number } } | [page: number | { id: numb
 
     const parsedArgs = {
                         page: typeof args.page === 'object'
-                ? args.page.id
+                ? args.page.slug
                 : args.page,
                 }
 
@@ -259,49 +259,49 @@ show.url = (args: { page: number | { id: number } } | [page: number | { id: numb
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-show.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+show.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: show.url(args, options),
     method: 'get',
 })
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-show.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+show.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: show.url(args, options),
     method: 'head',
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-    const showForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const showForm = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: show.url(args, options),
         method: 'get',
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-        showForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, options),
             method: 'get',
         })
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::show
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:60
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::show
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:59
  * @route '/cp/pages/{page}'
  */
-        showForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        showForm.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: show.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -313,11 +313,11 @@ show.head = (args: { page: number | { id: number } } | [page: number | { id: num
     
     show.form = showForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-export const edit = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+export const edit = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
@@ -328,17 +328,17 @@ edit.definition = {
 } satisfies RouteDefinition<["get","head"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-edit.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+edit.url = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { page: args.id }
+            if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+            args = { page: args.slug }
         }
     
     if (Array.isArray(args)) {
@@ -351,7 +351,7 @@ edit.url = (args: { page: number | { id: number } } | [page: number | { id: numb
 
     const parsedArgs = {
                         page: typeof args.page === 'object'
-                ? args.page.id
+                ? args.page.slug
                 : args.page,
                 }
 
@@ -361,49 +361,49 @@ edit.url = (args: { page: number | { id: number } } | [page: number | { id: numb
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-edit.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
+edit.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'get'> => ({
     url: edit.url(args, options),
     method: 'get',
 })
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-edit.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
+edit.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'head'> => ({
     url: edit.url(args, options),
     method: 'head',
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-    const editForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+    const editForm = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
         action: edit.url(args, options),
         method: 'get',
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-        editForm.get = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.get = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, options),
             method: 'get',
         })
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::edit
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:71
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::edit
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:70
  * @route '/cp/pages/{page}/edit'
  */
-        editForm.head = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
+        editForm.head = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'get'> => ({
             action: edit.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'HEAD',
@@ -415,11 +415,11 @@ edit.head = (args: { page: number | { id: number } } | [page: number | { id: num
     
     edit.form = editForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-export const update = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+export const update = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
@@ -430,17 +430,17 @@ update.definition = {
 } satisfies RouteDefinition<["put","patch"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-update.url = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions) => {
+update.url = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions) => {
     if (typeof args === 'string' || typeof args === 'number') {
         args = { page: args }
     }
 
-            if (typeof args === 'object' && !Array.isArray(args) && 'id' in args) {
-            args = { page: args.id }
+            if (typeof args === 'object' && !Array.isArray(args) && 'slug' in args) {
+            args = { page: args.slug }
         }
     
     if (Array.isArray(args)) {
@@ -453,7 +453,7 @@ update.url = (args: { page: number | { id: number } } | [page: number | { id: nu
 
     const parsedArgs = {
                         page: typeof args.page === 'object'
-                ? args.page.id
+                ? args.page.slug
                 : args.page,
                 }
 
@@ -463,30 +463,30 @@ update.url = (args: { page: number | { id: number } } | [page: number | { id: nu
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-update.put = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
+update.put = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'put'> => ({
     url: update.url(args, options),
     method: 'put',
 })
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-update.patch = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
+update.patch = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteDefinition<'patch'> => ({
     url: update.url(args, options),
     method: 'patch',
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-    const updateForm = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+    const updateForm = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
         action: update.url(args, {
                     [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                         _method: 'PUT',
@@ -497,11 +497,11 @@ update.patch = (args: { page: number | { id: number } } | [page: number | { id: 
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-        updateForm.put = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.put = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PUT',
@@ -511,11 +511,11 @@ update.patch = (args: { page: number | { id: number } } | [page: number | { id: 
             method: 'post',
         })
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::update
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:83
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::update
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:80
  * @route '/cp/pages/{page}'
  */
-        updateForm.patch = (args: { page: number | { id: number } } | [page: number | { id: number } ] | number | { id: number }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
+        updateForm.patch = (args: { page: string | { slug: string } } | [page: string | { slug: string } ] | string | { slug: string }, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
             action: update.url(args, {
                         [options?.mergeQuery ? 'mergeQuery' : 'query']: {
                             _method: 'PATCH',
@@ -527,8 +527,8 @@ update.patch = (args: { page: number | { id: number } } | [page: number | { id: 
     
     update.form = updateForm
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::destroy
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:102
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::destroy
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:93
  * @route '/cp/pages/{page}'
  */
 export const destroy = (args: { page: string | number } | [page: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -542,8 +542,8 @@ destroy.definition = {
 } satisfies RouteDefinition<["delete"]>
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::destroy
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:102
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::destroy
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:93
  * @route '/cp/pages/{page}'
  */
 destroy.url = (args: { page: string | number } | [page: string | number ] | string | number, options?: RouteQueryOptions) => {
@@ -570,8 +570,8 @@ destroy.url = (args: { page: string | number } | [page: string | number ] | stri
 }
 
 /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::destroy
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:102
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::destroy
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:93
  * @route '/cp/pages/{page}'
  */
 destroy.delete = (args: { page: string | number } | [page: string | number ] | string | number, options?: RouteQueryOptions): RouteDefinition<'delete'> => ({
@@ -580,8 +580,8 @@ destroy.delete = (args: { page: string | number } | [page: string | number ] | s
 })
 
     /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::destroy
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:102
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::destroy
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:93
  * @route '/cp/pages/{page}'
  */
     const destroyForm = (args: { page: string | number } | [page: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({
@@ -595,8 +595,8 @@ destroy.delete = (args: { page: string | number } | [page: string | number ] | s
     })
 
             /**
-* @see \Maximianac\SiteBuilder\Http\Controllers\PageController::destroy
- * @see packages/maximianac/site-builder/src/Http/Controllers/PageController.php:102
+* @see \Maximianac\SiteBuilder\Http\Controllers\Content\PageController::destroy
+ * @see packages/maximianac/site-builder/src/Http/Controllers/Content/PageController.php:93
  * @route '/cp/pages/{page}'
  */
         destroyForm.delete = (args: { page: string | number } | [page: string | number ] | string | number, options?: RouteQueryOptions): RouteFormDefinition<'post'> => ({

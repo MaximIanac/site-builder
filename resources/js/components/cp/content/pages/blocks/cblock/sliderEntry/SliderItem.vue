@@ -5,11 +5,14 @@ import {GripVertical, Plus, Trash} from "lucide-vue-next";
 import Button from "../../../../../../ui/button/Button.vue";
 import BaseDropdown from "@/components/sb/dropdown/BaseDropdown.vue";
 import CBlockFormEntry from "@/components/cp/content/pages/blocks/cblock/CBlockFormEntry.vue";
-import {useFieldArray} from "vee-validate";
+import {useFieldArray, useFieldError} from "vee-validate";
 import {inject} from "vue";
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import ConfirmationPopover from "@/components/sb/popover/ConfirmationPopover.vue";
+import {toBracketNotation} from "@/lib/utils.js";
+import {FieldError} from "@/components/ui/field/index.js";
 
+const emits = defineEmits(['remove:slide'])
 const props = defineProps({
     slide: {
         type: Object,
@@ -24,10 +27,10 @@ const props = defineProps({
         required: true,
     },
 })
-const emits = defineEmits(['remove:slide'])
 
+const { remove, push } = useFieldArray(`${props.name}.entries`)
+const errorMessage = useFieldError(`${toBracketNotation(props.name)}.entries`);
 const locale = inject('locale');
-const { update, remove, push } = useFieldArray(`${props.name}.entries`)
 
 const createEntry = (type) => {
     const newEntry = {
@@ -40,10 +43,6 @@ const createEntry = (type) => {
 }
 
 const removeEntry = (index) => {
-
-    console.log(index)
-
-    console.log(props.slide)
     remove(index)
 }
 </script>
@@ -66,6 +65,7 @@ const removeEntry = (index) => {
         </ItemHeader>
 
         <ItemContent class="gap-1">
+            <FieldError :errors="[{message: errorMessage}]" />
             <draggable
                 v-if="!!slide.entries.length"
                 v-model="slide.entries"

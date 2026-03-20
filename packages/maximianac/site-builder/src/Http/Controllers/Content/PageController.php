@@ -1,19 +1,19 @@
 <?php
 
-namespace Maximianac\SiteBuilder\Http\Controllers;
+namespace Maximianac\SiteBuilder\Http\Controllers\Content;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
-use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
-use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
-use Maximianac\SiteBuilder\Http\Requests\Pages\PageStoreRequest;
+use Inertia\Response;
+use Maximianac\SiteBuilder\Http\Requests\Content\Pages\StorePageRequest;
+use Maximianac\SiteBuilder\Http\Requests\Content\Pages\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Content\Data\PageData;
 use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
+use Maximianac\SiteBuilder\Services\Content\Resources\PageResourceData;
 use Maximianac\SiteBuilder\Services\Managers\Clients\Page\Adapters\PageDataAdapter;
 use Maximianac\SiteBuilder\Services\Managers\Clients\Page\PageManager;
-use Maximianac\SiteBuilder\Services\Modules\Core\Template\TemplateService;
 use Throwable;
 
 class PageController extends Controller
@@ -44,7 +44,7 @@ class PageController extends Controller
      * Store a newly created resource in storage.
      * @throws Throwable
      */
-    public function store(PageStoreRequest $request): RedirectResponse
+    public function store(StorePageRequest $request): RedirectResponse
     {
         $page = (new PageManager())->create(
             PageDataAdapter::make()->transform($request->validated())->toArray()
@@ -70,14 +70,8 @@ class PageController extends Controller
     public function edit(Page $page)
     {
         return Inertia::render('cp/pages/Edit', [
-            'page' => PageData::from($page)
+            'page' => PageResourceData::from($page)
         ]);
-
-//        return view('cp.content.pages.edit', [
-//            'page' => $page,
-//            'contents' => ContentBlockData::collect($page->contents),
-//            'templates' => TemplateService::getPageTemplates()
-//        ]);
     }
 
     /**
@@ -85,18 +79,12 @@ class PageController extends Controller
      */
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
     {
-        // TODO: ДОДЕЛАТЬ ПРОЦЕССОР ДЛЯ PANELS
+        $page = (new PageManager())->update(
+            $page,
+            PageDataAdapter::make()->transform($request->validated())->toArray()
+        );
 
-//        dd($request->input('content', []));
-        foreach ($request->input('content', []) as $content) {
-            ContentManagerOld::from($page, $content['key'], $content['type'])
-                ->processor($request->files)
-                ->updateMany($content['data']);
-        }
-
-        $page->update($request->only(['title', 'slug', 'template']));
-
-        return redirect()->route('cp.content.pages.edit', $page)->with('success', 'Page edited successfully!');
+        return redirect()->route('cp.pages.edit', $page);
     }
 
     /**

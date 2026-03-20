@@ -1,11 +1,8 @@
 <?php
 
-use App\Http\Controllers\ControlPanel\Content\Modules\ModuleInstallerController;
-use App\Http\Controllers\ControlPanel\Content\Modules\ModulesController;
-use App\Http\Controllers\ControlPanel\Content\Pages\PanelController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use Maximianac\SiteBuilder\Http\Controllers\PageController;
+use Maximianac\SiteBuilder\Http\Controllers\Content\PageController;
 
 //use App\Http\Controllers\ControlPanel\DashboardController;
 

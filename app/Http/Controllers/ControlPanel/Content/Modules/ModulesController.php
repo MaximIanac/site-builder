@@ -5,16 +5,10 @@ namespace App\Http\Controllers\ControlPanel\Content\Modules;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
-use Inertia\Inertia;
-use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
-use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
+use Maximianac\SiteBuilder\Http\Requests\Content\Pages\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Module;
 use Maximianac\SiteBuilder\Models\Page;
-use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
-use Maximianac\SiteBuilder\Services\Modules\Catalog\app\Data\MCatalogDataProvider;
-use Maximianac\SiteBuilder\Services\Modules\Core\Template\TemplateService;
 
 class ModulesController extends Controller
 {

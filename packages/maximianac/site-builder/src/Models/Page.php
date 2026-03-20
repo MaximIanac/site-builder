@@ -15,22 +15,21 @@ class Page extends Model
     protected array $translatable = ['title'];
     protected $with = ['cblocks'];
 
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
+
     public function cblocks(): HasMany
     {
         return $this->hasMany(CBlock::class);
     }
 
-    /**
-     * Получить путь к шаблону страницы.
-     */
     public function getTemplatePath(): string
     {
         return "site-builder::templates.{$this->template}";
     }
 
-    /**
-     * Получить метатеги для страницы.
-     */
     public function getMetaTags(): array
     {
         return $this->meta ?? [

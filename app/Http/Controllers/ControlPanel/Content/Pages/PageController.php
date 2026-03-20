@@ -8,7 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Maximianac\SiteBuilder\Data\Content\ContentBlockData;
-use Maximianac\SiteBuilder\Http\Requests\Content\UpdatePageRequest;
+use Maximianac\SiteBuilder\Http\Requests\Content\Pages\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
 use Maximianac\SiteBuilder\Services\Modules\Core\Template\TemplateService;

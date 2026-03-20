@@ -2,10 +2,11 @@
 import { Item, ItemContent } from '@/components/ui/item/index.js'
 import Button from "../../../../../../ui/button/Button.vue";
 import {GripVertical, Plus} from "lucide-vue-next";
-import {useFieldArray} from "vee-validate";
+import {useFieldArray, useFieldError} from "vee-validate";
 import SliderItem from "@/components/cp/content/pages/blocks/cblock/sliderEntry/SliderItem.vue";
 import { VueDraggableNext as draggable } from 'vue-draggable-next'
 import {computed} from "vue";
+import {FieldError} from "@/components/ui/field/index.js";
 
 const props = defineProps({
     slides: {
@@ -20,25 +21,6 @@ const props = defineProps({
 
 const { fields, move, remove, push } = useFieldArray(`${props.name}`)
 const slidesRef = computed(() => props.slides)
-
-/* const cloneEntries = (entries = []) => {
-    return entries.map(item => ({
-        ...item,
-        key: `${item.key}`,
-        value: {},
-    }))
-}
-
-const createSlide = () => {
-    const source =
-        fields.value?.[0]?.value?.entries ??
-        props.slides?.[0]?.entries ??
-        []
-
-    const entries = cloneEntries(source)
-
-    push({ entries })
-}*/
 
 const createSlide = () => {
     push({

@@ -21,6 +21,6 @@ class CBlockSlide extends Model
 
     public function entries(): HasMany
     {
-        return $this->hasMany(CBlockSlideEntry::class, 'cblock_slide_id');
+        return $this->hasMany(CBlockSlideEntry::class, 'cblock_slide_id')->orderBy('order');
     }
 }

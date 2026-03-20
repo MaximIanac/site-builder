@@ -28,7 +28,7 @@ class CBlockEntry extends Model
 
     public function slides(): HasMany
     {
-        return $this->hasMany(CBlockSlide::class, 'cblock_entry_id');
+        return $this->hasMany(CBlockSlide::class, 'cblock_entry_id')->orderBy('order');
     }
 
     public function scopeOfType($query, CBlockEntryTypeEnum $type)

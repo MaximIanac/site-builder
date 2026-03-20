@@ -1,6 +1,6 @@
-import PageController from './PageController'
+import Content from './Content'
 const Controllers = {
-    PageController: Object.assign(PageController, PageController),
+    Content: Object.assign(Content, Content),
 }
 
 export default Controllers

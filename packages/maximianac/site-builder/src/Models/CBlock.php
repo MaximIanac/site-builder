@@ -20,6 +20,6 @@ class CBlock extends Model
 
     public function entries(): HasMany
     {
-        return $this->hasMany(CBlockEntry::class, 'cblock_id');
+        return $this->hasMany(CBlockEntry::class, 'cblock_id')->orderBy('order');
     }
 }
