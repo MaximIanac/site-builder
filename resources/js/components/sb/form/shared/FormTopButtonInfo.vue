@@ -3,9 +3,15 @@ import {AlertCircle, Braces, CheckCircle2, RotateCcw} from "lucide-vue-next";
 import {Badge} from "@/components/ui/badge/index.js";
 import {Field} from "@/components/ui/field/index.js";
 import {Button} from "@/components/ui/button/index.js";
+import {FormType} from "@/enums/FormType.js";
 
 const emits = defineEmits(['reset'])
 const props = defineProps({
+    formType: {
+        type: String,
+        validator: (v) => Object.values(FormType).includes(v),
+        required: true
+    },
     isDirty: Boolean,
     isFormValid: Boolean,
 })
@@ -20,17 +26,17 @@ const props = defineProps({
                 :class="{
                     'text-amber-600': isDirty && !isFormValid,
                     'text-green-600': isDirty && isFormValid,
-                    '': !isDirty
+                    'hidden': !isDirty && formType === FormType.CREATE
                 }"
             >
                 <AlertCircle v-if="isDirty && !isFormValid" class="size-4" />
                 <CheckCircle2 v-else-if="isDirty && isFormValid" class="size-4" />
-                <Braces v-else class="size-4" />
+                <Braces v-else-if="!isDirty && isFormValid" class="size-4" />
 
                 <span class="text-sm font-medium">
                     <span v-if="!isDirty">No changes</span>
-                    <span v-else-if="!isFormValid">Form has errors</span>
-                    <span v-else>Ready to save</span>
+                    <span v-else-if="isDirty && !isFormValid">Form has errors</span>
+                    <span v-else-if="isDirty && isFormValid">Ready to save</span>
                 </span>
             </Badge>
 

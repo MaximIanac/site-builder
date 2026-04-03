@@ -2,7 +2,7 @@
 import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
 import {Head} from "@inertiajs/vue3";
 import pages from "@/routes/cp/pages/index.js";
-import PageCreateForm from "@/components/cp/content/pages/forms/create/PageCreateForm.vue";
+import PageCreateEditForm from "@/components/cp/content/pages/forms/create/PageCreateEditForm.vue";
 
 const breadcrumbs = [
     {
@@ -20,6 +20,6 @@ const breadcrumbs = [
     <Head title="Pages" />
 
     <ControlPanelLayout :breadcrumbs="breadcrumbs">
-        <PageCreateForm />
+        <PageCreateEditForm form-type="create" />
     </ControlPanelLayout>
 </template>

@@ -5,21 +5,22 @@ import * as z from "zod";
 import {useForm} from "vee-validate";
 import PageBaseInfoFormCard from "@/components/cp/content/pages/forms/create/form-card/PageBaseInfoFormCard.vue";
 import PageCBlockFormCard from "@/components/cp/content/pages/forms/create/form-card/PageCBlockFormCard.vue";
-import {computed, onBeforeUnmount, onMounted, watch} from "vue";
-import {Field} from "@/components/ui/field/index.js";
+import {computed, onMounted, onUnmounted, watch} from "vue";
 import {Button} from "@/components/ui/button/index.js";
 import {router} from "@inertiajs/vue3";
 import {toast} from "vue-sonner";
-import {formatProductToast} from "@/lib/formatters/toast/formatProductToast.js";
 import pages from "@/routes/cp/pages/index.js";
 import {CBlockEntryType} from "@/enums/CBlockEntryType.js";
-import { AlertCircle, CheckCircle2, RotateCcw, Braces } from 'lucide-vue-next';
-import {Badge} from "@/components/ui/badge/index.js";
 import FormTopButtonInfo from "@/components/sb/form/shared/FormTopButtonInfo.vue";
+import {FormType} from "@/enums/FormType.js";
 
 const props = defineProps({
     page: {
         type: Object,
+    },
+    formType: {
+        type: String,
+        required: true
     }
 });
 
@@ -44,7 +45,11 @@ const createPageSchema = toTypedSchema(z.object({
                         message: "Only latin, numbers, and _, cannot start with a number, no spaces or special characters"
                     }),
                 type: z.enum(Object.values(CBlockEntryType)),
-                value: localizeSchema(),
+                value:
+                    z.union([
+                        z.object({}).passthrough(),
+                        z.instanceof(File)
+                    ]).optional(),
                 slides: z.array(
                     z.object({
                         id: z.union([z.number(), z.string()]).optional(),
@@ -107,10 +112,10 @@ const { handleSubmit, setFieldValue, values, setErrors, errors, meta, resetForm 
 })
 
 const isDirty = computed(() => meta.value.dirty)
-const isFormValid = computed(() => meta.value.valid)
+const isFormValid = computed(() => meta.value.valid || Object.keys(errors.value).length === 0)
 
 const onSubmit = handleSubmit(data => {
-    if (props.page) {
+    if (props.formType === FormType.EDIT) {
         router.post(
             pages.update({page: props.page.slug}),
             {...data, _method: "put"},
@@ -151,21 +156,29 @@ const handleReset = () => {
     toast.info('Form has been reset')
 }
 
-router.on('before', (event) => {
-    if (event.detail.visit.method !== 'get') return;
+let removeHook = null;
 
-    if (isDirty.value) {
-        if (!confirm('There are unsaved changes. Exit?')) {
-            event.preventDefault()
+onMounted(() => {
+    removeHook = router.on('before', (event) => {
+        if (event.detail.visit.method !== 'get') return;
+
+        if (isDirty.value) {
+            if (!confirm('There are unsaved changes. Exit?')) {
+                event.preventDefault()
+            }
         }
-    }
+    })
+})
+
+onUnmounted(() => {
+    removeHook && removeHook()
 })
 
 watch(values, (v) => {
-    // console.log(v)
+    console.log(v.cblocks[0])
 })
 watch(errors, (v) => {
-    // console.log(v)
+    console.log(v)
 })
 </script>
 
@@ -173,6 +186,7 @@ watch(errors, (v) => {
     <form id="create-edit-page" @submit="onSubmit">
         <div class="space-y-6">
             <FormTopButtonInfo
+                :form-type="formType"
                 :is-dirty="isDirty"
                 :is-form-valid="isFormValid"
                 @reset="handleReset"
@@ -182,7 +196,7 @@ watch(errors, (v) => {
                     form="create-edit-page"
                     :disabled="!isDirty || !isFormValid"
                 >
-                    <span>{{ page ? 'Edit Page' : 'Create' }}</span>
+                    <span>{{ props.formType === FormType.EDIT ? 'Edit Page' : 'Create' }}</span>
                 </Button>
             </FormTopButtonInfo>
 

@@ -6,6 +6,7 @@ import { Trash } from 'lucide-vue-next';
 import InlineEditLabel from "@/components/sb/labels/InlineEditLabel.vue";
 import Slider from "@/components/cp/content/pages/blocks/cblock/sliderEntry/Slider.vue";
 import ConfirmationPopover from "@/components/sb/popover/ConfirmationPopover.vue";
+import FormUploader from "@/components/sb/form/shared/FormUploader.vue";
 const emits = defineEmits(['update:entry', "remove:entry"])
 const props = defineProps({
     entry: {
@@ -56,6 +57,12 @@ watch(
             v-if="entry.type === 'text'"
             :name="`${name}.value.${locale}`"
             v-model="entry.value[locale]"
+        />
+        <FormUploader
+            :id="entry.key"
+            v-if="entry.type === 'image'"
+            :name="`${name}.__${locale}`"
+            v-model="entry.value"
         />
         <Slider
             :id="entry.key"

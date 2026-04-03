@@ -2,7 +2,7 @@
 import ControlPanelLayout from "@/layouts/cp/ControlPanelLayout.vue";
 import {Head} from "@inertiajs/vue3";
 import pages from "@/routes/cp/pages/index.js";
-import PageCreateForm from "@/components/cp/content/pages/forms/create/PageCreateForm.vue";
+import PageCreateForm from "@/components/cp/content/pages/forms/create/PageCreateEditForm.vue";
 
 const props = defineProps({
     page: {
