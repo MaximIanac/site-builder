@@ -5,9 +5,18 @@ namespace Maximianac\SiteBuilder\Services\Managers\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
+use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 trait HasRelations
 {
+    protected function getMediaLibrary(): string
+    {
+        return 'media';
+    }
+
     protected function straightRelations(): array
     {
         return [];
@@ -57,7 +66,13 @@ trait HasRelations
         $modelData = $data;
         unset($modelData[$nextRelation]);
 
+        $files = [];
+        $this->extractFiles($modelData, $files);
         $child = $parent->$currRelation()->create($modelData);
+
+        if (count($files) > 0) {
+            $this->saveFiles($child, $files);
+        }
 
         if (isset($data[$nextRelation]) && $data[$nextRelation]) {
             $nestedItems = array_is_list($data[$nextRelation])
@@ -135,12 +150,17 @@ trait HasRelations
         $modelData = $data;
         unset($modelData[$nextRelation]);
 
+        $files = [];
+        $this->extractFiles($modelData, $files);
+
         if ($modelData['id']) {
             $child = $parent->$currRelation()->find($modelData['id']);
             $child->update($modelData);
         } else {
             $child = $parent->$currRelation()->create($modelData);
         }
+
+        $this->saveFiles($child, $files);
 
         if (isset($data[$nextRelation]) && $data[$nextRelation]) {
             $nestedItems = array_is_list($data[$nextRelation])
@@ -204,5 +224,92 @@ trait HasRelations
         }
 
         return null;
+    }
+
+    /**
+     * Extracts UploadedFile instances from data (recursively) and removes them.
+     *
+     * @param array $data
+     * @param array $files
+     */
+    private function extractFiles(array &$data, array &$files = []): void
+    {
+        foreach ($data as $key => &$value) {
+            if ($value instanceof UploadedFile) {
+                $files[] = $value;
+                unset($data[$key]);
+                continue;
+            }
+
+            if (is_array($value) && isset($value['file']) && $value['file'] instanceof UploadedFile) {
+                $files[] = $value['file'];
+                unset($data[$key]);
+                continue;
+            }
+
+            if (is_array($value)) {
+                $this->extractFiles($value, $files);
+            }
+        }
+    }
+
+    /**
+     * Saves UploadedFile instances to the model media collection.
+     *
+     * @param Model $model
+     * @param array $files
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
+    private function saveFiles(Model $model, array $files): void
+    {
+        if (!$model instanceof HasMedia) {
+            return;
+        }
+
+        $isSingle = $this->isSingleCollection($model);
+        $collection = $this->getMediaLibrary();
+
+        if ($isSingle && empty($files)) {
+            $model->clearMediaCollection($collection);
+            return;
+        }
+
+        foreach ($files as $index => $file) {
+            $model
+                ->addMedia($file)
+                ->toMediaCollection($collection)
+                ->update(['order_column' => $index + 1]);
+        }
+    }
+
+    private function isSingleCollection(Model $model): bool
+    {
+        return $model->getMediaCollection($this->getMediaLibrary())?->singleFile === true;
+    }
+
+    private function handleMedia(Model $model, array $data): void
+    {
+        foreach ($data as $value) {
+            if ($value instanceof UploadedFile) {
+                $model
+                    ->addMedia($value)
+                    ->toMediaCollection($this->getMediaLibrary());
+
+                continue;
+            }
+
+            if (isset($value['file']) && $value['file'] instanceof UploadedFile) {
+                $model
+                    ->addMedia($value['file'])
+                    ->toMediaCollection($this->getMediaLibrary());
+
+                continue;
+            }
+
+            if (is_array($value)) {
+                $this->handleMedia($model, $value);
+            }
+        }
     }
 }

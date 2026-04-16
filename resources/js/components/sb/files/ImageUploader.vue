@@ -1,9 +1,7 @@
 <script setup>
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {Button} from "@/components/ui/button/index.js";
-import {Badge} from "@/components/ui/badge/index.js";
 import { Image, Eye, Star, Trash2, X, ArrowBigLeft, ArrowBigRight, Plus, ArchiveRestore } from 'lucide-vue-next';
-import {FieldError} from "@/components/ui/field/index.js";
 
 const props = defineProps({
     id: {
@@ -38,9 +36,9 @@ const files = ref([])
 const fileInput = ref(null)
 const isDragging = ref(false)
 const viewingIndex = ref(null)
-const dragIndex = ref(null)
 const existingMedia = ref([])
 const newFiles = ref([])
+const filesToDelete = ref([])
 
 onMounted(() => {
     initializeFiles()
@@ -49,64 +47,55 @@ onMounted(() => {
 const initializeFiles = () => {
     const media = props.modelValue
 
-    if (Object.keys(media).length === 0) {
+    if (!media || (typeof media === 'object' && Object.keys(media).length === 0)) {
         files.value = []
         existingMedia.value = []
         newFiles.value = []
         return;
     }
 
-    if (!props.isMultiple) {
-        existingMedia.value = [{
-            ...media,
-            isExisting: true,
-            id: media.id,
-            file: null,
-            name: media.file_name || media.name,
-            size: media.size,
-            type: media.mime_type,
-            preview: media.original_url,
-            lastModified: null,
-            originalData: {
-                id: media.id,
-                uuid: media.uuid,
-                file_name: media.file_name,
-                collection_name: media.collection_name
-            }
-        }]
-    } else {
-        existingMedia.value = media.map(
-            media => ({
-                ...media,
-                isExisting: true,
-                id: media.id,
-                file: null,
-                name: media.file_name || media.name,
-                size: media.size,
-                type: media.mime_type,
-                preview: media.original_url,
-                lastModified: null,
-                originalData: {
-                    id: media.id,
-                    uuid: media.uuid,
-                    file_name: media.file_name,
-                    collection_name: media.collection_name
-                }
-            })
-        )
+    const item = media
+
+    if (!item?.uuid && item?.file) {
+        addFiles([item.file])
+        return;
     }
+
+    existingMedia.value = item?.id ? [{
+        isExisting: true,
+        id: item.id,
+        file: null,
+        name: item.file_name || item.name,
+        size: item.size,
+        type: item.mime_type,
+        preview: item.original_url,
+        lastModified: null,
+        originalData: {
+            id: item.id,
+            uuid: item.uuid,
+            file_name: item.file_name,
+            collection_name: item.collection_name
+        }
+    }] : []
 
     files.value = [...existingMedia.value]
 }
 
 watch(() => props.modelValue, (newFile) => {
-    if (!newFile) return
+    if (!newFile) return;
+
+    console.log(newFile)
+    return
+
+    if (Object.keys(newFile).length === 0 && files.value.length > 0) {
+        removeFile(0)
+
+        return;
+    }
 
     const exists = files.value.some(item => item.id === newFile.id)
 
-    if (!exists) {
-        files.value.push(newFile)
-    }
+    files.value[0] = newFile;
 })
 
 const formatFileSize = (bytes) => {
@@ -137,8 +126,6 @@ const addFiles = (fileList) => {
             return
         }
 
-        // const reader = new FileReader()
-        // reader.onload = (e) => {
         const fileObject = {
             id: Date.now() + Math.random(),
             file: file,
@@ -149,12 +136,10 @@ const addFiles = (fileList) => {
             lastModified: file.lastModified,
             isExisting: false,
         }
-        // }
 
         files.value.push(fileObject)
         newFiles.value.push(fileObject)
         emitUpdate()
-        // reader.readAsDataURL(file)
     })
 }
 
@@ -164,6 +149,8 @@ const removeFile = (index) => {
     if (fileToRemove.isExisting) {
         fileToRemove._destroy = true
         fileToRemove.markedForDeletion = true
+        filesToDelete.value.push(fileToRemove)
+        files.value.splice(index, 1)
     } else {
         files.value.splice(index, 1)
         newFiles.value = newFiles.value.filter(f => f.id !== fileToRemove.id)
@@ -177,21 +164,16 @@ const removeFile = (index) => {
 }
 
 const restoreFile = (index) => {
-    const file = files.value[index]
-    if (!file.isExisting || !file.markedForDeletion) return;
+    const file = filesToDelete.value[index]
+    if (!file.isExisting) return;
 
     file._destroy = false
     file.markedForDeletion = false
 
-    emitUpdate()
-}
+    filesToDelete.value.splice(index, 1)
+    files.value = [file];
 
-const clearAll = () => {
-    // files.value.forEach(file => {
-    //     URL.revokeObjectURL(file.preview)
-    // })
-    // files.value = []
-    // emitUpdate()
+    emitUpdate()
 }
 
 const sortFiles = () => {
@@ -222,11 +204,6 @@ const handleDrop = (event) => {
     addFiles(droppedFiles)
 }
 
-const makePrimary = (index) => {
-    const file = files.value.splice(index, 1)[0]
-    files.value.unshift(file)
-    emitUpdate()
-}
 
 const viewImage = (index) => {
     viewingIndex.value = index
@@ -236,27 +213,10 @@ const closeViewer = () => {
     viewingIndex.value = null
 }
 
-const handleDragStart = (index) => {
-    dragIndex.value = index
-}
-
-const handleDropReorder = (dropIndex) => {
-    if (dragIndex.value === null || dragIndex.value === dropIndex) return
-
-    const draggedItem = files.value.splice(dragIndex.value, 1)[0]
-    files.value.splice(dropIndex, 0, draggedItem)
-
-    dragIndex.value = null
-    emitUpdate()
-}
-
 const emitUpdate = () => {
     sortFiles();
 
-    emit('update:modelValue', props.isMultiple
-        ? files.value
-        : files.value[0]
-    )
+    emit('update:modelValue', files.value[0] ?? {})
 }
 
 onBeforeUnmount(() => {
@@ -299,51 +259,42 @@ onBeforeUnmount(() => {
         </div>
 
         <!-- GALLERY DnD -->
-        <div
-            v-if="!files.length"
-            @click="triggerFileInput"
-            @dragover.prevent="handleDragOver"
-            @dragleave.prevent="handleDragLeave"
-            @drop.prevent="handleDrop"
-            :class="[
-                'border border-dashed rounded-lg p-8 text-center cursor-pointer transition-colors',
+        <div class="relative">
+            <div
+                v-if="!files.length"
+                @click="triggerFileInput"
+                @dragover.prevent="handleDragOver"
+                @dragleave.prevent="handleDragLeave"
+                @drop.prevent="handleDrop"
+                :class="[
+                'border border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors z-0',
                 isDragging ? 'border-primary bg-primary/5' : 'border-input hover:border-primary hover:bg-accent'
             ]"
-        >
-            <div class="max-w-xs mx-auto space-y-4">
-                <div class="flex justify-center">
-                    <Image class="size-8" />
-                </div>
-                <div>
-                    <p class="text-sm font-medium mb-1">Add photo</p>
-                    <p class="text-sm text-muted-foreground">Drag and drope or click to select the images</p>
-                    <p class="text-xs text-muted-foreground mt-2">JPG, PNG, WEBP until {{ maxFileSize / 1024 / 1024 }} MB</p>
+            >
+                <div class="max-w-xs mx-auto space-y-4">
+                    <div class="flex justify-center">
+                        <Image class="size-8" />
+                    </div>
+                    <div>
+                        <p class="text-sm font-medium mb-1">Add photo</p>
+                        <p class="text-sm text-muted-foreground">Drag and drope or click to select the images</p>
+                        <p class="text-xs text-muted-foreground mt-2">JPG, PNG, WEBP until {{ maxFileSize / 1024 / 1024 }} MB</p>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- GALLERY PHOTO GRID -->
-        <div v-if="files.length > 0" class="space-y-4">
-            <div
-                class="flex flex-wrap gap-4"
-                :class="{'justify-center' : !isMultiple}"
-            >
+            <!-- EXISTED FILE TO DELETE PREVIEW -->
+            <div class="absolute right-1 top-1 z-10 pointer-events-auto">
                 <div
-                    v-for="(file, index) in files"
+                    v-for="(file, index) in filesToDelete"
                     :key="file.id"
-                    class="group relative overflow-hidden rounded-lg border bg-card"
+                    @click.stop="restoreFile(index)"
+                    class="group relative overflow-hidden rounded-lg border bg-card cursor-pointer"
                 >
-                    <Badge v-if="index === 0 && !file.markedForDeletion && isMultiple" class="absolute left-2 top-2 z-10">Main</Badge>
-
                     <img
                         :src="file.preview"
                         :alt="file.name"
-                        class="h-40 w-full object-cover transition-transform"
-                        :class="[
-                            file.markedForDeletion
-                                ? 'opacity-50 grayscale blur-[1px] cursor-not-allowed'
-                                : 'group-hover:scale-105'
-                        ]"
+                        class="w-full object-cover transition-transform opacity-50 grayscale blur-[1px] h-20"
                     />
 
                     <div
@@ -355,27 +306,39 @@ onBeforeUnmount(() => {
                             style="background: repeating-linear-gradient(45deg, #9ca3af, #9ca3af 1px, transparent 1px, transparent 10px);"
                         ></div>
 
-                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 flex items-center justify-center pointer-events-auto">
+                        <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/40 flex items-center justify-center">
                             <Button
-                                @click.stop="restoreFile(index)"
                                 type="button"
                                 class="rounded-full !px-2"
                                 variant="secondary"
                             >
-                                <ArchiveRestore class="size-5" />
+                                <ArchiveRestore class="size-[20px]" />
                             </Button>
                         </div>
                     </div>
 
-                    <div
-                        v-if="!file.markedForDeletion"
-                        @dragstart="handleDragStart(index)"
-                        @dragover.prevent
-                        @drop.prevent="handleDropReorder(index)"
-                        draggable="true"
-                        class="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100"
-                        :class="{' cursor-move' : isMultiple}"
-                    >
+                    <div class="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-2">
+                        <p class="text-xs text-gray-300">{{ formatFileSize(file.size) }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- GALLERY PHOTO GRID -->
+        <div v-if="files.length > 0" class="space-y-4">
+            <div class="flex flex-wrap gap-4 justify-center">
+                <div
+                    v-for="(file, index) in files"
+                    :key="file.id"
+                    class="group relative overflow-hidden rounded-lg border bg-card"
+                >
+                    <img
+                        :src="file.preview"
+                        :alt="file.name"
+                        class="w-full object-cover transition-transform group-hover:scale-105 h-36"
+                    />
+
+                    <div class="absolute inset-0 bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
                         <div class="flex h-full items-center justify-center space-x-2">
                             <Button
                                 @click.stop="viewImage(index)"
@@ -384,17 +347,6 @@ onBeforeUnmount(() => {
                                 variant="outline"
                             >
                                 <Eye class="size-5"/>
-                            </Button>
-
-                            <Button
-                                v-if="index !== 0"
-                                @click.stop="makePrimary(index)"
-                                type="button"
-                                class="rounded-full !px-2"
-                                variant="outline"
-                                title="Make main"
-                            >
-                                <Star class="size-5" />
                             </Button>
 
                             <Button

@@ -14,6 +14,11 @@ class PageManager extends ModelManager
 {
     use HasRelations;
 
+    protected function getMediaLibrary(): string
+    {
+        return 'page';
+    }
+
     protected function straightRelations(): array
     {
         return ['cblocks'];

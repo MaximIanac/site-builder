@@ -16,17 +16,25 @@ const props = defineProps({
     isFormValid: Boolean,
 })
 
+console.log(props.formType)
+
 </script>
 
 <template>
-    <div class="flex items-center justify-between gap-4">
-        <div class="flex items-center gap-3">
+    <div
+        class="flex items-center gap-4"
+        :class="[formType === FormType.CREATE ? 'justify-end' : 'justify-between']"
+    >
+        <div
+            class="flex items-center gap-3"
+            :class="{'hidden' : formType === FormType.CREATE}"
+        >
             <Badge
                 variant="secondary"
                 :class="{
                     'text-amber-600': isDirty && !isFormValid,
                     'text-green-600': isDirty && isFormValid,
-                    'hidden': !isDirty && formType === FormType.CREATE
+                    'hidden': !isDirty,
                 }"
             >
                 <AlertCircle v-if="isDirty && !isFormValid" class="size-4" />
@@ -63,7 +71,3 @@ const props = defineProps({
         </div>
     </div>
 </template>
-
-<style scoped>
-
-</style>

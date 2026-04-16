@@ -1,5 +1,4 @@
 <script setup>
-import {Input} from "@/components/ui/input/index.ts";
 import BaseFormField from "@/components/sb/form/shared/BaseFormField.vue";
 import {computed} from "vue";
 import ImageUploader from "@/components/sb/files/ImageUploader.vue";

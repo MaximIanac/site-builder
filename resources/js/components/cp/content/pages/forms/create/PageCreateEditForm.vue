@@ -90,14 +90,18 @@ const getInitials = (state = []) => {
                 id: e.id,
                 key: e.key,
                 type: e.type,
-                value: ensureObject(e.translations?.value),
+                value: e.type === CBlockEntryType.IMAGE
+                    ? (e.image ?? {})
+                    : ensureObject(e.translations?.value),
                 slides: (e.slides || []).map(s => ({
                     id: s.id,
                     entries: (s.entries || []).map(se => ({
                         id: se.id,
                         key: se.key,
                         type: se.type,
-                        value: ensureObject(se.translations?.value),
+                        value: se.type === CBlockEntryType.IMAGE
+                            ? (se.image ?? {})
+                            : ensureObject(se.translations?.value),
                     }))
                 }))
             }))
@@ -175,10 +179,10 @@ onUnmounted(() => {
 })
 
 watch(values, (v) => {
-    console.log(v.cblocks[0])
+    // console.log(v.cblocks[0].entries)
 })
 watch(errors, (v) => {
-    console.log(v)
+    // console.log(v)
 })
 </script>
 

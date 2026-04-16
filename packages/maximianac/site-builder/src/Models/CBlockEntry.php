@@ -6,11 +6,14 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Maximianac\SiteBuilder\Services\Content\Enums\CBlockEntryTypeEnum;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Spatie\Translatable\HasTranslations;
 
-class CBlockEntry extends Model
+class CBlockEntry extends Model implements HasMedia
 {
-    use HasTranslations;
+    use InteractsWithMedia, HasTranslations;
 
     protected $table = 'cblock_entries';
     protected $guarded = [];
@@ -20,6 +23,11 @@ class CBlockEntry extends Model
     protected $casts = [
         'type' => CBlockEntryTypeEnum::class,
     ];
+
+    public function getRouteKeyName(): string
+    {
+        return 'slug';
+    }
 
     public function cblock(): BelongsTo
     {
@@ -34,5 +42,16 @@ class CBlockEntry extends Model
     public function scopeOfType($query, CBlockEntryTypeEnum $type)
     {
         return $query->where('type', $type);
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('page')
+            ->singleFile();
+    }
+
+    public function getImageAttribute(): ?Media
+    {
+        return $this->getFirstMedia('page');
     }
 }

@@ -1,8 +1,7 @@
 <script setup>
 import FormInput from "@/components/sb/form/shared/FormInput.vue";
-import {computed, reactive, ref, watch, provide} from "vue";
+import {watch, provide} from "vue";
 import FormTextarea from "@/components/sb/form/shared/FormTextarea.vue";
-import { Trash } from 'lucide-vue-next';
 import InlineEditLabel from "@/components/sb/labels/InlineEditLabel.vue";
 import Slider from "@/components/cp/content/pages/blocks/cblock/sliderEntry/Slider.vue";
 import ConfirmationPopover from "@/components/sb/popover/ConfirmationPopover.vue";
@@ -48,24 +47,28 @@ watch(
 
         <FormInput
             :id="entry.key"
+            :key="entry.key"
             v-if="entry.type === 'hero'"
             :name="`${name}.value.${locale}`"
             v-model="entry.value[locale]"
         />
         <FormTextarea
             :id="entry.key"
+            :key="entry.key"
             v-if="entry.type === 'text'"
             :name="`${name}.value.${locale}`"
             v-model="entry.value[locale]"
         />
         <FormUploader
             :id="entry.key"
+            :key="entry.key"
             v-if="entry.type === 'image'"
             :name="`${name}.__${locale}`"
             v-model="entry.value"
         />
         <Slider
             :id="entry.key"
+            :key="entry.key"
             v-if="entry.type === 'slider'"
             :name="`${name}.slides`"
             :slides="entry.slides"

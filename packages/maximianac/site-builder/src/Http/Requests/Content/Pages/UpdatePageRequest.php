@@ -39,7 +39,8 @@ class UpdatePageRequest extends FormRequest
             'cblocks.*.entries.*.key' => 'required|string|max:50',
             'cblocks.*.entries.*.type' => ['nullable', new Enum(CBlockEntryTypeEnum::class)],
             'cblocks.*.entries.*.value' => 'nullable|array',
-            'cblocks.*.entries.*.value.*' => 'nullable|string',
+            'cblocks.*.entries.*.value.*' => 'nullable',
+            'cblocks.*.entries.*.value.file' => 'nullable|image|max:10240',
 
             'cblocks.*.entries.*.slides' => 'nullable|array',
             'cblocks.*.entries.*.slides.*' => 'nullable|array',

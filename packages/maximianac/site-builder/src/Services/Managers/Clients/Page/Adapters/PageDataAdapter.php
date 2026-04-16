@@ -6,17 +6,30 @@ use Illuminate\Support\Collection;
 use Maximianac\SiteBuilder\Services\Content\Data\PageData;
 use Maximianac\SiteBuilder\Services\Managers\Decorators\DataAdapter;
 use Spatie\LaravelData\Data;
+use Symfony\Component\HttpFoundation\FileBag;
 
 class PageDataAdapter extends DataAdapter
 {
-    public function transform(array $data): Collection|Data
+    public function transform(array $data, FileBag $files = new FileBag()): Collection|Data
     {
+        $data = $this->mergeFilesIntoData($data, $files);
+
         $data['cblocks'] = collect($data['cblocks'] ?? [])
             ->map(fn ($cblock) => $this->mapCBlock($cblock))
             ->toArray();
 
         return PageData::from($data);
     }
+
+    private function mergeFilesIntoData(array $data, FileBag $files): array
+    {
+        foreach ($files->all() as $key => $file) {
+            data_set($data, $key, $file);
+        }
+
+        return $data;
+    }
+
     private function mapCBlock(array $cblock): array
     {
         $cblock['entries'] = collect($cblock['entries'] ?? [])

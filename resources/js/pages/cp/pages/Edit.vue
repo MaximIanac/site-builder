@@ -17,7 +17,7 @@ const breadcrumbs = [
         href: pages.index(),
     },
     {
-        title: `${props.page.title} edit`,
+        title: `${props.page.title} (/${props.page.slug}) edit`,
         href: pages.edit({page: props.page.id}),
     },
 ];
@@ -27,6 +27,6 @@ const breadcrumbs = [
     <Head :title="page.title" />
 
     <ControlPanelLayout :breadcrumbs="breadcrumbs">
-        <PageCreateForm :page="page" />
+        <PageCreateForm :page="page" form-type="edit" />
     </ControlPanelLayout>
 </template>
