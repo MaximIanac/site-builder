@@ -13,14 +13,13 @@ class CBlockEntryData extends Data
     public function __construct(
         public string $key,
         public CBlockEntryTypeEnum $type,
-        public array|null $value,
+        public array|null $value, // TODO: make DTO for ImageData
         public int $order,
 
         #[DataCollectionOf(CBlockSlideData::class)]
         public Optional|Collection|array|null $slides,
 
         public int|null $id = null,
-
     ) {
         if ($this->type === CBlockEntryTypeEnum::SLIDER) {
             $this->value = null;

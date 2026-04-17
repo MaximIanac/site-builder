@@ -2,6 +2,8 @@
 import {computed, onBeforeUnmount, onMounted, ref, watch} from 'vue'
 import {Button} from "@/components/ui/button/index.js";
 import { Image, Eye, Star, Trash2, X, ArrowBigLeft, ArrowBigRight, Plus, ArchiveRestore } from 'lucide-vue-next';
+import {ActionEnum} from "@/composables/services/normalizers/ActionEnum.js";
+import useMediaNormalizer from "@/composables/services/normalizers/useMediaNormalizer.js";
 
 const props = defineProps({
     id: {
@@ -38,7 +40,6 @@ const isDragging = ref(false)
 const viewingIndex = ref(null)
 const existingMedia = ref([])
 const newFiles = ref([])
-const filesToDelete = ref([])
 
 onMounted(() => {
     initializeFiles()
@@ -54,46 +55,33 @@ const initializeFiles = () => {
         return;
     }
 
-    const item = media
-
-    if (!item?.uuid && item?.file) {
-        addFiles([item.file])
+    if (!media?.uuid && media?.file) {
+        addFiles([media.file])
         return;
     }
 
-    existingMedia.value = item?.id ? [{
-        isExisting: true,
-        id: item.id,
-        file: null,
-        name: item.file_name || item.name,
-        size: item.size,
-        type: item.mime_type,
-        preview: item.original_url,
-        lastModified: null,
-        originalData: {
-            id: item.id,
-            uuid: item.uuid,
-            file_name: item.file_name,
-            collection_name: item.collection_name
-        }
-    }] : []
+    existingMedia.value = media?.id ? [media] : []
 
     files.value = [...existingMedia.value]
 }
 
 watch(() => props.modelValue, (newFile) => {
-    if (!newFile) return;
-
-    console.log(newFile)
-    return
-
     if (Object.keys(newFile).length === 0 && files.value.length > 0) {
         removeFile(0)
-
         return;
     }
 
-    const exists = files.value.some(item => item.id === newFile.id)
+    if (
+        files.value.filter(item => item.action === ActionEnum.DELETED).length > 0
+        && newFile.action === ActionEnum.EXISTING
+    ) {
+        restoreFile(0)
+        return;
+    }
+
+    if (Object.keys(newFile).length === 0) {
+        return;
+    }
 
     files.value[0] = newFile;
 })
@@ -126,16 +114,7 @@ const addFiles = (fileList) => {
             return
         }
 
-        const fileObject = {
-            id: Date.now() + Math.random(),
-            file: file,
-            name: file.name,
-            size: file.size,
-            type: file.type,
-            preview: URL.createObjectURL(file),
-            lastModified: file.lastModified,
-            isExisting: false,
-        }
+        const fileObject = useMediaNormalizer().createMedia(file);
 
         files.value.push(fileObject)
         newFiles.value.push(fileObject)
@@ -143,14 +122,12 @@ const addFiles = (fileList) => {
     })
 }
 
-const removeFile = (index) => {
-    const fileToRemove = files.value[index]
+const removeFile = (id) => {
+    const fileToRemove = files.value.find(f => f.id === id)
 
     if (fileToRemove.isExisting) {
-        fileToRemove._destroy = true
-        fileToRemove.markedForDeletion = true
-        filesToDelete.value.push(fileToRemove)
-        files.value.splice(index, 1)
+        fileToRemove.action = ActionEnum.DELETED
+        return;
     } else {
         files.value.splice(index, 1)
         newFiles.value = newFiles.value.filter(f => f.id !== fileToRemove.id)
@@ -163,26 +140,28 @@ const removeFile = (index) => {
     emitUpdate()
 }
 
-const restoreFile = (index) => {
-    const file = filesToDelete.value[index]
+const restoreFile = (id) => {
+    const file = files.value.find(f => f.id === id)
+
     if (!file.isExisting) return;
 
-    file._destroy = false
-    file.markedForDeletion = false
-
-    filesToDelete.value.splice(index, 1)
-    files.value = [file];
+    file.action = file.isExisting
+        ? ActionEnum.EXISTING
+        : ActionEnum.NEW
 
     emitUpdate()
 }
 
 const sortFiles = () => {
     files.value.sort((a, b) => {
-        if (a.markedForDeletion && b.markedForDeletion) return 0
-        if (a.markedForDeletion) return 1
-        if (b.markedForDeletion) return -1
+        const aDeleted = a.action === ActionEnum.DELETED
+        const bDeleted = b.action === ActionEnum.DELETED
 
-        return a.originalIndex - b.originalIndex
+        if (aDeleted && bDeleted) return 0
+        if (aDeleted) return 1
+        if (bDeleted) return -1
+
+        return (a.originalIndex ?? 0) - (b.originalIndex ?? 0)
     })
 }
 
@@ -203,7 +182,6 @@ const handleDrop = (event) => {
     )
     addFiles(droppedFiles)
 }
-
 
 const viewImage = (index) => {
     viewingIndex.value = index
@@ -232,7 +210,6 @@ onBeforeUnmount(() => {
             :id="id"
             ref="fileInput"
             type="file"
-            :multiple="isMultiple"
             :accept="acceptedTypes"
             @change="handleFileSelect"
             class="hidden"
@@ -261,15 +238,15 @@ onBeforeUnmount(() => {
         <!-- GALLERY DnD -->
         <div class="relative">
             <div
-                v-if="!files.length"
+                v-if="!files.filter(i => i.action !== ActionEnum.DELETED).length"
                 @click="triggerFileInput"
                 @dragover.prevent="handleDragOver"
                 @dragleave.prevent="handleDragLeave"
                 @drop.prevent="handleDrop"
                 :class="[
-                'border border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors z-0',
-                isDragging ? 'border-primary bg-primary/5' : 'border-input hover:border-primary hover:bg-accent'
-            ]"
+                    'border border-dashed rounded-lg p-4 text-center cursor-pointer transition-colors z-0',
+                    isDragging ? 'border-primary bg-primary/5' : 'border-input hover:border-primary hover:bg-accent'
+                ]"
             >
                 <div class="max-w-xs mx-auto space-y-4">
                     <div class="flex justify-center">
@@ -286,9 +263,9 @@ onBeforeUnmount(() => {
             <!-- EXISTED FILE TO DELETE PREVIEW -->
             <div class="absolute right-1 top-1 z-10 pointer-events-auto">
                 <div
-                    v-for="(file, index) in filesToDelete"
+                    v-for="(file) in files.filter(i => i.action === ActionEnum.DELETED)"
                     :key="file.id"
-                    @click.stop="restoreFile(index)"
+                    @click.stop="restoreFile(file.id)"
                     class="group relative overflow-hidden rounded-lg border bg-card cursor-pointer"
                 >
                     <img
@@ -298,7 +275,7 @@ onBeforeUnmount(() => {
                     />
 
                     <div
-                        v-if="file.markedForDeletion"
+                        v-if="file.action === ActionEnum.DELETED"
                         class="absolute inset-0 pointer-events-none"
                     >
                         <div
@@ -328,7 +305,7 @@ onBeforeUnmount(() => {
         <div v-if="files.length > 0" class="space-y-4">
             <div class="flex flex-wrap gap-4 justify-center">
                 <div
-                    v-for="(file, index) in files"
+                    v-for="(file, index) in files.filter(i => i.action !== ActionEnum.DELETED)"
                     :key="file.id"
                     class="group relative overflow-hidden rounded-lg border bg-card"
                 >
@@ -350,7 +327,7 @@ onBeforeUnmount(() => {
                             </Button>
 
                             <Button
-                                @click.stop="removeFile(index)"
+                                @click.stop="removeFile(file.id)"
                                 type="button"
                                 class="rounded-full !px-2"
                                 variant="destructive"
@@ -387,10 +364,10 @@ onBeforeUnmount(() => {
                     :src="files[viewingIndex].preview"
                     :alt="files[viewingIndex].name"
                     class="max-h-[80vh] max-w-[80vw] object-contain"
-                    :class="{'grayscale blur-[1px] cursor-not-allowed' : files[viewingIndex].markedForDeletion}"
+                    :class="{'grayscale blur-[1px] cursor-not-allowed' : files[viewingIndex].action === ActionEnum.DELETED}"
                 />
 
-                <div v-if="files[viewingIndex].markedForDeletion" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-[-45deg]">
+                <div v-if="files[viewingIndex].action === ActionEnum.DELETED" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 rotate-[-45deg]">
                     <span class="text-7xl font-mono font-bold tracking-[.8em] text-neutral-500/50 select-none border-4 border-neutral-500/50 p-8 rounded-lg cursor-not-allowed">
                         REMOVED
                     </span>

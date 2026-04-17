@@ -13,6 +13,7 @@ import pages from "@/routes/cp/pages/index.js";
 import {CBlockEntryType} from "@/enums/CBlockEntryType.js";
 import FormTopButtonInfo from "@/components/sb/form/shared/FormTopButtonInfo.vue";
 import {FormType} from "@/enums/FormType.js";
+import useMediaNormalizer from "@/composables/services/normalizers/useMediaNormalizer.js";
 
 const props = defineProps({
     page: {
@@ -24,6 +25,7 @@ const props = defineProps({
     }
 });
 
+const { normalizeMedia } = useMediaNormalizer();
 const { localizeSchema, ensureObject } = useLocalizedSchema();
 
 const createPageSchema = toTypedSchema(z.object({
@@ -91,7 +93,7 @@ const getInitials = (state = []) => {
                 key: e.key,
                 type: e.type,
                 value: e.type === CBlockEntryType.IMAGE
-                    ? (e.image ?? {})
+                    ? normalizeMedia(e.image)
                     : ensureObject(e.translations?.value),
                 slides: (e.slides || []).map(s => ({
                     id: s.id,
@@ -100,7 +102,7 @@ const getInitials = (state = []) => {
                         key: se.key,
                         type: se.type,
                         value: se.type === CBlockEntryType.IMAGE
-                            ? (se.image ?? {})
+                            ? normalizeMedia(se.image)
                             : ensureObject(se.translations?.value),
                     }))
                 }))
@@ -124,6 +126,7 @@ const onSubmit = handleSubmit(data => {
             pages.update({page: props.page.slug}),
             {...data, _method: "put"},
             {
+                preserveState: false,
                 onSuccess: (page) => {
                     toast.success('Page edited successfully!', {
                         duration: 10000,
@@ -161,7 +164,6 @@ const handleReset = () => {
 }
 
 let removeHook = null;
-
 onMounted(() => {
     removeHook = router.on('before', (event) => {
         if (event.detail.visit.method !== 'get') return;

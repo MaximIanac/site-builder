@@ -15,9 +15,6 @@ const props = defineProps({
     isDirty: Boolean,
     isFormValid: Boolean,
 })
-
-console.log(props.formType)
-
 </script>
 
 <template>

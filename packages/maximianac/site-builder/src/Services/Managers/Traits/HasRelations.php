@@ -5,10 +5,13 @@ namespace Maximianac\SiteBuilder\Services\Managers\Traits;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
+use InvalidArgumentException;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
+use Spatie\MediaLibrary\MediaCollections\Models\Media;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use UnexpectedValueException;
 
 trait HasRelations
 {
@@ -53,6 +56,10 @@ trait HasRelations
         }
     }
 
+    /**
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
     private function createRelationWithChildren(
         Model $parent,
         string $straightRelation,
@@ -71,7 +78,7 @@ trait HasRelations
         $child = $parent->$currRelation()->create($modelData);
 
         if (count($files) > 0) {
-            $this->saveFiles($child, $files);
+            $this->processingFiles($child, $files);
         }
 
         if (isset($data[$nextRelation]) && $data[$nextRelation]) {
@@ -137,6 +144,10 @@ trait HasRelations
         }
     }
 
+    /**
+     * @throws FileDoesNotExist
+     * @throws FileIsTooBig
+     */
     private function updateRelationWithChildren(
         Model $parent,
         string $straightRelation,
@@ -160,7 +171,7 @@ trait HasRelations
             $child = $parent->$currRelation()->create($modelData);
         }
 
-        $this->saveFiles($child, $files);
+        $this->processingFiles($child, $files);
 
         if (isset($data[$nextRelation]) && $data[$nextRelation]) {
             $nestedItems = array_is_list($data[$nextRelation])
@@ -235,33 +246,33 @@ trait HasRelations
     private function extractFiles(array &$data, array &$files = []): void
     {
         foreach ($data as $key => &$value) {
-            if ($value instanceof UploadedFile) {
+            if (is_array($value) && isset($value['file']) && $value['file'] instanceof UploadedFile) {
                 $files[] = $value;
                 unset($data[$key]);
                 continue;
             }
 
-            if (is_array($value) && isset($value['file']) && $value['file'] instanceof UploadedFile) {
-                $files[] = $value['file'];
+            if (is_array($value) && isset($value['uuid']) && isset($value['action'])) {
+                $files[] = $value;
                 unset($data[$key]);
                 continue;
             }
 
-            if (is_array($value)) {
-                $this->extractFiles($value, $files);
-            }
+//            if (is_array($value)) {
+//                $this->extractFiles($value, $files);
+//            }
         }
     }
 
     /**
-     * Saves UploadedFile instances to the model media collection.
+     * Processing files by their actions (DELETED, NEW, EXISTING).
      *
      * @param Model $model
      * @param array $files
      * @throws FileDoesNotExist
      * @throws FileIsTooBig
      */
-    private function saveFiles(Model $model, array $files): void
+    private function processingFiles(Model $model, array $files): void
     {
         if (!$model instanceof HasMedia) {
             return;
@@ -270,16 +281,63 @@ trait HasRelations
         $isSingle = $this->isSingleCollection($model);
         $collection = $this->getMediaLibrary();
 
-        if ($isSingle && empty($files)) {
-            $model->clearMediaCollection($collection);
-            return;
+        /** Deleting files */
+        $deletedFiles = array_filter(
+            $files,
+            fn ($file) => ($file['action'] ?? null) === "deleted"
+        );
+
+        foreach ($deletedFiles as $file) {
+            if (!empty($file['id'])) {
+                Media::find($file['id'])?->delete();
+            }
         }
 
+        /** @var array $files Only EXISTING and NEW files */
+        $files = array_values(array_filter($files, function ($file) {
+            return ($file['action'] ?? null) !== 'deleted';
+        }));
+
+        /** Processing NEW and EXISTING files */
         foreach ($files as $index => $file) {
-            $model
-                ->addMedia($file)
-                ->toMediaCollection($collection)
-                ->update(['order_column' => $index + 1]);
+            $action = $file['action'] ?? null;
+
+            switch ($action) {
+                case 'new':
+                    $uploaded = $model
+                        ->addMedia($file['file'])
+                        ->toMediaCollection($collection);
+
+                    $uploaded->order_column = $index + 1;
+                    $uploaded->save();
+
+                    break;
+
+                case 'existing':
+                    if ($isSingle) {
+                        break;
+                    }
+
+                    $media = Media::firstWhere('uuid', $file['uuid']);
+
+                    if (!$media) {
+                        break;
+                    }
+
+                    if ($media->model_id !== $model->getKey()) {
+                        $media->model()->associate($model);
+                    }
+
+                    $media->order_column = $index + 1;
+                    $media->save();
+
+                    break;
+
+                default:
+                    throw new UnexpectedValueException(
+                        "Unknown media action: {$action}"
+                    );
+            }
         }
     }
 
