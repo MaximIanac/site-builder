@@ -2,7 +2,7 @@
 
 namespace Maximianac\SiteBuilder\Services\Managers\Clients\Page;
 
-use DB;
+use Illuminate\Support\Facades\DB;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Maximianac\SiteBuilder\Models\Page;

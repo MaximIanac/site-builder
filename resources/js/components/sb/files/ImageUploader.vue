@@ -39,7 +39,7 @@ const fileInput = ref(null)
 const isDragging = ref(false)
 const viewingIndex = ref(null)
 const existingMedia = ref([])
-const newFiles = ref([])
+// const newFiles = ref([])
 
 onMounted(() => {
     initializeFiles()
@@ -51,7 +51,7 @@ const initializeFiles = () => {
     if (!media || (typeof media === 'object' && Object.keys(media).length === 0)) {
         files.value = []
         existingMedia.value = []
-        newFiles.value = []
+        // newFiles.value = []
         return;
     }
 
@@ -75,7 +75,7 @@ watch(() => props.modelValue, (newFile) => {
         files.value.filter(item => item.action === ActionEnum.DELETED).length > 0
         && newFile.action === ActionEnum.EXISTING
     ) {
-        restoreFile(0)
+        restoreFile(newFile.id)
         return;
     }
 
@@ -117,27 +117,25 @@ const addFiles = (fileList) => {
         const fileObject = useMediaNormalizer().createMedia(file);
 
         files.value.push(fileObject)
-        newFiles.value.push(fileObject)
-        emitUpdate()
+        emitUpdate(fileObject)
     })
 }
 
-const removeFile = (id) => {
-    const fileToRemove = files.value.find(f => f.id === id)
+const removeFile = (index) => {
+    const fileToRemove = files.value[index]
 
     if (fileToRemove.isExisting) {
-        fileToRemove.action = ActionEnum.DELETED
+        fileToRemove.action = ActionEnum.DELETED;
         return;
-    } else {
-        files.value.splice(index, 1)
-        newFiles.value = newFiles.value.filter(f => f.id !== fileToRemove.id)
-
-        if (fileToRemove.preview && fileToRemove.preview.startsWith('blob:')) {
-            URL.revokeObjectURL(fileToRemove.preview)
-        }
     }
 
-    emitUpdate()
+    if (fileToRemove.preview && fileToRemove.preview.startsWith('blob:')) {
+        URL.revokeObjectURL(fileToRemove.preview)
+    }
+
+    files.value.splice(index, 1);
+
+    emitUpdate({})
 }
 
 const restoreFile = (id) => {
@@ -149,7 +147,11 @@ const restoreFile = (id) => {
         ? ActionEnum.EXISTING
         : ActionEnum.NEW
 
-    emitUpdate()
+    files.value = files.value.filter(i => i.id === file.id)
+
+    console.log(files.value)
+
+    emitUpdate(file)
 }
 
 const sortFiles = () => {
@@ -191,10 +193,10 @@ const closeViewer = () => {
     viewingIndex.value = null
 }
 
-const emitUpdate = () => {
+const emitUpdate = (file) => {
     sortFiles();
 
-    emit('update:modelValue', files.value[0] ?? {})
+    emit('update:modelValue', file)
 }
 
 onBeforeUnmount(() => {
@@ -327,7 +329,7 @@ onBeforeUnmount(() => {
                             </Button>
 
                             <Button
-                                @click.stop="removeFile(file.id)"
+                                @click.stop="removeFile(index)"
                                 type="button"
                                 class="rounded-full !px-2"
                                 variant="destructive"

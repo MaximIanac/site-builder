@@ -5,12 +5,10 @@ namespace Maximianac\SiteBuilder\Http\Controllers\Content;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
-use Inertia\Response;
 use Maximianac\SiteBuilder\Http\Requests\Content\Pages\StorePageRequest;
 use Maximianac\SiteBuilder\Http\Requests\Content\Pages\UpdatePageRequest;
 use Maximianac\SiteBuilder\Models\Page;
 use Maximianac\SiteBuilder\Services\Content\Data\PageData;
-use Maximianac\SiteBuilder\Services\Content\Managers\ContentManagerOld;
 use Maximianac\SiteBuilder\Services\Content\Resources\PageResourceData;
 use Maximianac\SiteBuilder\Services\Managers\Clients\Page\Adapters\PageDataAdapter;
 use Maximianac\SiteBuilder\Services\Managers\Clients\Page\PageManager;
@@ -24,7 +22,9 @@ class PageController extends Controller
     public function index()
     {
         return Inertia::render('cp/pages/Index', [
-            'pages' => Page::all()
+            'pagesData' => PageResourceData::collect(
+                Page::without('cblocks')->get()
+            )
         ]);
     }
 
@@ -34,10 +34,6 @@ class PageController extends Controller
     public function create()
     {
         return Inertia::render('cp/pages/Create');
-
-//        return view('cp.content.pages.create', [
-//            'templates' => TemplateService::getPageTemplates()
-//        ]);
     }
 
     /**
@@ -76,6 +72,7 @@ class PageController extends Controller
 
     /**
      * Update the specified resource in storage.
+     * @throws Throwable
      */
     public function update(UpdatePageRequest $request, Page $page): RedirectResponse
     {

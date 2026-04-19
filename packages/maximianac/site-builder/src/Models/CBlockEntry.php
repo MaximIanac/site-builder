@@ -24,11 +24,6 @@ class CBlockEntry extends Model implements HasMedia
         'type' => CBlockEntryTypeEnum::class,
     ];
 
-    public function getRouteKeyName(): string
-    {
-        return 'slug';
-    }
-
     public function cblock(): BelongsTo
     {
         return $this->belongsTo(CBlock::class);

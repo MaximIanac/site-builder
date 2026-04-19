@@ -33,6 +33,7 @@ class UpdatePageRequest extends FormRequest
             'cblocks' => 'nullable|array',
             'cblocks.*.id' => 'nullable|integer|exists:cblocks,id',
             'cblocks.*.key' => 'required|string|max:50',
+            'cblocks.*.is_active' => 'required|boolean',
 
             'cblocks.*.entries' => 'required|array',
             'cblocks.*.entries.*.id' => 'nullable|integer|exists:cblock_entries,id',
@@ -50,7 +51,8 @@ class UpdatePageRequest extends FormRequest
             'cblocks.*.entries.*.slides.*.entries.*.key' => 'required|string|max:50',
             'cblocks.*.entries.*.slides.*.entries.*.type' => ['nullable', new Enum(CBlockEntryTypeEnum::class)],
             'cblocks.*.entries.*.slides.*.entries.*.value' => 'nullable|array',
-            'cblocks.*.entries.*.slides.*.entries.*.value.*' => 'nullable|string',
+            'cblocks.*.entries.*.slides.*.entries.*.value.*' => 'nullable',
+            'cblocks.*.entries.*.slides.*.entries.*.value.file' =>  'nullable|image|max:10240',
         ];
     }
 }

@@ -57,9 +57,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('m_catalog_product_offer_prices');
+        Schema::dropIfExists('m_catalog_product_variant_prices');
         Schema::dropIfExists('currencies');
-        Schema::dropIfExists('m_catalog_product_offer_property_values');
-        Schema::dropIfExists('m_catalog_product_offers');
+        Schema::dropIfExists('m_catalog_product_variant_property');
+        Schema::dropIfExists('m_catalog_product_variants');
     }
 };

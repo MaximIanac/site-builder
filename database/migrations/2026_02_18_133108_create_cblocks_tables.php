@@ -45,7 +45,7 @@ return new class extends Migration
             $table->foreignId('cblock_slide_id')->constrained()->onDelete('cascade');
             $table->string('key', 100);
             $table->string('type')->comment("hero, image, text");
-            $table->json('value');
+            $table->json('value')->nullable();
             $table->unsignedTinyInteger('order')->default(0);
             $table->timestamps();
 

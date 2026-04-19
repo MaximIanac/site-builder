@@ -23,7 +23,8 @@ const props = defineProps({
         required: true
     }
 })
-const emits = defineEmits([])
+
+const emits = defineEmits(['update:isActive'])
 
 const { update, remove, push } = useFieldArray(`${props.name}.entries`)
 const errorMessage = useFieldError(`${toBracketNotation(props.name)}.entries`);
@@ -54,6 +55,10 @@ const createEntry = (type) => {
         <LocalizedGroup
             :group-title="cblockData.key"
             :locales="useConfig().APP_LOCALES"
+
+            label="is active"
+            :is_active="cblockData.is_active"
+            @update:is-active="$emit('update:isActive', $event)"
         >
             <template v-slot="{ locale }">
                 <div class="flex flex-wrap gap-4 -mx-2">

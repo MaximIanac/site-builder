@@ -3,9 +3,6 @@ import CBlockForm from "@/components/cp/content/pages/blocks/cblock/CBlockForm.v
 import Button from "@/components/ui/button/Button.vue";
 import { Plus } from 'lucide-vue-next';
 import {useFieldArray} from "vee-validate";
-import Slider from "@/components/cp/content/pages/blocks/cblock/sliderEntry/Slider.vue";
-
-const emits = defineEmits(['update:create-cblock'])
 
 const { fields: cblocks, push, update } = useFieldArray("cblocks");
 
@@ -16,14 +13,22 @@ const createCBlock = () => {
         entries: [],
     })
 }
+
+const putCBlock = (index, cblock, is_active) => {
+    update(index, {
+        ...cblock.value,
+        is_active: is_active
+    })
+}
 </script>
 
 <template>
     <div class="flex flex-col gap-4">
         <CBlockForm
             v-for="(cblock, index) in cblocks"
-            :cblock="cblock.value"
             :name="`cblocks.${index}`"
+            :cblock="cblock.value"
+            @update:is-active="putCBlock(index, cblock, $event)"
         />
 
         <Button type="button" @click="createCBlock" variant="outline" class="w-full">

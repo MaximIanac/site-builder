@@ -65,7 +65,11 @@ const createPageSchema = toTypedSchema(z.object({
                                         message: "Only latin, numbers, and _, cannot start with a number, no spaces or special characters"
                                     }),
                                 type: z.enum(Object.values(CBlockEntryType).filter(i => i !== CBlockEntryType.SLIDER)),
-                                value: localizeSchema(),
+                                value:
+                                    z.union([
+                                        z.object({}).passthrough(),
+                                        z.instanceof(File)
+                                    ]).optional(),
                             })
                         )
                     })
@@ -181,7 +185,7 @@ onUnmounted(() => {
 })
 
 watch(values, (v) => {
-    // console.log(v.cblocks[0].entries)
+    // console.log(v.cblocks[0])
 })
 watch(errors, (v) => {
     // console.log(v)

@@ -6,6 +6,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
+use Maximianac\SiteBuilder\Services\Content\Enums\FileActionTypeEnum;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileDoesNotExist;
 use Spatie\MediaLibrary\MediaCollections\Exceptions\FileIsTooBig;
@@ -282,28 +283,29 @@ trait HasRelations
         $collection = $this->getMediaLibrary();
 
         /** Deleting files */
-        $deletedFiles = array_filter(
-            $files,
-            fn ($file) => ($file['action'] ?? null) === "deleted"
-        );
+        $filteredFiles = [];
+        foreach ($files as $file) {
+            $action = $file['action'] ?? null;
 
-        foreach ($deletedFiles as $file) {
-            if (!empty($file['id'])) {
-                Media::find($file['id'])?->delete();
+            if ($action === FileActionTypeEnum::DELETED->value) {
+                if (!empty($file['id'])) {
+                    $model->deleteMedia($file['id']);
+                }
+                continue;
             }
+
+            $filteredFiles[] = $file;
         }
 
-        /** @var array $files Only EXISTING and NEW files */
-        $files = array_values(array_filter($files, function ($file) {
-            return ($file['action'] ?? null) !== 'deleted';
-        }));
+        /** Only EXISTING and NEW files */
+        $files = array_values($filteredFiles);
 
         /** Processing NEW and EXISTING files */
         foreach ($files as $index => $file) {
-            $action = $file['action'] ?? null;
-
-            switch ($action) {
-                case 'new':
+            switch (
+                FileActionTypeEnum::tryFrom($file['action'] ?? null)
+            ) {
+                case FileActionTypeEnum::NEW:
                     $uploaded = $model
                         ->addMedia($file['file'])
                         ->toMediaCollection($collection);
@@ -313,19 +315,15 @@ trait HasRelations
 
                     break;
 
-                case 'existing':
+                case FileActionTypeEnum::EXISTING:
                     if ($isSingle) {
                         break;
                     }
 
-                    $media = Media::firstWhere('uuid', $file['uuid']);
+                    $media = $model->media()->where('uuid', $file['uuid'])->first();
 
                     if (!$media) {
                         break;
-                    }
-
-                    if ($media->model_id !== $model->getKey()) {
-                        $media->model()->associate($model);
                     }
 
                     $media->order_column = $index + 1;
@@ -335,7 +333,7 @@ trait HasRelations
 
                 default:
                     throw new UnexpectedValueException(
-                        "Unknown media action: {$action}"
+                        "Unknown media action: " . ($file['action'] ?? 'null')
                     );
             }
         }

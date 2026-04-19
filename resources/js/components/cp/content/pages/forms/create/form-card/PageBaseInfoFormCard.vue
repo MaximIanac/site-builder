@@ -6,8 +6,10 @@ import FormInput from "@/components/sb/form/shared/FormInput.vue";
 import useConfig from "@/composables/useConfig.js";
 import {useField} from "vee-validate";
 import {computed} from "vue";
+import FormSwitch from "@/components/sb/form/shared/FormSwitch.vue";
 
 const { value: slug } = useField("slug")
+const { value: is_active } = useField("is_active")
 const { value: title, setValue: setTitle } = useField("title")
 
 const localizedData = computed({
@@ -30,6 +32,12 @@ const localizedData = computed({
                     label="Slug"
                     placeholder="Enter the page unique slug (route)"
                     description="Unique page slug"
+                />
+
+                <FormSwitch
+                    v-model="is_active"
+                    name="is_active"
+                    label="Is page active"
                 />
 
                 <LocalizedGroup

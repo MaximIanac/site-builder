@@ -28,18 +28,20 @@ const props = defineProps({
     },
 })
 
-const { remove, push } = useFieldArray(`${props.name}.entries`)
+const { update, remove, push } = useFieldArray(`${props.name}.entries`)
 const errorMessage = useFieldError(`${toBracketNotation(props.name)}.entries`);
 const locale = inject('locale');
 
 const createEntry = (type) => {
-    const newEntry = {
+    push({
         key: `${type}_${props.slide.entries.length + 1}`,
         type: type,
         value: {},
-    }
+    })
+}
 
-    push(newEntry)
+const putEntry = (entryIndex, entry) => {
+    update(entryIndex, entry)
 }
 
 const removeEntry = (index) => {
@@ -66,6 +68,7 @@ const removeEntry = (index) => {
 
         <ItemContent class="gap-1">
             <FieldError :errors="[{message: errorMessage}]" />
+
             <draggable
                 v-if="!!slide.entries.length"
                 v-model="slide.entries"
@@ -88,6 +91,8 @@ const removeEntry = (index) => {
                         :entry="entry"
                         :name="`${name}.entries.${index}`"
                         :locale="locale"
+
+                        @update:entry="(updated) => putEntry(index, updated)"
                         @remove:entry="removeEntry(index)"
                     />
                 </div>

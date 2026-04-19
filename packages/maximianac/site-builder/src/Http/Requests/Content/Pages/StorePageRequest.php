@@ -43,7 +43,8 @@ class StorePageRequest extends FormRequest
             'cblocks.*.entries.*.slides.*.entries.*.key' => 'required|string|max:50',
             'cblocks.*.entries.*.slides.*.entries.*.type' => ['nullable', new Enum(CBlockEntryTypeEnum::class)],
             'cblocks.*.entries.*.slides.*.entries.*.value' => 'required|array',
-            'cblocks.*.entries.*.slides.*.entries.*.value.*' => 'nullable|string',
+            'cblocks.*.entries.*.slides.*.entries.*.value.*' => 'nullable',
+            'cblocks.*.entries.*.slides.*.entries.*.value.file' =>  'nullable|image|max:10240',
         ];
     }
 }

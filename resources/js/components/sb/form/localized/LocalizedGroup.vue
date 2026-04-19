@@ -6,7 +6,10 @@ import LocalizedElement from "@/components/sb/form/localized/LocalizedElement.vu
 import { Field, FieldError }  from "@/components/ui/field/index.ts";
 import {getErrorMessages} from "@/lib/utils.js";
 import useConfig from "@/composables/useConfig.js";
-import {forEach} from "lodash-es";
+import Switch from "@/components/ui/switch/Switch.vue";
+import Label from "@/components/ui/label/Label.vue";
+import {ChevronDown, ChevronRight} from "lucide-vue-next";
+import Button from "@/components/ui/button/Button.vue";
 
 const props = defineProps({
     groupTitle: {
@@ -31,16 +34,24 @@ const props = defineProps({
     scope: {
         type: String,
         default: 'locales'
+    },
+
+    label: {
+        type: String,
+    },
+    is_active: {
+        type: Boolean,
     }
 })
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'update:isActive'])
 const errors = useFormErrors();
 
 const activeLocale = ref(props.defaultLocale)
 const localeErrors = ref({})
 const formData = ref(props.modelValue)
 const isFilledLocale = ref({})
+const isExpanded = ref(true)
 
 const updateFieldValue = (locale, fieldName, value) => {
     const newData = JSON.parse(JSON.stringify(formData.value))
@@ -107,7 +118,7 @@ onMounted(() => {
 <template>
     <Tabs :model-value="activeLocale" @update:model-value="activeLocale = $event" :unmountOnHide="false">
         <div class="flex justify-between rounded-t-lg bg-gray-50 dark:bg-neutral-800 px-1 pt-1">
-            <div v-if="groupTitle" class="flex items-center">
+            <div v-if="groupTitle" class="flex items-center gap-4">
 
 <!--                <InlineEditLabel-->
 <!--                    :name="`${name}.__${locale}`"-->
@@ -115,6 +126,32 @@ onMounted(() => {
 <!--                    v-model="entry.key"-->
 <!--                />-->
 
+                <button
+                    type="button"
+                    @click="isExpanded = !isExpanded"
+                    class="p-1 rounded-md hover:bg-gray-100 dark:hover:bg-neutral-800 transition-colors cursor-pointer"
+                >
+                    <ChevronRight
+                        class="
+                            h-4 w-4
+                            text-gray-600 dark:text-neutral-400
+                            transition-transform duration-200 ease-in-out
+                        "
+                        :class="{ 'rotate-90': isExpanded }"
+                    />
+                </button>
+
+                <div v-if="label || is_active" class="flex items-center space-x-2 cursor-pointer">
+                    <Switch
+                        id="switch-option"
+                        :model-value="is_active"
+                        @update:model-value="$emit('update:isActive', $event)"
+                        class="data-[state=checked]:bg-purple-700/50 data-[state=unchecked]:bg-gray-300 dark:data-[state=unchecked]:bg-neutral-600 [&_span]:bg-background/75"
+                   />
+                    <Label for="switch-option" class="text-xs text-muted-foreground cursor-pointer">
+                        {{ label }}
+                    </Label>
+                </div>
 
                 <h2 class="text-sm font-semibold text-foreground tracking-tight">
                     {{ groupTitle }}
@@ -150,7 +187,13 @@ onMounted(() => {
         <div class="relative">
             <div class="rounded-b-lg border-l-4 border-gray-50 dark:border-neutral-800 bg-gray-100 dark:bg-neutral-900 p-4">
                 <div v-for="locale in locales" :key="locale">
-                    <TabsContent :value="locale" class="space-y-4">
+                    <TabsContent
+                        :value="locale"
+                        class="space-y-4 transition-all duration-100"
+                        :class="isExpanded
+                            ? 'scale-y-100 opacity-100'
+                            : 'h-0 scale-y-0 opacity-0 pointer-events-none'"
+                    >
                         <slot :locale="locale" :update-field-value="updateFieldValue" :get-field-value="getFieldValue">
                             <div
                                 v-for="(field, index) in fields"

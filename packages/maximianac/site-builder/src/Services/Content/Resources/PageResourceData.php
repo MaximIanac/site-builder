@@ -3,9 +3,9 @@
 namespace Maximianac\SiteBuilder\Services\Content\Resources;
 
 use Illuminate\Support\Collection;
-use Illuminate\Support\Optional;
 use Spatie\LaravelData\Attributes\DataCollectionOf;
 use Spatie\LaravelData\Data;
+use Spatie\LaravelData\Optional;
 
 class PageResourceData extends Data
 {
@@ -15,7 +15,7 @@ class PageResourceData extends Data
         public bool $is_active,
 
         #[DataCollectionOf(CBlockResourceData::class)]
-        public Collection $cblocks,
+        public Optional|Collection $cblocks,
         public Optional|array|null $translations,
 
         public int|null $id = null,

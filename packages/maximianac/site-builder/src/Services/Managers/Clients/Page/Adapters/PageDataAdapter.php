@@ -21,15 +21,6 @@ class PageDataAdapter extends DataAdapter
         return PageData::from($data);
     }
 
-    private function mergeFilesIntoData(array $data, FileBag $files): array
-    {
-        foreach ($files->all() as $key => $file) {
-            data_set($data, $key, $file);
-        }
-
-        return $data;
-    }
-
     private function mapCBlock(array $cblock): array
     {
         $cblock['entries'] = collect($cblock['entries'] ?? [])
@@ -62,5 +53,14 @@ class PageDataAdapter extends DataAdapter
             ->toArray();
 
         return $slide;
+    }
+
+    private function mergeFilesIntoData(array $data, FileBag $files): array
+    {
+        foreach ($files->all() as $key => $file) {
+            data_set($data, $key, $file);
+        }
+
+        return $data;
     }
 }
